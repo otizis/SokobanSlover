@@ -1,21 +1,27 @@
 package com.jaxer.www;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.jaxer.www.enums.ItemType;
 import com.jaxer.www.model.Cell;
-import com.jaxer.www.model.Solution;
 
 public class Util
 {
-    static boolean isdebug = false;
     
-    static boolean isInfo = true;
-    
+    /**
+     * 地图特征值，如果出现过就会记录。 如果重复，表示出现过其他走出这个特征走法，本次为非最优的走法
+     */
     private static HashSet<String> mapSet = new HashSet<String>();
     
-    public static Cell[][] cloneObject(Cell[][] a)
+    /**
+     * 克隆地图
+     * 
+     * @param a
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static Cell[][] cloneMap(Cell[][] a)
     {
         Cell[][] b = new Cell[a.length][a[0].length];
         for (int i = 0; i < b.length; i++)
@@ -28,25 +34,89 @@ public class Util
         return b;
     }
     
-    public static void debug(String str)
+    /**
+     * 克隆地图，并移除玩家标记
+     * 
+     * @param a
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static Cell[][] cloneMapClearPlayer(Cell[][] a)
     {
-        if (isdebug)
+        Cell[][] b = new Cell[a.length][a[0].length];
+        for (int i = 0; i < b.length; i++)
         {
-            System.out.println(str);
+            for (int j = 0; j < b[i].length; j++)
+            {
+                b[i][j] = a[i][j].myClone();
+                if (b[i][j].getItem() == ItemType.player)
+                {
+                    b[i][j].setItem(ItemType.empty);
+                }
+            }
         }
+        return b;
     }
     
-    public static void info(String str)
+    /**
+     * 克隆地图，并移除玩家标记
+     * 
+     * @param a
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static Cell[][] cloneMapClearStatue(Cell[][] a)
     {
-        if (isInfo)
+        Cell[][] b = new Cell[a.length][a[0].length];
+        for (int i = 0; i < b.length; i++)
         {
-            System.out.println(str);
+            for (int j = 0; j < b[i].length; j++)
+            {
+                b[i][j] = a[i][j].myClone();
+                if (b[i][j].getItem() == ItemType.statue)
+                {
+                    b[i][j].setItem(ItemType.empty);
+                }
+            }
         }
+        return b;
     }
     
+    /**
+     * 克隆地图，并移除玩家标记，雕像标记
+     * 
+     * @param a
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static Cell[][] cloneMapClearPlayerAndStatue(Cell[][] a)
+    {
+        Cell[][] b = new Cell[a.length][a[0].length];
+        for (int i = 0; i < b.length; i++)
+        {
+            for (int j = 0; j < b[i].length; j++)
+            {
+                b[i][j] = a[i][j].myClone();
+                if (b[i][j].getItem() == ItemType.player||
+                    b[i][j].getItem() == ItemType.statue)
+                {
+                    b[i][j].setItem(ItemType.empty);
+                }
+            }
+        }
+        return b;
+    }
+    
+    /**
+     * 生成地图的特征字符串，即全盘描述
+     * 
+     * @param map
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
     public static String descMap(Cell[][] map)
     {
-        Cell[][] cloneObject = cloneObject(map);
+        Cell[][] cloneObject = cloneMap(map);
         
         HashSet<Cell> allPlayerCanGoCells =
             SolutionFactory.getAllPlayerCanGoCells(cloneObject);
@@ -70,45 +140,6 @@ public class Util
         return buid.toString();
     }
     
-    public static void drawMap(Cell[][] thisStepMap)
-    {
-        System.out.println("------------------");
-        for (int j = 0; j < thisStepMap[0].length; j++)
-        {
-            for (int i = 0; i < thisStepMap.length; i++)
-            {
-                System.out.print(thisStepMap[i][j].draw());
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-    
-    public static boolean equle(Cell[][] a, Cell[][] b)
-    {
-        for (int i = 0; i < b.length; i++)
-        {
-            for (int j = 0; j < b[i].length; j++)
-            {
-                if (!a[i][j].equals(b[i][j]))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
-    public static boolean isDebugEnable()
-    {
-        return isdebug;
-    }
-    
-    public static void main(String[] args)
-    {
-        //
-    }
-    
     /**
      * 是否成功放入set，表示不存在重复
      * 
@@ -128,13 +159,4 @@ public class Util
         
     }
     
-    static ArrayList<Solution> result = new ArrayList<Solution>();
-    
-    public static void addResult(Solution solution)
-    {
-        result.add(solution);
-        
-    }
-    
-
 }

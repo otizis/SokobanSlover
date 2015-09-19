@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.jaxer.www.Logger;
 import com.jaxer.www.SolutionFactory;
 import com.jaxer.www.Util;
 import com.jaxer.www.enums.AspectEnum;
@@ -97,7 +98,7 @@ public class Solution
     }
     
     /**
-     * 看是否所有目标点上都有雕像了
+     * 看是否所有雕像都在目标点上
      * 
      * @param nextMap
      * @return
@@ -105,23 +106,25 @@ public class Solution
      */
     private boolean isMapFinish(Cell[][] nextMap)
     {
-        boolean allFinish = true;
-        for (int i = 0; i < nextMap.length; i++)
+        for (Cell[] cells : nextMap)
         {
-            for (int j = 0; j < nextMap[0].length; j++)
+            for (Cell cell : cells)
             {
-                if (!nextMap[i][j].isFinish())
+                if (cell.isStatue())
                 {
-                    allFinish = false;
+                    if (!cell.isGole())
+                    {
+                        return false;
+                    }
                 }
             }
         }
-        return allFinish;
+        return true;
     }
     
     public void play()
     {
-        Util.debug(this.toString());
+        Logger.debug(this.toString());
         
         thisStepMap = stepToMap();
         
@@ -163,13 +166,13 @@ public class Solution
             String mapStr = Util.descMap(thisStepMap);
             if (!Util.putIfAb(mapStr))
             {
-                Util.debug("以上结果重复，或不是最优解其他");
+                Logger.debug("以上结果重复，或不是最优解其他");
                 return null;
             }
-            if (Util.isDebugEnable())
+            if (Logger.isDebugEnable())
             {
-                Util.debug("走完后：");
-                Util.drawMap(thisStepMap);
+                Logger.debug("走完后：");
+                Logger.debug(this.toString());
             }
             return thisStepMap;
         }
@@ -182,25 +185,33 @@ public class Solution
     @Override
     public String toString()
     {
-        StringBuilder builder = new StringBuilder("level:");
+        StringBuilder builder = new StringBuilder("第");
         builder.append(level);
-        builder.append(",");
-        builder.append(step == null ? "" : step.getDesc());
+        builder.append("步：");
         builder.append("[");
         builder.append(moveCellx);
         builder.append(",");
         builder.append(moveCelly);
         builder.append("]");
+        builder.append(step == null ? "" : step.getDesc());
         
         builder.append("\n");
         for (int i = 0; i < thisStepMap[0].length; i++)
         {
             for (int j = 0; j < thisStepMap.length; j++)
             {
-                builder.append(thisStepMap[j][i].draw());
+                if (level != 0 && j == moveCellx && i == moveCelly)
+                {
+                    builder.append(step == null ? "　" : step.getDesc());
+                }
+                else
+                {
+                    builder.append(thisStepMap[j][i].draw());
+                }
             }
             builder.append("\n");
         }
+        builder.append("----------------------");
         return builder.toString();
     }
     

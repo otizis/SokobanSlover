@@ -26,7 +26,7 @@ public class SolutionFactory
         {
             return null;
         }
-        Util.debug("======开始计算分支走法。");
+        Logger.debug("======开始计算分支走法。");
         Cell[][] curMap = solu.getThisStepMap();
         
         ArrayList<Cell> statues = getAllStatues(curMap);
@@ -47,10 +47,11 @@ public class SolutionFactory
                 && curMap[x][y + 1].getItem() == ItemType.empty
                 && curMap[x][y - 1].getItem() == ItemType.empty)
             {
+                // 推动时，站人的位置人能过去，且目标位不是死角
                 if (playerCanGoCells.contains(curMap[x][y - 1])
                     && DeadPoitUtil.isPointNeedGo(x, y + 1))
                 {
-                    Cell[][] cloneMap = Util.cloneObject(curMap);
+                    Cell[][] cloneMap = Util.cloneMapClearPlayer(curMap);
                     cloneMap[x][y - 1].setPlayer();
                     solutions.add(
                         new Solution(cloneMap, AspectEnum.down, x, y, solu));
@@ -59,7 +60,7 @@ public class SolutionFactory
                 if (playerCanGoCells.contains(curMap[x][y + 1])
                     && DeadPoitUtil.isPointNeedGo(x, y - 1))
                 {
-                    Cell[][] cloneMap = Util.cloneObject(curMap);
+                    Cell[][] cloneMap = Util.cloneMapClearPlayer(curMap);
                     cloneMap[x][y + 1].setPlayer();
                     solutions
                         .add(new Solution(cloneMap, AspectEnum.up, x, y, solu));
@@ -75,7 +76,7 @@ public class SolutionFactory
                 if (playerCanGoCells.contains(curMap[x - 1][y])
                     && DeadPoitUtil.isPointNeedGo(x + 1, y))
                 {
-                    Cell[][] cloneMap = Util.cloneObject(curMap);
+                    Cell[][] cloneMap = Util.cloneMapClearPlayer(curMap);
                     cloneMap[x - 1][y].setPlayer();
                     solutions.add(
                         new Solution(cloneMap, AspectEnum.right, x, y, solu));
@@ -84,7 +85,7 @@ public class SolutionFactory
                 if (playerCanGoCells.contains(curMap[x + 1][y])
                     && DeadPoitUtil.isPointNeedGo(x - 1, y))
                 {
-                    Cell[][] cloneMap = Util.cloneObject(curMap);
+                    Cell[][] cloneMap = Util.cloneMapClearPlayer(curMap);
                     cloneMap[x + 1][y].setPlayer();
                     solutions.add(
                         new Solution(cloneMap, AspectEnum.left, x, y, solu));
@@ -96,30 +97,30 @@ public class SolutionFactory
         }
         
         Solution.sort(solutions);
-        if (Util.isDebugEnable())
+        if (Logger.isDebugEnable())
         {
             int num = solutions.size();
-            Util.debug(solu.toString());
-            Util.debug("接下来有" + num + "种分支走法：");
+            Logger.debug(solu.toString());
+            Logger.debug("接下来有" + num + "种分支走法：");
             for (int i = 0; i < num; i++)
             {
-                Util.debug("序号：" + (1 + i));
-                Util.debug(solutions.get(i).toString());
+                Logger.debug("序号：" + (1 + i));
+                Logger.debug(solutions.get(i).toString());
             }
-            Util.debug("======获取分支走法结束。");
+            Logger.debug("======获取分支走法结束。");
         }
         return solutions;
     }
     
     /**
      * 获取玩家能移动到的位置
-     * 
      * @param curMap
      * @return
      * @see [类、类#方法、类#成员]
      */
     public static HashSet<Cell> getAllPlayerCanGoCells(Cell[][] curMap)
     {
+        // 把玩家现在的位置放入set中
         HashSet<Cell> cells = new HashSet<Cell>();
         for (int i = 0; i < curMap.length; i++)
         {
@@ -127,9 +128,7 @@ public class SolutionFactory
             {
                 if (curMap[i][j].getItem() == ItemType.player)
                 {
-                    curMap[i][j].setItem(ItemType.empty);
                     cells.add(curMap[i][j]);
-                    
                     break;
                 }
             }
@@ -138,6 +137,7 @@ public class SolutionFactory
                 break;
             }
         }
+        
         HashSet<Cell> hasLoop = new HashSet<Cell>();
         HashSet<Cell> temp = new HashSet<Cell>();
         boolean plusCellFlag = false;
@@ -311,9 +311,48 @@ public class SolutionFactory
             {
                 nextSolutionList.addAll(temp);
             }
-            Util.debug("=============");
+            Logger.debug("=============");
         }
         return nextSolutionList;
+    }
+    
+    /**
+     * 一层一层历遍根据走法衍生的走法
+     * 
+     * @return 最后成功的解法，无解返回null
+     * @see [类、类#方法、类#成员]
+     */
+    public static Solution runByLevel(Solution solution)
+    {
+        Logger.debug(solution.toString());
+        // 获取现在能走的走法列表
+        ArrayList<Solution> nextSolution =
+            SolutionFactory.getNextSolution(solution);
+            
+        // 每走一步，获取下一步的走法列表，不断循环
+        int level = 1;
+        while (!nextSolution.isEmpty())
+        {
+            
+            Logger.info("开始走第" + level + "层分支，有走法：" + nextSolution.size());
+            
+            // 实施走法
+            ArrayList<Solution> needSub =
+                SolutionFactory.getSoultionNeedSub(nextSolution);
+                
+            // 有成功, 中断向下一级循环
+            if (needSub.size() == 1
+                && needSub.get(0).getResult() == Result.success)
+            {
+                return needSub.get(0);
+            }
+            
+            // 下一步的走法列表
+            nextSolution = SolutionFactory.getNextSolutionsBatch(needSub);
+            
+            level++;
+        }
+        return null;
     }
     
     /**
@@ -321,7 +360,6 @@ public class SolutionFactory
      * 
      * @param solutions
      * @return
-     * @see [类、类#方法、类#成员]
      */
     public static ArrayList<Solution> getSoultionNeedSub(
         ArrayList<Solution> solutions)
@@ -333,13 +371,13 @@ public class SolutionFactory
             solu.play();
             if (solu.getResult() == Result.success)
             {
-                Util.result.add(solu);
+                needSub.clear();
+                needSub.add(solu);
                 break;
             }
             if (solu.getResult() == Result.needsub)
             {
                 needSub.add(solu);
-                
             }
             
         }

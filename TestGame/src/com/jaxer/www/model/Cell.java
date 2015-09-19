@@ -62,6 +62,10 @@ public class Cell
         {
             this.isGoal = true;
         }
+        else if ("play".equals(string))
+        {
+            this.item = ItemType.player;
+        }
     }
     
     /**
@@ -130,21 +134,6 @@ public class Cell
     {
         
         return 100;
-    }
-    
-    /**
-     * 是否完成
-     * 
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public boolean isFinish()
-    {
-        if (isGoal)
-        {
-            return item == ItemType.statue;
-        }
-        return true;
     }
     
     /**
