@@ -3,69 +3,13 @@ package com.jaxer.www;
 import java.util.ArrayList;
 
 import com.jaxer.www.model.Cell;
-import com.jaxer.www.model.Result;
 import com.jaxer.www.model.Solution;
 
 public class Test
 {
     
-    /**
-     * 批量获取走法的下一步走法。
-     * 
-     * @param needSub
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    private static ArrayList<Solution> getNextSolutionsBatch(
-        ArrayList<Solution> needSub)
+    public static void main(String[] args)
     {
-        ArrayList<Solution> nextSolutionList = new ArrayList<Solution>();
-        for (Solution solu : needSub)
-        {
-            ArrayList<Solution> temp = SolutionFactory.getNextSolution(solu);
-            if (null != temp)
-            {
-                nextSolutionList.addAll(temp);
-                
-            }
-        }
-        return nextSolutionList;
-    }
-    
-    /**
-     * 对每一种走法进行行走，返回走成功的走法
-     * 
-     * @param solutions
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    private static ArrayList<Solution> getSoultionNeedSub(
-        ArrayList<Solution> solutions)
-    {
-        ArrayList<Solution> needSub = new ArrayList<Solution>();
-        
-        for (Solution solu : solutions)
-        {
-            solu.play();
-            if (solu.getResult() == Result.success)
-            {
-                Util.result.add(solu);
-                break;
-            }
-            if (solu.getResult() == Result.needsub)
-            {
-                needSub.add(solu);
-                
-            }
-            
-        }
-        return needSub;
-    }
-    
-    private static Cell[][] initMap()
-    {
-        Cell[][] map = null;
-        
         StringBuilder line = new StringBuilder();
         line.append("wall,wall,wall,empt,wall,wall,wall,wall").append(";");
         line.append("wall,wall,empt,empt,empt,empt,wall,wall").append(";");
@@ -74,51 +18,46 @@ public class Test
         line.append("empt,empt,stat,empt,stat,stat,empt,empt").append(";");
         line.append("wall,wall,wall,empt,empt,wall,wall,wall");
         
-        // line.append("wall,wall,wall,empt,wall,wall,wall,wall").append(";");
-        // line.append("wall,wall,empt,empt,empt,empt,wall,wall").append(";");
-        // line.append("empt,empt,stat,empt,empt,empt,empt,empt").append(";");
-        // line.append("wall,empt,empt,goal,empt,empt,empt,wall").append(";");
-        // line.append("empt,empt,empt,empt,empt,empt,empt,empt").append(";");
-        // line.append("wall,wall,wall,empt,empt,wall,wall,wall");
+        Cell[][] map = initMap(line.toString());
         
-        String[] lns = line.toString().split(";");
+        // 放置玩家位置
+        map[5][3].setPlayer();
+        
+        run(map);
+    }
+    
+
+    private static Cell[][] initMap(String line)
+    {
+        Cell[][] map = null;
+        
+        String[] lns = line.split(";");
         for (int i = 0; i < lns.length; i++)
         {
-            String[] cell = lns[i].split(",");
-            for (int j = 0; j < cell.length; j++)
+            String[] desc = lns[i].split(",");
+            for (int j = 0; j < desc.length; j++)
             {
                 if (null == map)
                 {
-                    map = new Cell[cell.length][lns.length];
+                    map = new Cell[desc.length][lns.length];
                 }
-                map[j][i] = new Cell(j, i, cell[j]);
+                map[j][i] = new Cell(j, i, desc[j]);
             }
         }
         return map;
     }
     
-    /**
-     * 放置玩家初始位置
-     * 
+    /** 
+     * 运行算法
      * @param map
-     *            
      * @see [类、类#方法、类#成员]
      */
-    private static void initPlayer(Cell[][] map)
+    public static void run(Cell[][] map)
     {
-        // 放置玩家位置
-        map[3][0].setPlayer();
-        
-    }
-    
-    public static void main(String[] args)
-        throws Exception
-    {
-        Cell[][] map = initMap();
-        
-        initPlayer(map);
         
         Util.drawMap(map);
+        
+        DeadPoitUtil.loadDeadSet(map);
         
         Long begin = System.currentTimeMillis();
         runByLevel(new Solution(map));
@@ -172,14 +111,14 @@ public class Test
             SolutionFactory.getNextSolution(solution);
             
         // 每走一步，获取下一步的走法列表，不断循环
-        int level = 0;
+        int level = 1;
         while (!nextSolution.isEmpty())
         {
             
-            Util.info("开始走第" + level + "步，有走法：" + nextSolution.size());
+            Util.info("开始走第" + level + "层分支，有走法：" + nextSolution.size());
             
             // 实施走法
-            ArrayList<Solution> needSub = getSoultionNeedSub(nextSolution);
+            ArrayList<Solution> needSub = SolutionFactory.getSoultionNeedSub(nextSolution);
             
             // 有成功, 中断向下一级循环
             if (!Util.result.isEmpty())
@@ -188,7 +127,7 @@ public class Test
             }
             
             // 下一步的走法列表
-            nextSolution = getNextSolutionsBatch(needSub);
+            nextSolution = SolutionFactory.getNextSolutionsBatch(needSub);
             
             level++;
         }

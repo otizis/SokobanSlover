@@ -7,6 +7,7 @@ import java.util.Iterator;
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.enums.ItemType;
 import com.jaxer.www.model.Cell;
+import com.jaxer.www.model.Result;
 import com.jaxer.www.model.Solution;
 
 public class SolutionFactory
@@ -18,14 +19,15 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static ArrayList<Solution> getNextSolution(Solution lastSolu)
+    public static ArrayList<Solution> getNextSolution(Solution solu)
     {
         
-        if (lastSolu == null || lastSolu.getThisStepMap() == null)
+        if (solu == null || solu.getThisStepMap() == null)
         {
             return null;
         }
-        Cell[][] curMap = lastSolu.getThisStepMap();
+        Util.debug("======开始计算分支走法。");
+        Cell[][] curMap = solu.getThisStepMap();
         
         ArrayList<Cell> statues = getAllStatues(curMap);
         
@@ -41,46 +43,51 @@ public class SolutionFactory
             int y = statue.getY();
             
             // 是否能上下移动
-            if ((y >= 1 && (y + 1) < curMap[x].length))
+            if ((y >= 1 && (y + 1) < curMap[x].length)
+                && curMap[x][y + 1].getItem() == ItemType.empty
+                && curMap[x][y - 1].getItem() == ItemType.empty)
             {
-                if (curMap[x][y - 1].getItem() == ItemType.empty
-                    && playerCanGoCells.contains(curMap[x][y - 1]))
+                if (playerCanGoCells.contains(curMap[x][y - 1])
+                    && DeadPoitUtil.isPointNeedGo(x, y + 1))
                 {
                     Cell[][] cloneMap = Util.cloneObject(curMap);
                     cloneMap[x][y - 1].setPlayer();
-                    solutions.add(new Solution(cloneMap, AspectEnum.down, x, y,
-                        lastSolu));
+                    solutions.add(
+                        new Solution(cloneMap, AspectEnum.down, x, y, solu));
                         
                 }
-                if (curMap[x][y + 1].getItem() == ItemType.empty
-                    && playerCanGoCells.contains(curMap[x][y + 1]))
+                if (playerCanGoCells.contains(curMap[x][y + 1])
+                    && DeadPoitUtil.isPointNeedGo(x, y - 1))
                 {
                     Cell[][] cloneMap = Util.cloneObject(curMap);
                     cloneMap[x][y + 1].setPlayer();
-                    solutions.add(
-                        new Solution(cloneMap, AspectEnum.up, x, y, lastSolu));
+                    solutions
+                        .add(new Solution(cloneMap, AspectEnum.up, x, y, solu));
                 }
             }
             
-            if (x >= 1 && (x + 1) < curMap.length)
+            // 能否左右移动
+            if (x >= 1 && (x + 1) < curMap.length
+                && curMap[x + 1][y].getItem() == ItemType.empty
+                && curMap[x - 1][y].getItem() == ItemType.empty)
             {
                 
-                if (curMap[x - 1][y].getItem() == ItemType.empty
-                    && playerCanGoCells.contains(curMap[x - 1][y]))
+                if (playerCanGoCells.contains(curMap[x - 1][y])
+                    && DeadPoitUtil.isPointNeedGo(x + 1, y))
                 {
                     Cell[][] cloneMap = Util.cloneObject(curMap);
                     cloneMap[x - 1][y].setPlayer();
-                    solutions.add(new Solution(cloneMap, AspectEnum.right, x, y,
-                        lastSolu));
+                    solutions.add(
+                        new Solution(cloneMap, AspectEnum.right, x, y, solu));
                         
                 }
-                if (curMap[x + 1][y].getItem() == ItemType.empty
-                    && playerCanGoCells.contains(curMap[x + 1][y]))
+                if (playerCanGoCells.contains(curMap[x + 1][y])
+                    && DeadPoitUtil.isPointNeedGo(x - 1, y))
                 {
                     Cell[][] cloneMap = Util.cloneObject(curMap);
                     cloneMap[x + 1][y].setPlayer();
-                    solutions.add(new Solution(cloneMap, AspectEnum.left, x, y,
-                        lastSolu));
+                    solutions.add(
+                        new Solution(cloneMap, AspectEnum.left, x, y, solu));
                         
                 }
                 
@@ -91,13 +98,15 @@ public class SolutionFactory
         Solution.sort(solutions);
         if (Util.isDebugEnable())
         {
-            Util.debug("接下来的分支：");
-            int a = 1;
-            for (Solution solution : solutions)
+            int num = solutions.size();
+            Util.debug(solu.toString());
+            Util.debug("接下来有" + num + "种分支走法：");
+            for (int i = 0; i < num; i++)
             {
-                Util.debug("序号：" + a++);
-                Util.debug(solution.toString());
+                Util.debug("序号：" + (1 + i));
+                Util.debug(solutions.get(i).toString());
             }
+            Util.debug("======获取分支走法结束。");
         }
         return solutions;
     }
@@ -198,7 +207,7 @@ public class SolutionFactory
     }
     
     /**
-     * 获取四边是边界或墙的数量 <功能详细描述>
+     * 是否在角落，再也不能动了
      * 
      * @param curMap
      * @param x
@@ -206,44 +215,16 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    private static int getStayNum(Cell[][] curMap, int x, int y)
+    private static boolean isStayEver(Cell[][] curMap, int x, int y)
     {
-        int cantStayNum = 0;
-        if (x == 0 || x == (curMap.length - 1))
+        
+        // 点位是否在地图的死角上
+        if (DeadPoitUtil.isNeedLoadDeadSet())
         {
-            cantStayNum++;
+            DeadPoitUtil.loadDeadSet(curMap);
         }
-        else
-        {
-            if (curMap[x - 1][y].getItem() == ItemType.wall)
-            {
-                cantStayNum++;
-                
-            }
-            if (curMap[x + 1][y].getItem() == ItemType.wall)
-            {
-                cantStayNum++;
-                
-            }
-        }
-        if (y == 0 || y == (curMap[0].length - 1))
-        {
-            cantStayNum++;
-        }
-        else
-        {
-            if (curMap[x][y - 1].getItem() == ItemType.wall)
-            {
-                cantStayNum++;
-                
-            }
-            if (curMap[x][y + 1].getItem() == ItemType.wall)
-            {
-                cantStayNum++;
-                
-            }
-        }
-        return cantStayNum;
+        
+        return DeadPoitUtil.deadSet.contains(x + "," + y);
     }
     
     /**
@@ -269,6 +250,13 @@ public class SolutionFactory
         return statues;
     }
     
+    /**
+     * 判断该走法是否是死胡同
+     * 
+     * @param solution
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
     public static boolean isdead(Solution solution)
     {
         if (solution == null || solution.getThisStepMap() == null)
@@ -277,10 +265,15 @@ public class SolutionFactory
         }
         Cell[][] curMap = solution.getThisStepMap();
         
+        // 历遍所有雕像
         ArrayList<Cell> statues = getAllStatues(curMap);
         for (int i = 0; i < statues.size(); i++)
         {
             Cell statue = statues.get(i);
+            if (statue.isGole())
+            {
+                continue;
+            }
             int x = statue.getX();
             int y = statue.getY();
             if (x == 0 || (x + 1) == curMap.length || y == 0
@@ -290,8 +283,7 @@ public class SolutionFactory
             }
             
             // 靠墙的判断
-            int stayNum = getStayNum(curMap, x, y);
-            if (stayNum >= 2)
+            if (isStayEver(curMap, x, y))
             {
                 return true;
             }
@@ -299,5 +291,58 @@ public class SolutionFactory
         }
         
         return false;
+    }
+    
+    /**
+     * 批量获取走法的下一步走法。
+     * 
+     * @param needSub
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static ArrayList<Solution> getNextSolutionsBatch(
+        ArrayList<Solution> needSub)
+    {
+        ArrayList<Solution> nextSolutionList = new ArrayList<Solution>();
+        for (Solution solu : needSub)
+        {
+            ArrayList<Solution> temp = SolutionFactory.getNextSolution(solu);
+            if (null != temp)
+            {
+                nextSolutionList.addAll(temp);
+            }
+            Util.debug("=============");
+        }
+        return nextSolutionList;
+    }
+    
+    /**
+     * 对每一种走法进行行走，返回走成功的走法
+     * 
+     * @param solutions
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static ArrayList<Solution> getSoultionNeedSub(
+        ArrayList<Solution> solutions)
+    {
+        ArrayList<Solution> needSub = new ArrayList<Solution>();
+        
+        for (Solution solu : solutions)
+        {
+            solu.play();
+            if (solu.getResult() == Result.success)
+            {
+                Util.result.add(solu);
+                break;
+            }
+            if (solu.getResult() == Result.needsub)
+            {
+                needSub.add(solu);
+                
+            }
+            
+        }
+        return needSub;
     }
 }

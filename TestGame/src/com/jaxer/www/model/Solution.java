@@ -168,6 +168,7 @@ public class Solution
             }
             if (Util.isDebugEnable())
             {
+                Util.debug("×ßÍêºó£º");
                 Util.drawMap(thisStepMap);
             }
             return thisStepMap;
