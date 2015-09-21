@@ -1,8 +1,8 @@
 package com.jaxer.www.model;
 
-import com.jaxer.www.MyException;
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.enums.ItemType;
+import com.jaxer.www.model.myexception.MyException;
 
 public class Cell
 {
@@ -46,39 +46,34 @@ public class Cell
         this.item = item;
     }
     
-    public static final String wall = "M";
+    public static final char wall = 'M';
     
-    public static final String statue = "Y";
+    public static final char statue = 'Y';
     
-    public static final String goal = "G";
+    public static final char goal = 'G';
     
-    public static final String play = "P";
+    public static final char player = 'P';
     
-    public static final String empty = " ";
+    public static final char empty = 'S';
     
-    public Cell(int x, int y, String string)
+    public Cell(int x, int y, char b)
     {
         this.x = x;
         this.y = y;
-        if (wall.equals(string))
+        switch (b)
         {
-            this.item = ItemType.wall;
-        }
-        else if (empty.equals(string))
-        {
-            return;
-        }
-        else if (statue.equals(string))
-        {
-            this.item = ItemType.statue;
-        }
-        else if (goal.equals(string))
-        {
-            this.isGoal = true;
-        }
-        else if (play.equals(string))
-        {
-            this.item = ItemType.player;
+            case wall:
+                this.item = ItemType.wall;
+                break;
+            case statue:
+                this.item = ItemType.statue;
+                break;
+            case goal:
+                this.isGoal = true;
+                break;
+            case player:
+                this.item = ItemType.player;
+                break;
         }
     }
     
@@ -214,7 +209,7 @@ public class Cell
         }
         if (target.canMoveIn())
         {
-            moveTo(target);
+            this.moveTo(target);
             return true;
         }
         return false;

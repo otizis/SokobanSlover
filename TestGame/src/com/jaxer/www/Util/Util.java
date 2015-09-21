@@ -1,4 +1,4 @@
-package com.jaxer.www;
+package com.jaxer.www.Util;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,19 +12,16 @@ public class Util
 {
     
     /**
+     * 地图特征，和步骤的map
+     */
+    private static HashMap<String, Integer> keySet =
+        new HashMap<String, Integer>();
+        
+    /**
      * 地图特征值，如果出现过就会记录。 如果重复，表示出现过其他走出这个特征走法，本次为非最优的走法
      */
     private static HashMap<String, String> mapSet =
         new HashMap<String, String>();
-        
-    public static void printMapSet()
-    {
-        Set<String> keySet2 = mapSet.keySet();
-        for (String string : keySet2)
-        {
-            System.out.println(string + ":" + mapSet.get(string));
-        }
-    }
     
     /**
      * 克隆地图
@@ -71,30 +68,6 @@ public class Util
     }
     
     /**
-     * 克隆地图，并移除玩家标记
-     * 
-     * @param a
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public static Cell[][] cloneMapClearStatue(Cell[][] a)
-    {
-        Cell[][] b = new Cell[a.length][a[0].length];
-        for (int i = 0; i < b.length; i++)
-        {
-            for (int j = 0; j < b[i].length; j++)
-            {
-                b[i][j] = a[i][j].myClone();
-                if (b[i][j].getItem() == ItemType.statue)
-                {
-                    b[i][j].setItem(ItemType.empty);
-                }
-            }
-        }
-        return b;
-    }
-    
-    /**
      * 克隆地图，并移除玩家标记，雕像标记
      * 
      * @param a
@@ -111,6 +84,30 @@ public class Util
                 b[i][j] = a[i][j].myClone();
                 if (b[i][j].getItem() == ItemType.player
                     || b[i][j].getItem() == ItemType.statue)
+                {
+                    b[i][j].setItem(ItemType.empty);
+                }
+            }
+        }
+        return b;
+    }
+    
+    /**
+     * 克隆地图，并移除玩家标记
+     * 
+     * @param a
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static Cell[][] cloneMapClearStatue(Cell[][] a)
+    {
+        Cell[][] b = new Cell[a.length][a[0].length];
+        for (int i = 0; i < b.length; i++)
+        {
+            for (int j = 0; j < b[i].length; j++)
+            {
+                b[i][j] = a[i][j].myClone();
+                if (b[i][j].getItem() == ItemType.statue)
                 {
                     b[i][j].setItem(ItemType.empty);
                 }
@@ -153,6 +150,33 @@ public class Util
     }
     
     /**
+     * 同步获取key，按前后顺序
+     * 
+     * @param key
+     * @see [类、类#方法、类#成员]
+     */
+    public static String getSolutionKey(String key)
+    {
+        if (keySet.containsKey(key))
+        {
+            int num = keySet.get(key);
+            keySet.put(key, ++num);
+            return key + ":" + num;
+        }
+        keySet.put(key, 0);
+        return key + ":0";
+    }
+    
+    public static void printMapSet()
+    {
+        Set<String> mapStr = mapSet.keySet();
+        for (String string : mapStr)
+        {
+            System.out.println(string + " : " + mapSet.get(string));
+        }
+    }
+    
+    /**
      * 是否成功放入set，表示不存在重复
      * 
      * @param mapStr
@@ -169,7 +193,7 @@ public class Util
         mapSet.put(mapStr, keys);
         return true;
     }
-    
+        
     /**
      * 清空记录
      * 
@@ -181,26 +205,5 @@ public class Util
     {
         mapSet.clear();
         
-    }
-    
-    private static HashMap<String, Integer> keySet =
-        new HashMap<String, Integer>();
-        
-    /**
-     * 同步获取key，按前后顺序
-     * 
-     * @param key
-     * @see [类、类#方法、类#成员]
-     */
-    public static String getSolutionKey(String key)
-    {
-        if (keySet.containsKey(key))
-        {
-            int num = keySet.get(key);
-            keySet.put(key, ++num);
-            return key + "[" + num + "]";
-        }
-        keySet.put(key, 0);
-        return key + "[0]";
     }
 }

@@ -1,4 +1,4 @@
-package com.jaxer.www;
+package com.jaxer.www.Util;
 
 public class Logger
 {

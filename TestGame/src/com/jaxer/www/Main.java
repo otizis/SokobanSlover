@@ -2,8 +2,12 @@ package com.jaxer.www;
 
 import java.util.ArrayList;
 
+import com.jaxer.www.Util.DeadPoitUtil;
+import com.jaxer.www.Util.Logger;
+import com.jaxer.www.Util.SolutionFactory;
 import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.Solution;
+import com.jaxer.www.model.myexception.MyException;
 
 /**
  * 主体类
@@ -19,11 +23,16 @@ public class Main
     public static void main(String[] args)
     {
         StringBuilder line = new StringBuilder();
-        line.append("M, , , , , ,M,M").append(";");
-        line.append("M,Y,M,M,M, , , ").append(";");
-        line.append("P, , ,Y, , ,Y, ").append(";");
-        line.append(" ,G,G,M, ,Y, ,M").append(";");
-        line.append("M,G,G,M, , , ,M");
+        line.append("MMMMMSSMSSM;");
+        line.append("MMMMMSSYYSM;");
+        line.append("MMMMMSYMSSM;");
+        line.append("GGGMMMSMSSM;");
+        line.append("GSSMSSYSMSS;");
+        line.append("GSSSSYSYSYS;");
+        line.append("GSSMSSYSMSS;");
+        line.append("GGGMMMSMSSM;");
+        line.append("MMMMMPYSSSM;");
+        line.append("MMMMMSSMSSM");
         
         Cell[][] map = initMap(line.toString());
         
@@ -34,19 +43,22 @@ public class Main
     
     private static Cell[][] initMap(String line)
     {
+        if (!line.contains("P"))
+        {
+            throw new MyException("没有放置玩家位置。");
+        }
         Cell[][] map = null;
-        
         String[] lns = line.split(";");
         for (int i = 0; i < lns.length; i++)
         {
-            String[] desc = lns[i].split(",");
-            for (int j = 0; j < desc.length; j++)
+            for (int j = 0; j < lns[i].length(); j++)
             {
                 if (null == map)
                 {
-                    map = new Cell[desc.length][lns.length];
+                    map = new Cell[lns[i].length()][lns.length];
                 }
-                map[j][i] = new Cell(j, i, desc[j]);
+                char type = lns[i].charAt(j);
+                map[j][i] = new Cell(j, i, type);
             }
         }
         return map;

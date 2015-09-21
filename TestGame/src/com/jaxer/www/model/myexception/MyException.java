@@ -1,4 +1,4 @@
-package com.jaxer.www;
+package com.jaxer.www.model.myexception;
 
 public class MyException extends RuntimeException
 {

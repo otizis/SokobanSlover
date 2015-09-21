@@ -1,4 +1,4 @@
-package com.jaxer.www;
+package com.jaxer.www.Util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -241,11 +241,6 @@ public class SolutionFactory
         ArrayList<Solution> nextSolutionList = new ArrayList<Solution>();
         for (Solution solu : needSub)
         {
-            if (solu.getKey().startsWith(
-                "0[21][0][2][1][0][0][4][4][6][1][1][0][2][3][1][1][1][1][0][1][1][4][2][2][0]"))
-            {
-                System.out.println();
-            }
             ArrayList<Solution> temp = SolutionFactory.getNextSolution(solu);
             if (null != temp)
             {
@@ -305,9 +300,11 @@ public class SolutionFactory
         ArrayList<Solution> solutions)
     {
         ArrayList<Solution> needSub = new ArrayList<Solution>();
-        
-        for (Solution solu : solutions)
+        int len = solutions.size();
+        for (int i = 0; i < len; i++)
         {
+            Logger.info(i + "/" + len);
+            Solution solu = solutions.get(i);
             solu.play();
             if (solu.getResult() == Result.success)
             {

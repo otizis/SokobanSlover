@@ -1,4 +1,4 @@
-package com.jaxer.www;
+package com.jaxer.www.Util;
 
 import java.util.HashSet;
 
@@ -19,6 +19,8 @@ public class DeadPoitUtil
     public static void loadDeadSet(Cell[][] curMap)
     {
         Logger.info("==开始死点推算==");
+        Long begin = System.currentTimeMillis();
+        
         for (Cell[] cells : curMap)
         {
             for (Cell cell : cells)
@@ -45,7 +47,9 @@ public class DeadPoitUtil
                 }
             }
         }
-        Logger.info("==结束死点推算==");
+        Long end = System.currentTimeMillis();
+        
+        Logger.info("==结束死点推算==耗时：" + (end - begin));
         Cell[][] cloneMap = Util.cloneMap(curMap);
         
         for (String point : deadSet)

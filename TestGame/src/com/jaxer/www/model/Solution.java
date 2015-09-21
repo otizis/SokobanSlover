@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.jaxer.www.Logger;
-import com.jaxer.www.Util;
+import com.jaxer.www.Util.Logger;
+import com.jaxer.www.Util.Util;
 import com.jaxer.www.enums.AspectEnum;
 
 /**
@@ -137,12 +137,6 @@ public class Solution
     {
         Logger.debug(this.toString());
         
-        if ("0[21][0][2][1][0][0][4][4][6][1][1][0][2][3][1][1][1][1][0][1][1][4][2][2][0]"
-            .equals(key))
-        {
-            System.out.println(
-                "0[21][0][2][1][0][0][4][4][6][1][1][0][2][3][1][1][1][1][0][1][1][4][2][0][1]");
-        }
         thisStepMap = stepToMap();
         
         if (null == thisStepMap)
