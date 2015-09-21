@@ -44,8 +44,7 @@ public class SolutionFactory
             
             // 是否能上下移动
             if ((y >= 1 && (y + 1) < curMap[x].length)
-                && curMap[x][y + 1].getItem() == ItemType.empty
-                && curMap[x][y - 1].getItem() == ItemType.empty)
+                && curMap[x][y + 1].canMoveIn() && curMap[x][y - 1].canMoveIn())
             {
                 // 推动时，站人的位置人能过去，且目标位不是死角
                 if (playerCanGoCells.contains(curMap[x][y - 1])
@@ -69,8 +68,7 @@ public class SolutionFactory
             
             // 能否左右移动
             if (x >= 1 && (x + 1) < curMap.length
-                && curMap[x + 1][y].getItem() == ItemType.empty
-                && curMap[x - 1][y].getItem() == ItemType.empty)
+                && curMap[x + 1][y].canMoveIn() && curMap[x - 1][y].canMoveIn())
             {
                 
                 if (playerCanGoCells.contains(curMap[x - 1][y])
@@ -114,6 +112,7 @@ public class SolutionFactory
     
     /**
      * 获取玩家能移动到的位置
+     * 
      * @param curMap
      * @return
      * @see [类、类#方法、类#成员]
@@ -207,27 +206,6 @@ public class SolutionFactory
     }
     
     /**
-     * 是否在角落，再也不能动了
-     * 
-     * @param curMap
-     * @param x
-     * @param y
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    private static boolean isStayEver(Cell[][] curMap, int x, int y)
-    {
-        
-        // 点位是否在地图的死角上
-        if (DeadPoitUtil.isNeedLoadDeadSet())
-        {
-            DeadPoitUtil.loadDeadSet(curMap);
-        }
-        
-        return DeadPoitUtil.deadSet.contains(x + "," + y);
-    }
-    
-    /**
      * 获取地图中所有的雕像列表
      * 
      * @param curMap
@@ -251,49 +229,6 @@ public class SolutionFactory
     }
     
     /**
-     * 判断该走法是否是死胡同
-     * 
-     * @param solution
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public static boolean isdead(Solution solution)
-    {
-        if (solution == null || solution.getThisStepMap() == null)
-        {
-            return true;
-        }
-        Cell[][] curMap = solution.getThisStepMap();
-        
-        // 历遍所有雕像
-        ArrayList<Cell> statues = getAllStatues(curMap);
-        for (int i = 0; i < statues.size(); i++)
-        {
-            Cell statue = statues.get(i);
-            if (statue.isGole())
-            {
-                continue;
-            }
-            int x = statue.getX();
-            int y = statue.getY();
-            if (x == 0 || (x + 1) == curMap.length || y == 0
-                || (y + 1) == curMap[0].length)
-            {
-                return true;
-            }
-            
-            // 靠墙的判断
-            if (isStayEver(curMap, x, y))
-            {
-                return true;
-            }
-            
-        }
-        
-        return false;
-    }
-    
-    /**
      * 批量获取走法的下一步走法。
      * 
      * @param needSub
@@ -306,6 +241,11 @@ public class SolutionFactory
         ArrayList<Solution> nextSolutionList = new ArrayList<Solution>();
         for (Solution solu : needSub)
         {
+            if (solu.getKey().startsWith(
+                "0[21][0][2][1][0][0][4][4][6][1][1][0][2][3][1][1][1][1][0][1][1][4][2][2][0]"))
+            {
+                System.out.println();
+            }
             ArrayList<Solution> temp = SolutionFactory.getNextSolution(solu);
             if (null != temp)
             {

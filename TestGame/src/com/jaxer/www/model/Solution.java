@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import com.jaxer.www.Logger;
-import com.jaxer.www.SolutionFactory;
 import com.jaxer.www.Util;
 import com.jaxer.www.enums.AspectEnum;
 
@@ -19,6 +18,17 @@ import com.jaxer.www.enums.AspectEnum;
  */
 public class Solution
 {
+    /**
+     * @return 返回 key
+     */
+    public String getKey()
+    {
+        return key;
+    }
+    
+    // 算法的编号
+    String key = "0";
+    
     public static void sort(ArrayList<Solution> nextSolutions2)
     {
         Collections.sort(nextSolutions2, new Comparator<Solution>()
@@ -79,6 +89,7 @@ public class Solution
         {
             this.level = lastSolution.level + 1;
         }
+        this.key = Util.getSolutionKey(lastSolution.key);
     }
     
     /**
@@ -126,6 +137,12 @@ public class Solution
     {
         Logger.debug(this.toString());
         
+        if ("0[21][0][2][1][0][0][4][4][6][1][1][0][2][3][1][1][1][1][0][1][1][4][2][2][0]"
+            .equals(key))
+        {
+            System.out.println(
+                "0[21][0][2][1][0][0][4][4][6][1][1][0][2][3][1][1][1][1][0][1][1][4][2][0][1]");
+        }
         thisStepMap = stepToMap();
         
         if (null == thisStepMap)
@@ -134,11 +151,6 @@ public class Solution
             return;
         }
         
-        if (SolutionFactory.isdead(this))
-        {
-            this.result = Result.failue;
-            return;
-        }
         // 判断是否完成
         boolean allFinish = isMapFinish(thisStepMap);
         
@@ -164,9 +176,9 @@ public class Solution
         if (statue.move(step, thisStepMap))
         {
             String mapStr = Util.descMap(thisStepMap);
-            if (!Util.putIfAb(mapStr))
+            if (!Util.putIfAb(mapStr, key))
             {
-                Logger.debug("以上结果重复，或不是最优解其他");
+                Logger.debug("以上" + key + "结果重复，或不是最优解");
                 return null;
             }
             if (Logger.isDebugEnable())

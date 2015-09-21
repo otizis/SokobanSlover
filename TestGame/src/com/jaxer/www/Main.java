@@ -5,22 +5,31 @@ import java.util.ArrayList;
 import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.Solution;
 
-public class Test
+/**
+ * 主体类
+ * 
+ * @author yejiangtao
+ * @version [版本号, 2015年9月21日]
+ * @see [相关类/方法]
+ * @since [产品/模块版本]
+ */
+public class Main
 {
     
     public static void main(String[] args)
     {
         StringBuilder line = new StringBuilder();
-        line.append("wall,wall,wall,play,wall,wall,wall,wall").append(";");
-        line.append("wall,wall,empt,empt,empt,empt,wall,wall").append(";");
-        line.append("empt,empt,stat,stat,empt,stat,empt,empt").append(";");
-        line.append("wall,goal,goal,goal,goal,goal,goal,wall").append(";");
-        line.append("empt,empt,stat,empt,stat,stat,empt,empt").append(";");
-        line.append("wall,wall,wall,empt,empt,wall,wall,wall");
+        line.append("M, , , , , ,M,M").append(";");
+        line.append("M,Y,M,M,M, , , ").append(";");
+        line.append("P, , ,Y, , ,Y, ").append(";");
+        line.append(" ,G,G,M, ,Y, ,M").append(";");
+        line.append("M,G,G,M, , , ,M");
         
         Cell[][] map = initMap(line.toString());
         
         run(map);
+        
+        // Util.printMapSet();
     }
     
     private static Cell[][] initMap(String line)
@@ -52,14 +61,17 @@ public class Test
     public static void run(Cell[][] map)
     {
         
+        Long begin = System.currentTimeMillis();
         DeadPoitUtil.loadDeadSet(map);
         
-        Long begin = System.currentTimeMillis();
-        Solution lastOne = SolutionFactory.runByLevel(new Solution(map));
+        Solution solution = new Solution(map);
+        Logger.info(solution.toString());
+        Solution lastOne = SolutionFactory.runByLevel(solution);
         Long end = System.currentTimeMillis();
         
         outputResult(lastOne);
         System.out.println("耗时：" + (end - begin));
+        
     }
     
     /**
@@ -92,8 +104,7 @@ public class Test
             }
             
         }
-
+        
     }
-    
     
 }

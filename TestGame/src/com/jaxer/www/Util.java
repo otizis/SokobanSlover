@@ -1,7 +1,9 @@
 package com.jaxer.www;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.jaxer.www.enums.ItemType;
 import com.jaxer.www.model.Cell;
@@ -12,7 +14,17 @@ public class Util
     /**
      * 地图特征值，如果出现过就会记录。 如果重复，表示出现过其他走出这个特征走法，本次为非最优的走法
      */
-    private static HashSet<String> mapSet = new HashSet<String>();
+    private static HashMap<String, String> mapSet =
+        new HashMap<String, String>();
+        
+    public static void printMapSet()
+    {
+        Set<String> keySet2 = mapSet.keySet();
+        for (String string : keySet2)
+        {
+            System.out.println(string + ":" + mapSet.get(string));
+        }
+    }
     
     /**
      * 克隆地图
@@ -97,8 +109,8 @@ public class Util
             for (int j = 0; j < b[i].length; j++)
             {
                 b[i][j] = a[i][j].myClone();
-                if (b[i][j].getItem() == ItemType.player||
-                    b[i][j].getItem() == ItemType.statue)
+                if (b[i][j].getItem() == ItemType.player
+                    || b[i][j].getItem() == ItemType.statue)
                 {
                     b[i][j].setItem(ItemType.empty);
                 }
@@ -147,16 +159,48 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean putIfAb(String mapStr)
+    public static boolean putIfAb(String mapStr, String keys)
     {
-        
-        if (mapSet.contains(mapStr))
+        if (mapSet.containsKey(mapStr))
         {
+            mapSet.put(mapStr, keys + "," + mapSet.get(mapStr));
             return false;
         }
-        mapSet.add(mapStr);
+        mapSet.put(mapStr, keys);
         return true;
+    }
+    
+    /**
+     * 清空记录
+     * 
+     * @param mapStr
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static void resetMapSet()
+    {
+        mapSet.clear();
         
     }
     
+    private static HashMap<String, Integer> keySet =
+        new HashMap<String, Integer>();
+        
+    /**
+     * 同步获取key，按前后顺序
+     * 
+     * @param key
+     * @see [类、类#方法、类#成员]
+     */
+    public static String getSolutionKey(String key)
+    {
+        if (keySet.containsKey(key))
+        {
+            int num = keySet.get(key);
+            keySet.put(key, ++num);
+            return key + "[" + num + "]";
+        }
+        keySet.put(key, 0);
+        return key + "[0]";
+    }
 }

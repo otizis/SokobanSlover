@@ -46,23 +46,37 @@ public class Cell
         this.item = item;
     }
     
+    public static final String wall = "M";
+    
+    public static final String statue = "Y";
+    
+    public static final String goal = "G";
+    
+    public static final String play = "P";
+    
+    public static final String empty = " ";
+    
     public Cell(int x, int y, String string)
     {
         this.x = x;
         this.y = y;
-        if ("wall".equals(string))
+        if (wall.equals(string))
         {
             this.item = ItemType.wall;
         }
-        else if ("stat".equals(string))
+        else if (empty.equals(string))
+        {
+            return;
+        }
+        else if (statue.equals(string))
         {
             this.item = ItemType.statue;
         }
-        else if ("goal".equals(string))
+        else if (goal.equals(string))
         {
             this.isGoal = true;
         }
-        else if ("play".equals(string))
+        else if (play.equals(string))
         {
             this.item = ItemType.player;
         }
@@ -74,11 +88,12 @@ public class Cell
      * @return
      * @see [类、类#方法、类#成员]
      */
-    private boolean canMoveIn()
+    public boolean canMoveIn()
     {
         switch (item)
         {
             case empty:
+            case player:
                 return true;
             case wall:
             case statue:
@@ -97,8 +112,7 @@ public class Cell
         if (obj instanceof Cell)
         {
             Cell b = (Cell)obj;
-            return (this.item == b.getItem() && this.x == b.getX()
-                && this.y == b.getY());
+            return (this.item == b.item && this.x == b.x && this.y == b.y);
         }
         return false;
     }
