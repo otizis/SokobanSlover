@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.enums.ItemType;
 import com.jaxer.www.model.Cell;
+import com.jaxer.www.model.ProgressCounter;
 import com.jaxer.www.model.Result;
 import com.jaxer.www.model.Solution;
 
@@ -227,8 +228,11 @@ public class SolutionFactory
         LinkedList<Solution> needSub)
     {
         LinkedList<Solution> nextSolutionList = new LinkedList<Solution>();
+        
+        ProgressCounter pc = new ProgressCounter(needSub.size(), "获取下一步走法");
         while (!needSub.isEmpty())
         {
+            pc.addProgress();
             Solution removeFirst = needSub.removeFirst();
             LinkedList<Solution> temp =
                 SolutionFactory.getNextSolution(removeFirst);
@@ -276,6 +280,11 @@ public class SolutionFactory
             
             level++;
         }
+        
+        if (Logger.isdebug)
+        {
+            Util.printMapSet();
+        }
         return null;
     }
     
@@ -289,17 +298,17 @@ public class SolutionFactory
         LinkedList<Solution> solutions)
     {
         LinkedList<Solution> needSub = new LinkedList<Solution>();
-        int len = solutions.size();
-        int index = 0;
+        ProgressCounter pc = new ProgressCounter(solutions.size(), "演算走法列表");
         while (!solutions.isEmpty())
         {
-            Logger.info(++index + "/" + len);
+            pc.addProgress();
             Solution solu = solutions.removeFirst();
             solu.play(solu.getSokoMapBefor());
             if (solu.getResult() == Result.success)
             {
                 needSub.clear();
                 needSub.add(solu);
+                pc.end();
                 break;
             }
             if (solu.getResult() == Result.needsub)

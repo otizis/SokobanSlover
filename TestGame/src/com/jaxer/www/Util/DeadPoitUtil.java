@@ -16,6 +16,7 @@ public class DeadPoitUtil
     public static void loadDeadSet(Cell[][] curMap)
     {
         Logger.info("==开始死点推算==");
+        Logger.turnOff();
         Long begin = System.currentTimeMillis();
         
         for (Cell[] cells : curMap)
@@ -45,8 +46,8 @@ public class DeadPoitUtil
             }
         }
         Long end = System.currentTimeMillis();
-        
-        Logger.info("==结束死点推算==耗时：" + (end - begin));
+        Logger.turnOn();
+        Logger.info("==结束死点推算,耗时：" + (end - begin));
         Cell[][] cloneMap = Util.cloneMap(curMap);
         
         for (String point : deadSet)

@@ -41,8 +41,8 @@ public class SokoMap
     {
         
         Long begin = System.currentTimeMillis();
-        DeadPoitUtil.loadDeadSet(thisStepMap);
         
+        DeadPoitUtil.loadDeadSet(thisStepMap);
         Solution solution = new Solution(thisStepMap);
         
         Logger.info(solution.toString());

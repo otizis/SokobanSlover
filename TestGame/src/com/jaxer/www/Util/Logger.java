@@ -6,8 +6,14 @@ public class Logger
     
     static boolean isInfo = true;
     
+    static boolean isoutput = true;
+    
     public static void debug(String str)
     {
+        if (!isoutput)
+        {
+            return;
+        }
         if (isdebug)
         {
             System.out.println(str);
@@ -16,6 +22,10 @@ public class Logger
     
     public static void info(String str)
     {
+        if (!isoutput)
+        {
+            return;
+        }
         if (isInfo)
         {
             System.out.println(str);
@@ -25,5 +35,15 @@ public class Logger
     public static boolean isDebugEnable()
     {
         return isdebug;
+    }
+    
+    public static void turnOff()
+    {
+        isoutput = false;
+    }
+    
+    public static void turnOn()
+    {
+        isoutput = true;
     }
 }

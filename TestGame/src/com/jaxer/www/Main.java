@@ -33,16 +33,11 @@ public class Main
 //        line.append("MMMMMSSMSSM");
         
         StringBuilder line = new StringBuilder();
-        line.append("MMMMMSSMSSM;");
-        line.append("MMMMMSSSSSM;");
-        line.append("MMMMMSYMSSM;");
-        line.append("GGGMMMSMSSM;");
-        line.append("GSSMSSSSMSS;");
-        line.append("GSSSSSSSSSS;");
-        line.append("GSSMSSSSMSS;");
-        line.append("GGGMMMSMSSM;");
-        line.append("MMMMMPSSSSM;");
-        line.append("MMMMMSSMSSM");
+        line.append("MSSSSSMM").append(";");
+        line.append("MYMMMSSS").append(";");
+        line.append("PSSYSSYS").append(";");
+        line.append("SGGMSYSM").append(";");
+        line.append("MGGMSSSM");
         
         Cell[][] map = initMap(line.toString());
         
@@ -51,7 +46,6 @@ public class Main
         Solution lastOne = sokoMap.run();
         outputResult(lastOne);
         
-        // Util.printMapSet();
     }
     
     private static Cell[][] initMap(String line)
