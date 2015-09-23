@@ -14,5 +14,5 @@
 		line.append("PSSYSSYS").append(";");
 		line.append("SGGMSYSM").append(";");
 		line.append("MGGMSSSM");
-1.M为墙，S为空，Y为箱子，G为目标点，P为玩家所在位置。
-2.每行后有；结尾。
+1。 M为墙，S为空，Y为箱子，G为目标点，P为玩家所在位置。
+2。 每行后有；结尾。
