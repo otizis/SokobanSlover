@@ -3,6 +3,7 @@ package com.jaxer.www.Util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.enums.ItemType;
@@ -19,21 +20,21 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static ArrayList<Solution> getNextSolution(Solution solu)
+    public static LinkedList<Solution> getNextSolution(Solution solu)
     {
         
-        if (solu == null || solu.getThisStepMap() == null)
+        Cell[][] curMap = solu.getSokoMapAfter();
+        if (solu == null || curMap == null)
         {
             return null;
         }
         Logger.debug("======开始计算分支走法。");
-        Cell[][] curMap = solu.getThisStepMap();
         
         ArrayList<Cell> statues = getAllStatues(curMap);
         
         HashSet<Cell> playerCanGoCells = getAllPlayerCanGoCells(curMap);
         
-        ArrayList<Solution> solutions = new ArrayList<Solution>();
+        LinkedList<Solution> solutions = new LinkedList<Solution>();
         
         // 根据
         for (int i = 0; i < statues.size(); i++)
@@ -50,19 +51,13 @@ public class SolutionFactory
                 if (playerCanGoCells.contains(curMap[x][y - 1])
                     && DeadPoitUtil.isPointNeedGo(x, y + 1))
                 {
-                    Cell[][] cloneMap = Util.cloneMapClearPlayer(curMap);
-                    cloneMap[x][y - 1].setPlayer();
-                    solutions.add(
-                        new Solution(cloneMap, AspectEnum.down, x, y, solu));
-                        
+                    solutions.add(new Solution(AspectEnum.down, x, y, solu));
+                    
                 }
                 if (playerCanGoCells.contains(curMap[x][y + 1])
                     && DeadPoitUtil.isPointNeedGo(x, y - 1))
                 {
-                    Cell[][] cloneMap = Util.cloneMapClearPlayer(curMap);
-                    cloneMap[x][y + 1].setPlayer();
-                    solutions
-                        .add(new Solution(cloneMap, AspectEnum.up, x, y, solu));
+                    solutions.add(new Solution(AspectEnum.up, x, y, solu));
                 }
             }
             
@@ -74,27 +69,20 @@ public class SolutionFactory
                 if (playerCanGoCells.contains(curMap[x - 1][y])
                     && DeadPoitUtil.isPointNeedGo(x + 1, y))
                 {
-                    Cell[][] cloneMap = Util.cloneMapClearPlayer(curMap);
-                    cloneMap[x - 1][y].setPlayer();
-                    solutions.add(
-                        new Solution(cloneMap, AspectEnum.right, x, y, solu));
-                        
+                    solutions.add(new Solution(AspectEnum.right, x, y, solu));
+                    
                 }
                 if (playerCanGoCells.contains(curMap[x + 1][y])
                     && DeadPoitUtil.isPointNeedGo(x - 1, y))
                 {
-                    Cell[][] cloneMap = Util.cloneMapClearPlayer(curMap);
-                    cloneMap[x + 1][y].setPlayer();
-                    solutions.add(
-                        new Solution(cloneMap, AspectEnum.left, x, y, solu));
-                        
+                    solutions.add(new Solution(AspectEnum.left, x, y, solu));
+                    
                 }
                 
             }
             
         }
         
-        Solution.sort(solutions);
         if (Logger.isDebugEnable())
         {
             int num = solutions.size();
@@ -235,18 +223,20 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static ArrayList<Solution> getNextSolutionsBatch(
-        ArrayList<Solution> needSub)
+    public static LinkedList<Solution> getNextSolutionsBatch(
+        LinkedList<Solution> needSub)
     {
-        ArrayList<Solution> nextSolutionList = new ArrayList<Solution>();
-        for (Solution solu : needSub)
+        LinkedList<Solution> nextSolutionList = new LinkedList<Solution>();
+        while (!needSub.isEmpty())
         {
-            ArrayList<Solution> temp = SolutionFactory.getNextSolution(solu);
+            Solution removeFirst = needSub.removeFirst();
+            LinkedList<Solution> temp =
+                SolutionFactory.getNextSolution(removeFirst);
             if (null != temp)
             {
                 nextSolutionList.addAll(temp);
+                Logger.debug("=============");
             }
-            Logger.debug("=============");
         }
         return nextSolutionList;
     }
@@ -259,9 +249,8 @@ public class SolutionFactory
      */
     public static Solution runByLevel(Solution solution)
     {
-        Logger.debug(solution.toString());
         // 获取现在能走的走法列表
-        ArrayList<Solution> nextSolution =
+        LinkedList<Solution> nextSolution =
             SolutionFactory.getNextSolution(solution);
             
         // 每走一步，获取下一步的走法列表，不断循环
@@ -272,7 +261,7 @@ public class SolutionFactory
             Logger.info("开始走第" + level + "层分支，有走法：" + nextSolution.size());
             
             // 实施走法
-            ArrayList<Solution> needSub =
+            LinkedList<Solution> needSub =
                 SolutionFactory.getSoultionNeedSub(nextSolution);
                 
             // 有成功, 中断向下一级循环
@@ -296,16 +285,17 @@ public class SolutionFactory
      * @param solutions
      * @return
      */
-    public static ArrayList<Solution> getSoultionNeedSub(
-        ArrayList<Solution> solutions)
+    public static LinkedList<Solution> getSoultionNeedSub(
+        LinkedList<Solution> solutions)
     {
-        ArrayList<Solution> needSub = new ArrayList<Solution>();
+        LinkedList<Solution> needSub = new LinkedList<Solution>();
         int len = solutions.size();
-        for (int i = 0; i < len; i++)
+        int index = 0;
+        while (!solutions.isEmpty())
         {
-            Logger.info(i + "/" + len);
-            Solution solu = solutions.get(i);
-            solu.play();
+            Logger.info(++index + "/" + len);
+            Solution solu = solutions.removeFirst();
+            solu.play(solu.getSokoMapBefor());
             if (solu.getResult() == Result.success)
             {
                 needSub.clear();

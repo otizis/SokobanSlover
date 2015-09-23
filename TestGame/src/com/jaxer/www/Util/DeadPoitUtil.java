@@ -9,9 +9,6 @@ import com.jaxer.www.model.Solution;
 
 public class DeadPoitUtil
 {
-    /**
-     * 
-     */
     private static boolean smart = true;
     
     static HashSet<String> deadSet = new HashSet<String>();
@@ -59,7 +56,7 @@ public class DeadPoitUtil
             int y = Integer.parseInt(xy[1]);
             cloneMap[x][y] = new DieCell();
         }
-        Logger.info(new Solution(cloneMap).toString());
+        Logger.info(Util.mapToString(cloneMap));
     }
     
     private static String getKey(int x, int y)
@@ -149,7 +146,7 @@ public class DeadPoitUtil
         
         Solution solu = new Solution(cloneObject);
         
-        // 获取现在能走的走法列表
+        // 获取该模式，人为初始值，能否推动到任一目标点
         Solution runByLevel = SolutionFactory.runByLevel(solu);
         if (null != runByLevel)
         {

@@ -22,7 +22,7 @@ public class Util
      */
     private static HashMap<String, String> mapSet =
         new HashMap<String, String>();
-    
+        
     /**
      * 克隆地图
      * 
@@ -150,6 +150,28 @@ public class Util
     }
     
     /**
+     * 生成地图的特征字符串，即全盘描述
+     * 
+     * @param map
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static String mapToString(Cell[][] map)
+    {
+        
+        StringBuilder buid = new StringBuilder();
+        for (int j = 0; j < map[0].length; j++)
+        {
+            for (int i = 0; i < map.length; i++)
+            {
+                buid.append(map[i][j].draw());
+            }
+            buid.append("\n");
+        }
+        return buid.toString();
+    }
+    
+    /**
      * 同步获取key，按前后顺序
      * 
      * @param key
@@ -193,7 +215,7 @@ public class Util
         mapSet.put(mapStr, keys);
         return true;
     }
-        
+    
     /**
      * 清空记录
      * 

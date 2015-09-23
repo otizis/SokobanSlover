@@ -209,16 +209,11 @@ public class Cell
         }
         if (target.canMoveIn())
         {
-            this.moveTo(target);
+            this.item = ItemType.empty;
+            target.item = ItemType.statue;
             return true;
         }
         return false;
-    }
-    
-    private void moveTo(Cell target)
-    {
-        this.item = ItemType.empty;
-        target.item = ItemType.statue;
     }
     
     public Cell myClone()

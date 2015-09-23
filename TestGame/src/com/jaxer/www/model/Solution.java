@@ -29,32 +29,13 @@ public class Solution
     // 算法的编号
     String key = "0";
     
-    public static void sort(ArrayList<Solution> nextSolutions2)
-    {
-        Collections.sort(nextSolutions2, new Comparator<Solution>()
-        {
-            
-            @Override
-            public int compare(Solution o1, Solution o2)
-            {
-                int o1int =
-                    o1.thisStepMap[o1.moveCellx][o1.moveCelly].isGole() ? 1 : 0;
-                int o2int =
-                    o2.thisStepMap[o2.moveCellx][o2.moveCelly].isGole() ? 1 : 0;
-                return o1int - o2int;
-            }
-            
-        });
-        
-    }
-    
     private Solution lastSolution;
     
     public int level;
     
-    private int moveCellx;
+    private int statue_x;
     
-    private int moveCelly;
+    private int statue_y;
     
     private AspectEnum step;
     
@@ -68,22 +49,24 @@ public class Solution
         return result;
     }
     
-    private Cell[][] thisStepMap;
+    /**
+     * 只有root的有值，其他为null
+     */
+    private Cell[][] sokoMap;
     
     public Solution(Cell[][] thisStepMap)
     {
         super();
-        this.thisStepMap = thisStepMap;
+        this.sokoMap = thisStepMap;
     }
     
-    public Solution(Cell[][] thisStepMap, AspectEnum step, int moveCellx,
-        int moveCelly, Solution lastSolution)
+    public Solution(AspectEnum step, int moveCellx, int moveCelly,
+        Solution lastSolution)
     {
         super();
-        this.thisStepMap = thisStepMap;
         this.step = step;
-        this.moveCellx = moveCellx;
-        this.moveCelly = moveCelly;
+        this.statue_x = moveCellx;
+        this.statue_y = moveCelly;
         this.lastSolution = lastSolution;
         if (lastSolution != null)
         {
@@ -101,11 +84,56 @@ public class Solution
     }
     
     /**
-     * @return 返回 thisStepMap
+     * 获取步骤后的地图
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
      */
-    public Cell[][] getThisStepMap()
+    public Cell[][] getSokoMapAfter()
     {
-        return thisStepMap;
+        Solution root = this.lastSolution;
+        if (null == root)
+        {
+            return Util.cloneMap(this.sokoMap);
+        }
+        ArrayList<Solution> list = new ArrayList<Solution>();
+        
+        list.add(this);
+        
+        while (root.lastSolution != null)
+        {
+            list.add(0, root);
+            root = root.lastSolution;
+            
+        }
+        Cell[][] cloneMap = Util.cloneMapClearPlayer(root.sokoMap);
+        for (int i = 0; i < list.size(); i++)
+        {
+            list.get(i).work(cloneMap);
+        }
+        // 推动后，人站在原来雕像的位置
+        cloneMap[statue_x][statue_y].setPlayer();
+        return cloneMap;
+    }
+    
+    /**
+     * 获取该走法前的地图 
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public Cell[][] getSokoMapBefor()
+    {
+        if(null == this.lastSolution){
+            return sokoMap;
+        }
+        return this.lastSolution.getSokoMapAfter();
+    }
+    
+    private void work(Cell[][] cloneMap)
+    {
+        cloneMap[statue_x][statue_y].move(step, cloneMap);
+        
     }
     
     /**
@@ -133,20 +161,20 @@ public class Solution
         return true;
     }
     
-    public void play()
+    public void play(Cell[][] sokoMap)
     {
         Logger.debug(this.toString());
         
-        thisStepMap = stepToMap();
+        sokoMap = stepToMap(sokoMap);
         
-        if (null == thisStepMap)
+        if (null == sokoMap)
         {
             this.result = Result.failue;
             return;
         }
         
         // 判断是否完成
-        boolean allFinish = isMapFinish(thisStepMap);
+        boolean allFinish = isMapFinish(sokoMap);
         
         if (allFinish)
         {
@@ -163,13 +191,13 @@ public class Solution
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public Cell[][] stepToMap()
+    public Cell[][] stepToMap(Cell[][] sokoMap)
     {
         
-        Cell statue = thisStepMap[moveCellx][moveCelly];
-        if (statue.move(step, thisStepMap))
+        Cell statue = sokoMap[statue_x][statue_y];
+        if (statue.move(step, sokoMap))
         {
-            String mapStr = Util.descMap(thisStepMap);
+            String mapStr = Util.descMap(sokoMap);
             if (!Util.putIfAb(mapStr, key))
             {
                 Logger.debug("以上" + key + "结果重复，或不是最优解");
@@ -180,7 +208,7 @@ public class Solution
                 Logger.debug("走完后：");
                 Logger.debug(this.toString());
             }
-            return thisStepMap;
+            return sokoMap;
         }
         return null;
         
@@ -195,29 +223,12 @@ public class Solution
         builder.append(level);
         builder.append("步：");
         builder.append("[");
-        builder.append(moveCellx);
+        builder.append(statue_x);
         builder.append(",");
-        builder.append(moveCelly);
+        builder.append(statue_y);
         builder.append("]");
         builder.append(step == null ? "" : step.getDesc());
         
-        builder.append("\n");
-        for (int i = 0; i < thisStepMap[0].length; i++)
-        {
-            for (int j = 0; j < thisStepMap.length; j++)
-            {
-                if (level != 0 && j == moveCellx && i == moveCelly)
-                {
-                    builder.append(step == null ? "　" : step.getDesc());
-                }
-                else
-                {
-                    builder.append(thisStepMap[j][i].draw());
-                }
-            }
-            builder.append("\n");
-        }
-        builder.append("----------------------");
         return builder.toString();
     }
     

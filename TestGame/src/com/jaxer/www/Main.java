@@ -2,10 +2,8 @@ package com.jaxer.www;
 
 import java.util.ArrayList;
 
-import com.jaxer.www.Util.DeadPoitUtil;
-import com.jaxer.www.Util.Logger;
-import com.jaxer.www.Util.SolutionFactory;
 import com.jaxer.www.model.Cell;
+import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
 import com.jaxer.www.model.myexception.MyException;
 
@@ -22,21 +20,36 @@ public class Main
     
     public static void main(String[] args)
     {
+//        StringBuilder line = new StringBuilder();
+//        line.append("MMMMMSSMSSM;");
+//        line.append("MMMMMSSYYSM;");
+//        line.append("MMMMMSYMSSM;");
+//        line.append("GGGMMMSMSSM;");
+//        line.append("GSSMSSYSMSS;");
+//        line.append("GSSSSYSYSYS;");
+//        line.append("GSSMSSYSMSS;");
+//        line.append("GGGMMMSMSSM;");
+//        line.append("MMMMMPYSSSM;");
+//        line.append("MMMMMSSMSSM");
+        
         StringBuilder line = new StringBuilder();
         line.append("MMMMMSSMSSM;");
-        line.append("MMMMMSSYYSM;");
+        line.append("MMMMMSSSSSM;");
         line.append("MMMMMSYMSSM;");
         line.append("GGGMMMSMSSM;");
-        line.append("GSSMSSYSMSS;");
-        line.append("GSSSSYSYSYS;");
-        line.append("GSSMSSYSMSS;");
+        line.append("GSSMSSSSMSS;");
+        line.append("GSSSSSSSSSS;");
+        line.append("GSSMSSSSMSS;");
         line.append("GGGMMMSMSSM;");
-        line.append("MMMMMPYSSSM;");
+        line.append("MMMMMPSSSSM;");
         line.append("MMMMMSSMSSM");
         
         Cell[][] map = initMap(line.toString());
         
-        run(map);
+        SokoMap sokoMap = new SokoMap(map);
+        
+        Solution lastOne = sokoMap.run();
+        outputResult(lastOne);
         
         // Util.printMapSet();
     }
@@ -62,28 +75,6 @@ public class Main
             }
         }
         return map;
-    }
-    
-    /**
-     * 运行算法
-     * 
-     * @param map
-     * @see [类、类#方法、类#成员]
-     */
-    public static void run(Cell[][] map)
-    {
-        
-        Long begin = System.currentTimeMillis();
-        DeadPoitUtil.loadDeadSet(map);
-        
-        Solution solution = new Solution(map);
-        Logger.info(solution.toString());
-        Solution lastOne = SolutionFactory.runByLevel(solution);
-        Long end = System.currentTimeMillis();
-        
-        outputResult(lastOne);
-        System.out.println("耗时：" + (end - begin));
-        
     }
     
     /**
