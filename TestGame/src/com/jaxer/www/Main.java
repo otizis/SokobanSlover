@@ -20,30 +20,24 @@ public class Main
     
     public static void main(String[] args)
     {
-//        StringBuilder line = new StringBuilder();
-//        line.append("MMMMMSSMSSM;");
-//        line.append("MMMMMSSYYSM;");
-//        line.append("MMMMMSYMSSM;");
-//        line.append("GGGMMMSMSSM;");
-//        line.append("GSSMSSYSMSS;");
-//        line.append("GSSSSYSYSYS;");
-//        line.append("GSSMSSYSMSS;");
-//        line.append("GGGMMMSMSSM;");
-//        line.append("MMMMMPYSSSM;");
-//        line.append("MMMMMSSMSSM");
-        
         StringBuilder line = new StringBuilder();
-        line.append("MSSSSSMM").append(";");
-        line.append("MYMMMSSS").append(";");
-        line.append("PSSYSSYS").append(";");
-        line.append("SGGMSYSM").append(";");
-        line.append("MGGMSSSM");
+        line.append("MMMMMSSMSSM;");
+        line.append("MMMMMSSYYSM;");
+        line.append("MMMMMSYMSSM;");
+        line.append("GGGMMMSMSSM;");
+        line.append("GSSMSSYSMSS;");
+        line.append("GSSSSYSYSYS;");
+        line.append("GSSMSSYSMSS;");
+        line.append("GGGMMMSMSSM;");
+        line.append("MMMMMPYSSSM;");
+        line.append("MMMMMSSMSSM");
         
         Cell[][] map = initMap(line.toString());
         
         SokoMap sokoMap = new SokoMap(map);
         
         Solution lastOne = sokoMap.run();
+        
         outputResult(lastOne);
         
     }
