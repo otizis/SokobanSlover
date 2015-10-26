@@ -2,10 +2,8 @@ package com.jaxer.www;
 
 import java.util.ArrayList;
 
-import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
-import com.jaxer.www.model.myexception.MyException;
 
 /**
  * 主体类
@@ -17,24 +15,28 @@ import com.jaxer.www.model.myexception.MyException;
  */
 public class Main
 {
-    
+
     public static void main(String[] args)
     {
         StringBuilder line = new StringBuilder();
-        line.append("MMMMMSSMSSM;");
-        line.append("MMMMMSSYYSM;");
-        line.append("MMMMMSYMSSM;");
-        line.append("GGGMMMSMSSM;");
-        line.append("GSSMSSYSMSS;");
-        line.append("GSSSSYSYSYS;");
-        line.append("GSSMSSYSMSS;");
-        line.append("GGGMMMSMSSM;");
-        line.append("MMMMMPYSSSM;");
-        line.append("MMMMMSSMSSM");
+//        line.append("MMMMMSSMSSM;");
+//        line.append("MMMMMSSYYSM;");
+//        line.append("MMMMMSYMSSM;");
+//        line.append("GGGMMMSMSSM;");
+//        line.append("GSSMSSYSMSS;");
+//        line.append("GSSSSYSYSYS;");
+//        line.append("GSSMSSYSMSS;");
+//        line.append("GGGMMMSMSSM;");
+//        line.append("MMMMMPYSSSM;");
+//        line.append("MMMMMSSMSSM");
+        line.append("MMMPMMMM;");
+        line.append("MMSSSSMM;");
+        line.append("SSYYSYSS;");
+        line.append("MGGGGGGM;");
+        line.append("SSYSYYSS;");
+        line.append("MMMSSMMM");
         
-        Cell[][] map = initMap(line.toString());
-        
-        SokoMap sokoMap = new SokoMap(map);
+        SokoMap sokoMap = new SokoMap(line.toString());
         
         Solution lastOne = sokoMap.run();
         
@@ -42,28 +44,7 @@ public class Main
         
     }
     
-    private static Cell[][] initMap(String line)
-    {
-        if (!line.contains("P"))
-        {
-            throw new MyException("没有放置玩家位置。");
-        }
-        Cell[][] map = null;
-        String[] lns = line.split(";");
-        for (int i = 0; i < lns.length; i++)
-        {
-            for (int j = 0; j < lns[i].length(); j++)
-            {
-                if (null == map)
-                {
-                    map = new Cell[lns[i].length()][lns.length];
-                }
-                char type = lns[i].charAt(j);
-                map[j][i] = new Cell(j, i, type);
-            }
-        }
-        return map;
-    }
+
     
     /**
      * 输出结果

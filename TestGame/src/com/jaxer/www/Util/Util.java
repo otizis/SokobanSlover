@@ -1,12 +1,15 @@
 package com.jaxer.www.Util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-import com.jaxer.www.enums.ItemType;
 import com.jaxer.www.model.Cell;
+import com.jaxer.www.model.SokoMap;
+import com.jaxer.www.model.Zuobiao;
 
 public class Util
 {
@@ -23,130 +26,16 @@ public class Util
     private static HashMap<String, String> mapSet =
         new HashMap<String, String>();
         
-    /**
-     * 克隆地图
-     * 
-     * @param a
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public static Cell[][] cloneMap(Cell[][] a)
+    public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
-        Cell[][] b = new Cell[a.length][a[0].length];
-        for (int i = 0; i < b.length; i++)
-        {
-            for (int j = 0; j < b[i].length; j++)
-            {
-                b[i][j] = a[i][j].myClone();
-            }
-        }
-        return b;
-    }
-    
-    /**
-     * 克隆地图，并移除玩家标记
-     * 
-     * @param a
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public static Cell[][] cloneMapClearPlayer(Cell[][] a)
-    {
-        Cell[][] b = new Cell[a.length][a[0].length];
-        for (int i = 0; i < b.length; i++)
-        {
-            for (int j = 0; j < b[i].length; j++)
-            {
-                b[i][j] = a[i][j].myClone();
-                if (b[i][j].getItem() == ItemType.player)
-                {
-                    b[i][j].setItem(ItemType.empty);
-                }
-            }
-        }
-        return b;
-    }
-    
-    /**
-     * 克隆地图，并移除玩家标记，雕像标记
-     * 
-     * @param a
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public static Cell[][] cloneMapClearPlayerAndStatue(Cell[][] a)
-    {
-        Cell[][] b = new Cell[a.length][a[0].length];
-        for (int i = 0; i < b.length; i++)
-        {
-            for (int j = 0; j < b[i].length; j++)
-            {
-                b[i][j] = a[i][j].myClone();
-                if (b[i][j].getItem() == ItemType.player
-                    || b[i][j].getItem() == ItemType.statue)
-                {
-                    b[i][j].setItem(ItemType.empty);
-                }
-            }
-        }
-        return b;
-    }
-    
-    /**
-     * 克隆地图，并移除玩家标记
-     * 
-     * @param a
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public static Cell[][] cloneMapClearStatue(Cell[][] a)
-    {
-        Cell[][] b = new Cell[a.length][a[0].length];
-        for (int i = 0; i < b.length; i++)
-        {
-            for (int j = 0; j < b[i].length; j++)
-            {
-                b[i][j] = a[i][j].myClone();
-                if (b[i][j].getItem() == ItemType.statue)
-                {
-                    b[i][j].setItem(ItemType.empty);
-                }
-            }
-        }
-        return b;
-    }
-    
-    /**
-     * 生成地图的特征字符串，即全盘描述
-     * 
-     * @param map
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public static String descMap(Cell[][] map)
-    {
-        Cell[][] cloneObject = cloneMap(map);
-        
-        HashSet<Cell> allPlayerCanGoCells =
-            SolutionFactory.getAllPlayerCanGoCells(cloneObject);
+        ArrayList<Zuobiao> cloneBoxList =
+            new ArrayList<Zuobiao>(boxList.size());
             
-        Iterator<Cell> iterator = allPlayerCanGoCells.iterator();
-        
-        while (iterator.hasNext())
+        for (Zuobiao box : boxList)
         {
-            Cell cell = (Cell)iterator.next();
-            cell.setPlayer();
+            cloneBoxList.add(box.myClone());
         }
-        
-        StringBuilder buid = new StringBuilder();
-        for (int j = 0; j < cloneObject[0].length; j++)
-        {
-            for (int i = 0; i < cloneObject.length; i++)
-            {
-                buid.append(cloneObject[i][j].draw());
-            }
-        }
-        return buid.toString();
+        return cloneBoxList;
     }
     
     /**
@@ -156,19 +45,47 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static String mapToString(Cell[][] map)
+    public static String descZuobiaoList(Collection<Zuobiao> coll)
     {
+        Zuobiao[] array = coll.toArray(new Zuobiao[0]);
+        Arrays.sort(array, new Comparator<Zuobiao>()
+        {
+            
+            @Override
+            public int compare(Zuobiao o1, Zuobiao o2)
+            {
+                if (o1.getX() == o2.getX())
+                {
+                    return o2.getY() - o1.getY();
+                }
+                return o2.getX() - o1.getX();
+            }
+            
+        });
         
         StringBuilder buid = new StringBuilder();
-        for (int j = 0; j < map[0].length; j++)
+        for (int j = 0; j < array.length; j++)
         {
-            for (int i = 0; i < map.length; i++)
-            {
-                buid.append(map[i][j].draw());
-            }
-            buid.append("\n");
+            buid.append(array[j].getX());
+            buid.append(array[j].getY());
+            buid.append(",");
         }
         return buid.toString();
+    }
+    
+    public static void drawMap(StringBuilder mapStr)
+    {
+        int width = SokoMap.max_x + 1;
+        for (int i = 0; i < mapStr.length(); i++)
+        {
+            if (i % width == 0)
+            {
+                System.out.println();
+            }
+            System.out.print(mapStr.charAt(i));
+            System.out.print(" ");
+        }
+        System.out.println();
     }
     
     /**
@@ -187,6 +104,28 @@ public class Util
         }
         keySet.put(key, 0);
         return key + ":0";
+    }
+    
+    /**
+     * 生成地图的特征字符串，即全盘描述
+     * 
+     * @param map
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static StringBuilder mapStr()
+    {
+        Cell[][] map = SokoMap.thisStepMap;
+        
+        StringBuilder buid = new StringBuilder();
+        for (int j = 0; j < map[0].length; j++)
+        {
+            for (int i = 0; i < map.length; i++)
+            {
+                buid.append(map[i][j].draw());
+            }
+        }
+        return buid;
     }
     
     public static void printMapSet()
@@ -217,6 +156,22 @@ public class Util
     }
     
     /**
+     * 生成地图的特征字符串，即全盘描述
+     * 
+     * @param map
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb,
+        String str)
+    {
+        int indxe = zb.getY() * (SokoMap.max_x + 1) + zb.getX();
+        
+        a.replace(indxe, indxe + 1, str);
+        return a;
+    }
+    
+    /**
      * 清空记录
      * 
      * @param mapStr
@@ -228,5 +183,4 @@ public class Util
         mapSet.clear();
         
     }
-    
 }

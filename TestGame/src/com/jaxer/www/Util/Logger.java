@@ -2,11 +2,11 @@ package com.jaxer.www.Util;
 
 public class Logger
 {
-    static boolean isdebug = false;
+    public static boolean isdebug = false;
     
-    static boolean isInfo = true;
+    public static boolean isInfo = true;
     
-    static boolean isoutput = true;
+    public static boolean isoutput = false;
     
     public static void debug(String str)
     {

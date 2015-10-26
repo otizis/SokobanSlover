@@ -1,6 +1,4 @@
-package com.jaxer.www.model;
-
-import com.jaxer.www.Util.Logger;
+package com.jaxer.www.Util;
 
 public class ProgressCounter
 {
@@ -25,6 +23,10 @@ public class ProgressCounter
     
     public void addProgress()
     {
+        if (total < 20000)
+        {
+            return;
+        }
         progress++;
         if ((progress * 100 / total) > lastPrecent)
         {
@@ -53,10 +55,9 @@ public class ProgressCounter
         Logger.info(build.toString());
         
     }
-
     
     /** {@inheritDoc} */
-     
+    
     @Override
     public String toString()
     {

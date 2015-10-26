@@ -1,17 +1,20 @@
 package com.jaxer.www.Util;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
-import com.jaxer.www.enums.ItemType;
+import com.jaxer.www.enums.AspectEnum;
+import com.jaxer.www.enums.CellType;
 import com.jaxer.www.model.Cell;
-import com.jaxer.www.model.DieCell;
+import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
+import com.jaxer.www.model.Zuobiao;
 
 public class DeadPoitUtil
 {
     private static boolean smart = true;
     
-    static HashSet<String> deadSet = new HashSet<String>();
+    static HashSet<Zuobiao> deadSet = new HashSet<Zuobiao>();
     
     public static void loadDeadSet(Cell[][] curMap)
     {
@@ -23,9 +26,9 @@ public class DeadPoitUtil
         {
             for (Cell cell : cells)
             {
-                if (cell.isGole() || cell.getItem() == ItemType.wall
-                    || cell.getItem() == ItemType.statue)
+                if (cell.check(CellType.gole) || cell.check(CellType.wall))
                 {
+                    // TODO 现在放着箱子的也可跳过
                     continue;
                 }
                 int x = cell.getX();
@@ -33,13 +36,13 @@ public class DeadPoitUtil
                 
                 if (isPointDead(curMap, x, y))
                 {
-                    deadSet.add(getKey(x, y));
+                    deadSet.add(cell);
                     continue;
                 }
                 
-                if (smart && smartDeadPoint(curMap, x, y))
+                if (smart && smartDeadPoint(curMap, cell))
                 {
-                    deadSet.add(getKey(x, y));
+                    deadSet.add(cell);
                     
                     continue;
                 }
@@ -48,34 +51,28 @@ public class DeadPoitUtil
         Long end = System.currentTimeMillis();
         Logger.turnOn();
         Logger.info("==结束死点推算,耗时：" + (end - begin));
-        Cell[][] cloneMap = Util.cloneMap(curMap);
+        StringBuilder mapStr = Util.mapStr();
         
-        for (String point : deadSet)
+        for (Zuobiao point : deadSet)
         {
-            String[] xy = point.split(",");
-            int x = Integer.parseInt(xy[0]);
-            int y = Integer.parseInt(xy[1]);
-            cloneMap[x][y] = new DieCell();
+            Util.replaceZuobiao(mapStr, point, "X");
         }
-        Logger.info(Util.mapToString(cloneMap));
-    }
-    
-    private static String getKey(int x, int y)
-    {
-        return x + "," + y;
+        if (Logger.isInfo)
+        {
+            Util.drawMap(mapStr);
+        }
     }
     
     /**
      * 该点位是否是死点,墙角
      * 
-     * @param x
-     * @param y
+     * @param zb
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean isPointNeedGo(int x, int y)
+    public static boolean isPointNeedGo(Zuobiao zb)
     {
-        return !deadSet.contains(getKey(x, y));
+        return !deadSet.contains(zb);
         
     }
     
@@ -93,22 +90,22 @@ public class DeadPoitUtil
         
         // 上 右 下 左 为固定的位置，标为1
         int[] UpRiDoLe = {0, 0, 0, 0};
-        if (x == 0 || curMap[x - 1][y].getItem() == ItemType.wall)
+        if (x == 0 || curMap[x - 1][y].check(CellType.wall))
         {
             UpRiDoLe[3] = 1;
         }
         else if (x == (curMap.length - 1)
-            || curMap[x + 1][y].getItem() == ItemType.wall)
+            || curMap[x + 1][y].check(CellType.wall))
         {
             UpRiDoLe[1] = 1;
         }
         
-        if (y == 0 || curMap[x][y - 1].getItem() == ItemType.wall)
+        if (y == 0 || curMap[x][y - 1].check(CellType.wall))
         {
             UpRiDoLe[0] = 1;
         }
         else if (y == (curMap[0].length - 1)
-            || curMap[x][y + 1].getItem() == ItemType.wall)
+            || curMap[x][y + 1].check(CellType.wall))
         {
             UpRiDoLe[2] = 1;
         }
@@ -137,139 +134,62 @@ public class DeadPoitUtil
      * @param x 雕像的x
      * @see [类、类#方法、类#成员]
      */
-    public static boolean smartDeadPoint(Cell[][] curMap, int x, int y)
+    public static boolean smartDeadPoint(Cell[][] curMap, Zuobiao zb)
     {
         // 不记录计算死点时的地图特征值，每次都重置
         Util.resetMapSet();
         
-        Cell[][] cloneObject = Util.cloneMapClearStatue(curMap);
-        cloneObject[x][y].setItem(ItemType.statue);
+        ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(SokoMap.boxList);
+        Zuobiao cloneMan = SokoMap.man;
         
-        Solution solu = new Solution(cloneObject);
+        ArrayList<Zuobiao> deadPointList = new ArrayList<Zuobiao>();
+        deadPointList.add(zb);
+        SokoMap.boxList = deadPointList;
+        
+        Solution solu = new Solution();
         
         // 获取该模式，人为初始值，能否推动到任一目标点
         Solution runByLevel = SolutionFactory.runByLevel(solu);
         if (null != runByLevel)
         {
+            // 复原
+            SokoMap.boxList = cloneBoxList;
+            SokoMap.man = cloneMan;
             return false;
         }
         
         // 如果不成功，获取该初始化人位置的等价位置
-        HashSet<Cell> allPlayerCanGoCells =
-            SolutionFactory.getAllPlayerCanGoCells(cloneObject);
+        HashSet<Zuobiao> allPlayerCanGoCells =
+            SolutionFactory.getAllPlayerCanGoCells(solu);
             
         // 四种情况，人在雕像的上下左右，且不是以上等价情况的位置，再次推断
-        if (y > 0)
+        for (AspectEnum aspect : AspectEnum.values())
         {
             
-            int player_x = x;
-            int player_y = y - 1;
-            
-            Solution checkSwitchPlayer = checkSwitchPlayer(x,
-                y,
-                cloneObject,
-                allPlayerCanGoCells,
-                player_x,
-                player_y);
-            // 如果获取到解法，表示不是死点
-            if (checkSwitchPlayer != null)
+            Zuobiao move = ZuobiaoUtil.getMove(zb, aspect);
+            if (isPointNeedGo(move))
             {
+                continue;
+            }
+            if (allPlayerCanGoCells.contains(move))
+            {
+                continue;
+            }
+            SokoMap.man = move;
+            Solution run = SolutionFactory.runByLevel(new Solution());
+            if (run != null)
+            {
+                // 复原
+                SokoMap.boxList = cloneBoxList;
+                SokoMap.man = cloneMan;
                 return false;
             }
         }
         
-        if (y < (cloneObject[0].length - 1))
-        {
-            int player_x = x;
-            int player_y = y + 1;
-            
-            Solution checkSwitchPlayer = checkSwitchPlayer(x,
-                y,
-                cloneObject,
-                allPlayerCanGoCells,
-                player_x,
-                player_y);
-            // 如果获取到解法，表示不是死点
-            if (checkSwitchPlayer != null)
-            {
-                return false;
-            }
-        }
-        
-        if (x > 0)
-        {
-            int player_x = x - 1;
-            int player_y = y;
-            
-            Solution checkSwitchPlayer = checkSwitchPlayer(x,
-                y,
-                cloneObject,
-                allPlayerCanGoCells,
-                player_x,
-                player_y);
-            // 如果获取到解法，表示不是死点
-            if (checkSwitchPlayer != null)
-            {
-                return false;
-            }
-        }
-        
-        if (x < (cloneObject.length - 1))
-        {
-            int player_x = x + 1;
-            int player_y = y;
-            
-            Solution checkSwitchPlayer = checkSwitchPlayer(x,
-                y,
-                cloneObject,
-                allPlayerCanGoCells,
-                player_x,
-                player_y);
-            // 如果获取到解法，表示不是死点
-            if (checkSwitchPlayer != null)
-            {
-                return false;
-            }
-        }
-        
+        // 复原
+        SokoMap.boxList = cloneBoxList;
+        SokoMap.man = cloneMan;
         return true;
     }
     
-    /**
-     * 测试人位置是否可以有其他情况，历遍上下左右的位置，再次进行推断。
-     * 
-     * @param x 雕像位置
-     * @param y 雕像位置
-     * @param cloneObject
-     * @param allPlayerCanGoCells 第一种情况人站位置的同等位置
-     * @param player_x 其他玩家位置
-     * @param player_y 其他玩家位置
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    private static Solution checkSwitchPlayer(int x, int y,
-        Cell[][] cloneObject, HashSet<Cell> allPlayerCanGoCells, int player_x,
-        int player_y)
-    {
-        if (cloneObject[player_x][player_y].getItem() == ItemType.empty
-            && !allPlayerCanGoCells.contains(cloneObject[player_x][player_y]))
-        {
-            // 站人的位置不能是死点，因为该情况下，人为非初始值，雕像也为非初始值。
-            // 若出现了，肯定是移动过。若人站在死点，则回退一步推的动作，雕像在死点，不能成立
-            if (!isPointNeedGo(player_x, player_y))
-            {
-                Cell[][] cloneMapClearPlayer =
-                    Util.cloneMapClearPlayerAndStatue(cloneObject);
-                cloneMapClearPlayer[x][y].setItem(ItemType.statue);
-                cloneMapClearPlayer[player_x][player_y].setPlayer();
-                
-                // 获取现在能走的走法列表
-                Solution run = SolutionFactory
-                    .runByLevel(new Solution(cloneMapClearPlayer));
-                return run;
-                
-            }
-        }
-        return null;
-    }
 }

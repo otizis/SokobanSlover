@@ -1,4 +1,4 @@
-package com.jaxer.www.model;
+package com.jaxer.www.enums;
 
 public enum Result
 {

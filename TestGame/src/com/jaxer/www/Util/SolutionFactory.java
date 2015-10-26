@@ -6,11 +6,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.jaxer.www.enums.AspectEnum;
-import com.jaxer.www.enums.ItemType;
-import com.jaxer.www.model.Cell;
-import com.jaxer.www.model.ProgressCounter;
-import com.jaxer.www.model.Result;
+import com.jaxer.www.enums.CellType;
+import com.jaxer.www.enums.Result;
+import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
+import com.jaxer.www.model.Zuobiao;
 
 public class SolutionFactory
 {
@@ -24,64 +24,47 @@ public class SolutionFactory
     public static LinkedList<Solution> getNextSolution(Solution solu)
     {
         
-        Cell[][] curMap = solu.getSokoMapAfter();
-        if (solu == null || curMap == null)
+        if (solu == null)
         {
             return null;
         }
-        Logger.debug("======开始计算分支走法。");
+        Logger.debug("======开始计算下一步走法。");
         
-        ArrayList<Cell> statues = getAllStatues(curMap);
+        ArrayList<Zuobiao> boxs = solu.getBoxListAfter();
         
-        HashSet<Cell> playerCanGoCells = getAllPlayerCanGoCells(curMap);
+        HashSet<Zuobiao> playerCanGoCells = getAllPlayerCanGoCells(solu);
         
         LinkedList<Solution> solutions = new LinkedList<Solution>();
         
-        // 根据
-        for (int i = 0; i < statues.size(); i++)
+        // 计算每一个箱子能走的步法
+        for (int i = 0; i < boxs.size(); i++)
         {
-            Cell statue = statues.get(i);
-            int x = statue.getX();
-            int y = statue.getY();
+            Zuobiao box = boxs.get(i);
             
-            // 是否能上下移动
-            if ((y >= 1 && (y + 1) < curMap[x].length)
-                && curMap[x][y + 1].canMoveIn() && curMap[x][y - 1].canMoveIn())
-            {
-                // 推动时，站人的位置人能过去，且目标位不是死角
-                if (playerCanGoCells.contains(curMap[x][y - 1])
-                    && DeadPoitUtil.isPointNeedGo(x, y + 1))
-                {
-                    solutions.add(new Solution(AspectEnum.down, x, y, solu));
-                    
-                }
-                if (playerCanGoCells.contains(curMap[x][y + 1])
-                    && DeadPoitUtil.isPointNeedGo(x, y - 1))
-                {
-                    solutions.add(new Solution(AspectEnum.up, x, y, solu));
-                }
-            }
-            
-            // 能否左右移动
-            if (x >= 1 && (x + 1) < curMap.length
-                && curMap[x + 1][y].canMoveIn() && curMap[x - 1][y].canMoveIn())
+            // 历遍上下左右
+            for (AspectEnum aspce : AspectEnum.values())
             {
                 
-                if (playerCanGoCells.contains(curMap[x - 1][y])
-                    && DeadPoitUtil.isPointNeedGo(x + 1, y))
+                Zuobiao zuobiaoGo = ZuobiaoUtil.getMove(box, aspce);
+                if (!canGo(solu, zuobiaoGo))
                 {
-                    solutions.add(new Solution(AspectEnum.right, x, y, solu));
-                    
+                    continue;
                 }
-                if (playerCanGoCells.contains(curMap[x + 1][y])
-                    && DeadPoitUtil.isPointNeedGo(x - 1, y))
+                // 目标位不是死角
+                if (!DeadPoitUtil.isPointNeedGo(zuobiaoGo))
                 {
-                    solutions.add(new Solution(AspectEnum.left, x, y, solu));
-                    
+                    continue;
                 }
                 
+                // 推动时，站人的位置人能过去
+                Zuobiao zuobiaoMan = ZuobiaoUtil.getMovePlayer(box, aspce);
+                if (!playerCanGoCells.contains(zuobiaoMan))
+                {
+                    continue;
+                }
+                
+                solutions.add(new Solution(aspce, i, solu));
             }
-            
         }
         
         if (Logger.isDebugEnable())
@@ -93,6 +76,7 @@ public class SolutionFactory
             {
                 Logger.debug("序号：" + (1 + i));
                 Logger.debug(solutions.get(i).toString());
+                solutions.get(i).drawBefo();
             }
             Logger.debug("======获取分支走法结束。");
         }
@@ -106,37 +90,23 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static HashSet<Cell> getAllPlayerCanGoCells(Cell[][] curMap)
+    public static HashSet<Zuobiao> getAllPlayerCanGoCells(Solution solu)
     {
         // 把玩家现在的位置放入set中
-        HashSet<Cell> cells = new HashSet<Cell>();
-        for (int i = 0; i < curMap.length; i++)
-        {
-            for (int j = 0; j < curMap[0].length; j++)
-            {
-                if (curMap[i][j].getItem() == ItemType.player)
-                {
-                    cells.add(curMap[i][j]);
-                    break;
-                }
-            }
-            if (!cells.isEmpty())
-            {
-                break;
-            }
-        }
+        HashSet<Zuobiao> cellsPlayerCanGo = new HashSet<Zuobiao>();
+        cellsPlayerCanGo.add(solu.getManAfterStep());
         
-        HashSet<Cell> hasLoop = new HashSet<Cell>();
-        HashSet<Cell> temp = new HashSet<Cell>();
+        HashSet<Zuobiao> hasLoop = new HashSet<Zuobiao>();
+        HashSet<Zuobiao> temp = new HashSet<Zuobiao>();
         boolean plusCellFlag = false;
         do
         {
             plusCellFlag = false;
-            Iterator<Cell> iterator = cells.iterator();
+            Iterator<Zuobiao> iterator = cellsPlayerCanGo.iterator();
             while (iterator.hasNext())
             {
                 
-                Cell cell = (Cell)iterator.next();
+                Zuobiao cell = (Zuobiao)iterator.next();
                 // 已经存在的跳过
                 if (hasLoop.contains(cell))
                 {
@@ -146,75 +116,69 @@ public class SolutionFactory
                 {
                     hasLoop.add(cell);
                 }
-                int x = cell.getX();
-                int y = cell.getY();
-                if (y > 0)
+                // 历遍上下左右
+                for (AspectEnum aspce : AspectEnum.values())
                 {
-                    Cell upCell = curMap[x][y - 1];
-                    if (upCell.getItem() == ItemType.empty)
+                    
+                    Zuobiao afterMove = ZuobiaoUtil.getMove(cell, aspce);
+                    if (canGo(solu, afterMove))
                     {
-                        temp.add(upCell);
-                        plusCellFlag = true;
-                    }
-                }
-                if (x > 0)
-                {
-                    Cell leftCell = curMap[x - 1][y];
-                    if (leftCell.getItem() == ItemType.empty)
-                    {
-                        temp.add(leftCell);
-                        plusCellFlag = true;
-                    }
-                }
-                if (y < (curMap[0].length - 1))
-                {
-                    Cell downCell = curMap[x][y + 1];
-                    if (downCell.getItem() == ItemType.empty)
-                    {
-                        temp.add(downCell);
-                        plusCellFlag = true;
-                    }
-                }
-                if (x < (curMap.length - 1))
-                {
-                    Cell rightCell = curMap[x + 1][y];
-                    if (rightCell.getItem() == ItemType.empty)
-                    {
-                        temp.add(rightCell);
+                        temp.add(afterMove);
                         plusCellFlag = true;
                     }
                 }
             }
             
-            cells.addAll(temp);
+            cellsPlayerCanGo.addAll(temp);
             temp.clear();
             
         } while (plusCellFlag);
         
-        return cells;
+        if (Logger.isdebug)
+        {
+            StringBuilder mapStr = Util.mapStr();
+            for (Zuobiao zuobiao : solu.getBoxListAfter())
+            {
+                Util.replaceZuobiao(mapStr, zuobiao, "B");
+            }
+            for (Zuobiao zuobiao : cellsPlayerCanGo)
+            {
+                Util.replaceZuobiao(mapStr, zuobiao, "a");
+            }
+            
+            Util.drawMap(mapStr);
+        }
+        return cellsPlayerCanGo;
     }
     
     /**
-     * 获取地图中所有的雕像列表
+     * 解法中，地图坐标为空，且不是box其中之一，返回true
      * 
-     * @param curMap
-     * @return
+     * 
+     * @param solu
+     * @param gotoCell
      * @see [类、类#方法、类#成员]
      */
-    private static ArrayList<Cell> getAllStatues(Cell[][] curMap)
+    private static boolean canGo(Solution solu, Zuobiao gotoZuobiao)
     {
-        ArrayList<Cell> statues = new ArrayList<Cell>();
-        for (int i = 0; i < curMap.length; i++)
+        if (gotoZuobiao == null)
         {
-            for (int j = 0; j < curMap[0].length; j++)
+            return false;
+        }
+        // 目标位，不能是墙
+        if (SokoMap.getCell(gotoZuobiao).check(CellType.wall))
+        {
+            return false;
+            
+        }
+        for (Zuobiao box : solu.getBoxListAfter())
+        {
+            if (box.equals(gotoZuobiao))
             {
-                if (curMap[i][j].isStatue())
-                {
-                    statues.add(curMap[i][j]);
-                }
+                return false;
             }
         }
-        return statues;
+        return true;
     }
     
     /**
@@ -233,9 +197,12 @@ public class SolutionFactory
         while (!needSub.isEmpty())
         {
             pc.addProgress();
+            
             Solution removeFirst = needSub.removeFirst();
+            
             LinkedList<Solution> temp =
                 SolutionFactory.getNextSolution(removeFirst);
+                
             if (null != temp)
             {
                 nextSolutionList.addAll(temp);
@@ -298,12 +265,16 @@ public class SolutionFactory
         LinkedList<Solution> solutions)
     {
         LinkedList<Solution> needSub = new LinkedList<Solution>();
+        
         ProgressCounter pc = new ProgressCounter(solutions.size(), "演算走法列表");
+        
         while (!solutions.isEmpty())
         {
             pc.addProgress();
             Solution solu = solutions.removeFirst();
-            solu.play(solu.getSokoMapBefor());
+            
+            solu.play();
+            
             if (solu.getResult() == Result.success)
             {
                 needSub.clear();
