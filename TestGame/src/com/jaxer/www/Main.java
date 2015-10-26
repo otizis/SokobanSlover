@@ -15,20 +15,20 @@ import com.jaxer.www.model.Solution;
  */
 public class Main
 {
-
+    
     public static void main(String[] args)
     {
         StringBuilder line = new StringBuilder();
-//        line.append("MMMMMSSMSSM;");
-//        line.append("MMMMMSSYYSM;");
-//        line.append("MMMMMSYMSSM;");
-//        line.append("GGGMMMSMSSM;");
-//        line.append("GSSMSSYSMSS;");
-//        line.append("GSSSSYSYSYS;");
-//        line.append("GSSMSSYSMSS;");
-//        line.append("GGGMMMSMSSM;");
-//        line.append("MMMMMPYSSSM;");
-//        line.append("MMMMMSSMSSM");
+        // line.append("MMMMMSSMSSM;");
+        // line.append("MMMMMSSYYSM;");
+        // line.append("MMMMMSYMSSM;");
+        // line.append("GGGMMMSMSSM;");
+        // line.append("GSSMSSYSMSS;");
+        // line.append("GSSSSYSYSYS;");
+        // line.append("GSSMSSYSMSS;");
+        // line.append("GGGMMMSMSSM;");
+        // line.append("MMMMMPYSSSM;");
+        // line.append("MMMMMSSMSSM");
         line.append("MMMPMMMM;");
         line.append("MMSSSSMM;");
         line.append("SSYYSYSS;");
@@ -43,8 +43,6 @@ public class Main
         outputResult(lastOne);
         
     }
-    
-
     
     /**
      * 输出结果
@@ -66,15 +64,15 @@ public class Main
             Solution solut = lastOne;
             do
             {
-                gonglv.add(0, solut.toString());
+                gonglv.add(0, solut.drawAfter());
                 solut = solut.getLastSolution();
             } while (solut != null);
             
-            for (String string : gonglv)
+            for (int i = 0; i < gonglv.size(); i++)
             {
-                System.out.println(string);
+                System.out.println("第" + i + "步");
+                System.out.println(gonglv.get(i));
             }
-            
         }
         
     }

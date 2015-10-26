@@ -73,19 +73,21 @@ public class Util
         return buid.toString();
     }
     
-    public static void drawMap(StringBuilder mapStr)
+    public static String drawMap(StringBuilder mapStr)
     {
+        StringBuilder result = new StringBuilder();
         int width = SokoMap.max_x + 1;
         for (int i = 0; i < mapStr.length(); i++)
         {
             if (i % width == 0)
             {
-                System.out.println();
+                result.append("\n");
             }
-            System.out.print(mapStr.charAt(i));
-            System.out.print(" ");
+            result.append(mapStr.charAt(i));
+            result.append(" ");
         }
-        System.out.println();
+        result.append("\n");
+        return result.toString();
     }
     
     /**

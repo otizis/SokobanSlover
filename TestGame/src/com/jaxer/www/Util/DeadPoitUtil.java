@@ -16,31 +16,35 @@ public class DeadPoitUtil
     
     static HashSet<Zuobiao> deadSet = new HashSet<Zuobiao>();
     
-    public static void loadDeadSet(Cell[][] curMap)
+    public static void loadDeadSet()
     {
         Logger.info("==开始死点推算==");
         Logger.turnOff();
         Long begin = System.currentTimeMillis();
         
-        for (Cell[] cells : curMap)
+        for (Cell[] cells : SokoMap.thisStepMap)
         {
             for (Cell cell : cells)
             {
-                if (cell.check(CellType.gole) || cell.check(CellType.wall))
+                // 现在放着箱子的可跳过
+                if (SokoMap.boxList.contains(cell))
                 {
-                    // TODO 现在放着箱子的也可跳过
+                    Logger.debug("跳过" + cell + ",放着箱子不会是死点");
                     continue;
                 }
-                int x = cell.getX();
-                int y = cell.getY();
+                if (cell.check(CellType.gole) || cell.check(CellType.wall))
+                {
+                    Logger.debug("跳过" + cell + ",墙和目标点不会是死点");
+                    continue;
+                }
                 
-                if (isPointDead(curMap, x, y))
+                if (isPointDead(cell))
                 {
                     deadSet.add(cell);
                     continue;
                 }
                 
-                if (smart && smartDeadPoint(curMap, cell))
+                if (smart && smartDeadPoint(cell))
                 {
                     deadSet.add(cell);
                     
@@ -57,10 +61,7 @@ public class DeadPoitUtil
         {
             Util.replaceZuobiao(mapStr, point, "X");
         }
-        if (Logger.isInfo)
-        {
-            Util.drawMap(mapStr);
-        }
+        Logger.info(Util.drawMap(mapStr));
     }
     
     /**
@@ -85,29 +86,22 @@ public class DeadPoitUtil
      * @return
      * @see [类、类#方法、类#成员]
      */
-    private static boolean isPointDead(Cell[][] curMap, int x, int y)
+    private static boolean isPointDead(Zuobiao zb)
     {
         
         // 上 右 下 左 为固定的位置，标为1
-        int[] UpRiDoLe = {0, 0, 0, 0};
-        if (x == 0 || curMap[x - 1][y].check(CellType.wall))
-        {
-            UpRiDoLe[3] = 1;
-        }
-        else if (x == (curMap.length - 1)
-            || curMap[x + 1][y].check(CellType.wall))
-        {
-            UpRiDoLe[1] = 1;
-        }
+        AspectEnum[] UpRiDoLe =
+            {AspectEnum.up, AspectEnum.left, AspectEnum.down, AspectEnum.right};
+            
+        boolean[] isWall = {false, false, false, false};
         
-        if (y == 0 || curMap[x][y - 1].check(CellType.wall))
+        for (int i = 0; i < UpRiDoLe.length; i++)
         {
-            UpRiDoLe[0] = 1;
-        }
-        else if (y == (curMap[0].length - 1)
-            || curMap[x][y + 1].check(CellType.wall))
-        {
-            UpRiDoLe[2] = 1;
+            Zuobiao edge = ZuobiaoUtil.getMove(zb, UpRiDoLe[i]);
+            if (edge == null || SokoMap.getCell(edge).check(CellType.wall))
+            {
+                isWall[i] = true;
+            }
         }
         
         for (int i = 0; i < 4; i++)
@@ -117,7 +111,7 @@ public class DeadPoitUtil
             {
                 j = 0;
             }
-            if (UpRiDoLe[i] + UpRiDoLe[j] == 2)
+            if (isWall[i] && isWall[j])
             {
                 return true;
             }
@@ -129,12 +123,10 @@ public class DeadPoitUtil
      * 死点推断，移除所有雕像，只放一个雕像在推断的点，看是否能移动到任一个目标点。
      * 如果不能，再测试人位置是否可以有其他情况，历遍上下左右的位置，再次进行推断。
      * 
-     * @param curMap
-     * @param y 雕像的y
-     * @param x 雕像的x
+     * @param zb 箱子的坐标
      * @see [类、类#方法、类#成员]
      */
-    public static boolean smartDeadPoint(Cell[][] curMap, Zuobiao zb)
+    public static boolean smartDeadPoint(Zuobiao zb)
     {
         // 不记录计算死点时的地图特征值，每次都重置
         Util.resetMapSet();

@@ -35,51 +35,82 @@ public class SokoMap
     
     public static final char empty = 'S';
     
+    /**
+     * 根据输入构造地图
+     */
     public SokoMap(String mapStr)
     {
         if (!mapStr.contains("P"))
         {
             throw new MyException("没有放置玩家位置。");
         }
-        Cell[][] map = null;
         String[] lns = mapStr.split(";");
-        for (int i = 0; i < lns.length; i++)
+        for (int y = 0; y < lns.length; y++)
         {
-            for (int j = 0; j < lns[i].length(); j++)
-            {
-                if (null == map)
-                {
-                    map = new Cell[lns[i].length()][lns.length];
-                }
-                char type = lns[i].charAt(j);
-                CellType ctype = null;
-                switch (type)
-                {
-                    case empty:
-                        ctype = CellType.empty;
-                        break;
-                    case player:
-                        ctype = CellType.empty;
-                        man = new Zuobiao(j, i);
-                        break;
-                    case box:
-                        ctype = CellType.empty;
-                        boxList.add(new Zuobiao(j, i));
-                        break;
-                    case goal:
-                        ctype = CellType.gole;
-                        break;
-                    case wall:
-                        ctype = CellType.wall;
-                        break;
-                        
-                }
-                map[j][i] = new Cell(j, i, ctype);
-            }
+            loadLine(lns, y);
         }
-        thisStepMap = map;
-        max_x = map.length - 1;
-        max_y = map[0].length - 1;
+        max_x = thisStepMap.length - 1;
+        max_y = thisStepMap[0].length - 1;
+    }
+    
+    /**
+     * 解析行
+     * 
+     * @param lns
+     * @param y 行数
+     * @see [类、类#方法、类#成员]
+     */
+    private void loadLine(String[] lns, int y)
+    {
+        for (int x = 0; x < lns[y].length(); x++)
+        {
+            loadCell(lns, y, x);
+        }
+    }
+    
+    /**
+     * 加载一个格子的类型
+     * 
+     * @param lns
+     * @param y
+     * @param x
+     * @see [类、类#方法、类#成员]
+     */
+    private void loadCell(String[] lns, int y, int x)
+    {
+        if (null == thisStepMap)
+        {
+            thisStepMap = new Cell[lns[y].length()][lns.length];
+        }
+        
+        char type = lns[y].charAt(x);
+        CellType ctype = null;
+        
+        switch (type)
+        {
+            case empty:
+                ctype = CellType.empty;
+                break;
+                
+            case player:
+                ctype = CellType.empty;
+                man = new Zuobiao(x, y);
+                break;
+                
+            case box:
+                ctype = CellType.empty;
+                boxList.add(new Zuobiao(x, y));
+                break;
+                
+            case goal:
+                ctype = CellType.gole;
+                break;
+                
+            case wall:
+                ctype = CellType.wall;
+                break;
+        }
+        thisStepMap[x][y] = new Cell(x, y, ctype);
     }
     
     /**
@@ -93,14 +124,11 @@ public class SokoMap
         
         Long begin = System.currentTimeMillis();
         
-        DeadPoitUtil.loadDeadSet(thisStepMap);
+        DeadPoitUtil.loadDeadSet();
         
         Solution solution = new Solution();
         
-        if (Logger.isInfo)
-        {
-            solution.drawBefo();
-        }
+        Logger.info(solution.drawBefore());
         
         Solution lastOne = SolutionFactory.runByLevel(solution);
         

@@ -76,7 +76,7 @@ public class SolutionFactory
             {
                 Logger.debug("序号：" + (1 + i));
                 Logger.debug(solutions.get(i).toString());
-                solutions.get(i).drawBefo();
+                Logger.debug(solutions.get(i).drawBefore());
             }
             Logger.debug("======获取分支走法结束。");
         }
@@ -146,7 +146,7 @@ public class SolutionFactory
                 Util.replaceZuobiao(mapStr, zuobiao, "a");
             }
             
-            Util.drawMap(mapStr);
+            Logger.info(Util.drawMap(mapStr));
         }
         return cellsPlayerCanGo;
     }

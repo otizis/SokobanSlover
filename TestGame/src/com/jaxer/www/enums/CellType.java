@@ -2,5 +2,12 @@ package com.jaxer.www.enums;
 
 public enum CellType
 {
-    wall, gole, empty;
+    // Ç½
+    wall,
+    
+    // Ä¿±êµã
+    gole,
+    
+    // ¿Õ
+    empty;
 }

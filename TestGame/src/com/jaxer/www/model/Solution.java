@@ -100,7 +100,7 @@ public class Solution
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public ArrayList<Zuobiao> getBoxListBefor()
+    public ArrayList<Zuobiao> getBoxListBefore()
     {
         if (null == this.lastSolution)
         {
@@ -128,7 +128,7 @@ public class Solution
     /**
      * @return
      */
-    public Zuobiao getManBeforStep()
+    public Zuobiao getManBeforeStep()
     {
         if (lastSolution == null)
         {
@@ -149,7 +149,7 @@ public class Solution
             return SokoMap.man;
         }
         // 现在箱子的位置，就是走完后人的位置
-        return getBoxListBefor().get(boxIndex);
+        return getBoxListBefore().get(boxIndex);
     }
     
     /**
@@ -164,7 +164,7 @@ public class Solution
     {
         Logger.debug(this.toString());
         
-        ArrayList<Zuobiao> boxListAfterStep = stepToBox(getBoxListBefor());
+        ArrayList<Zuobiao> boxListAfterStep = stepToBox(getBoxListBefore());
         
         if (null == boxListAfterStep)
         {
@@ -230,37 +230,54 @@ public class Solution
         if (Logger.isDebugEnable())
         {
             Logger.debug("走完后：");
-            this.drawAfter();
+            Logger.debug(drawAfter());
         }
         return boxList;
         
     }
     
-    public void drawBefo()
+    /**
+     * 返回步数推动前的地图
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public String drawBefore()
     {
-        draw(getManBeforStep(), getBoxListBefor());
+        return draw(getManBeforeStep(), getBoxListBefore());
     }
     
-    public void drawAfter()
+    /**
+     * 返回步数推动前的地图
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public String drawAfter()
     {
-        draw(getManAfterStep(), getBoxListAfter());
+        return draw(getManAfterStep(), getBoxListAfter());
     }
     
-    public void draw(Zuobiao man, ArrayList<Zuobiao> boxList)
+    /**
+     * 根据传入的玩家位置，和箱子位置绘图
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public String draw(Zuobiao man, ArrayList<Zuobiao> boxList)
     {
         StringBuilder builder = Util.mapStr();
-        Util.replaceZuobiao(builder, man, "a");
+        Util.replaceZuobiao(builder, man, step == null ? "a" : step.getDesc());
         
         for (Zuobiao box : boxList)
         {
             Util.replaceZuobiao(builder, box, "B");
         }
         
-        Util.drawMap(builder);
+        return Util.drawMap(builder);
     }
     
     /** {@inheritDoc} */
-    
     @Override
     public String toString()
     {
@@ -269,9 +286,7 @@ public class Solution
             return "init one";
         }
         StringBuilder builder = new StringBuilder();
-        builder.append(getBoxListBefor().get(boxIndex));
-        // builder.append(", key=");
-        // builder.append(key);
+        builder.append(getBoxListBefore().get(boxIndex));
         builder.append(", level=");
         builder.append(level);
         builder.append(", step=");
