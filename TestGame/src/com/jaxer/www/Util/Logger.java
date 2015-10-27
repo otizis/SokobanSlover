@@ -6,6 +6,7 @@ public class Logger
     
     public static boolean isInfo = true;
     
+    // ÊÇ·ñÊä³ömap
     public static boolean isoutput = false;
     
     public static void debug(String str)

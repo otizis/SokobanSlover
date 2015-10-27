@@ -40,6 +40,14 @@ public class ZuobiaoUtil
         return result;
     }
     
+    /**
+     * 获取推动箱子时，人站的坐标。不修改入参。
+     * 
+     * @param s 箱子坐标
+     * @param asp 推箱子方向
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
     public static Zuobiao getMovePlayer(Zuobiao s, AspectEnum asp)
     {
         switch (asp)

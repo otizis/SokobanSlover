@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.jaxer.www.model.Cell;
@@ -14,17 +15,22 @@ import com.jaxer.www.model.Zuobiao;
 public class Util
 {
     
-    /**
-     * 地图特征，和步骤的map
-     */
-    private static HashMap<String, Integer> keySet =
-        new HashMap<String, Integer>();
-        
+    // /**
+    // * 地图特征，和步骤的map
+    // */
+    // private static HashMap<String, Integer> keySet =
+    // new HashMap<String, Integer>();
+    
+    private final static boolean useSet = true;
+    
     /**
      * 地图特征值，如果出现过就会记录。 如果重复，表示出现过其他走出这个特征走法，本次为非最优的走法
      */
-    private static HashMap<String, String> mapSet =
-        new HashMap<String, String>();
+    private static HashMap<String, String> mapMap =
+        useSet ? null : new HashMap<String, String>(1024);
+        
+    private static HashSet<String> mapSet =
+        !useSet ? null : new HashSet<String>(1024);
         
     public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
@@ -90,23 +96,23 @@ public class Util
         return result.toString();
     }
     
-    /**
-     * 同步获取key，按前后顺序
-     * 
-     * @param key
-     * @see [类、类#方法、类#成员]
-     */
-    public static String getSolutionKey(String key)
-    {
-        if (keySet.containsKey(key))
-        {
-            int num = keySet.get(key);
-            keySet.put(key, ++num);
-            return key + ":" + num;
-        }
-        keySet.put(key, 0);
-        return key + ":0";
-    }
+    // /**
+    // * 同步获取key，按前后顺序
+    // *
+    // * @param key
+    // * @see [类、类#方法、类#成员]
+    // */
+    // public static String getSolutionKey(String key)
+    // {
+    // if (keySet.containsKey(key))
+    // {
+    // int num = keySet.get(key);
+    // keySet.put(key, ++num);
+    // return key + ":" + num;
+    // }
+    // keySet.put(key, 0);
+    // return key + ":0";
+    // }
     
     /**
      * 生成地图的特征字符串，即全盘描述
@@ -132,10 +138,14 @@ public class Util
     
     public static void printMapSet()
     {
-        Set<String> mapStr = mapSet.keySet();
+        if (useSet)
+        {
+            return;
+        }
+        Set<String> mapStr = mapMap.keySet();
         for (String string : mapStr)
         {
-            System.out.println(string + " : " + mapSet.get(string));
+            System.out.println(string + " : " + mapMap.get(string));
         }
     }
     
@@ -148,13 +158,26 @@ public class Util
      */
     public static boolean putIfAb(String mapStr, String keys)
     {
-        if (mapSet.containsKey(mapStr))
+        if (useSet)
         {
-            mapSet.put(mapStr, keys + "," + mapSet.get(mapStr));
-            return false;
+            if (mapSet.contains(mapStr))
+            {
+                return false;
+            }
+            mapSet.add(mapStr);
+            return true;
         }
-        mapSet.put(mapStr, keys);
-        return true;
+        else
+        {
+            
+            if (mapMap.containsKey(mapStr))
+            {
+                mapMap.put(mapStr, keys + "," + mapMap.get(mapStr));
+                return false;
+            }
+            mapMap.put(mapStr, keys);
+            return true;
+        }
     }
     
     /**
@@ -182,7 +205,15 @@ public class Util
      */
     public static void resetMapSet()
     {
-        mapSet.clear();
+        if (useSet)
+        {
+            mapSet.clear();
+        }
+        else
+        {
+            
+            mapMap.clear();
+        }
         
     }
 }

@@ -1,7 +1,6 @@
 package com.jaxer.www.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import com.jaxer.www.Util.Logger;
 import com.jaxer.www.Util.SolutionFactory;
@@ -35,6 +34,11 @@ public class Solution
     
     private AspectEnum step;
     
+    public Solution()
+    {
+        super();
+    }
+    
     public Solution(AspectEnum step, int boxIndex, Solution lastSolution)
     {
         super();
@@ -44,13 +48,49 @@ public class Solution
         if (lastSolution != null)
         {
             this.level = lastSolution.level + 1;
-            this.key = Util.getSolutionKey(lastSolution.key);
+            // this.key = Util.getSolutionKey(lastSolution.key);
         }
     }
     
-    public Solution()
+    /**
+     * 根据传入的玩家位置，和箱子位置绘图
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public String draw(Zuobiao man, ArrayList<Zuobiao> boxList)
     {
-        super();
+        StringBuilder builder = Util.mapStr();
+        Util.replaceZuobiao(builder, man, step == null ? "a" : step.getDesc());
+        
+        for (Zuobiao box : boxList)
+        {
+            Util.replaceZuobiao(builder, box, "B");
+        }
+        
+        return Util.drawMap(builder);
+    }
+    
+    /**
+     * 返回步数推动前的地图
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public String drawAfter()
+    {
+        return draw(getManAfterStep(), getBoxListAfter());
+    }
+    
+    /**
+     * 返回步数推动前的地图
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public String drawBefore()
+    {
+        return draw(getManBeforeStep(), getBoxListBefore());
     }
     
     public int getBoxIndex()
@@ -67,7 +107,7 @@ public class Solution
     public ArrayList<Zuobiao> getBoxListAfter()
     {
         // 若是根节点，直接返回
-        Solution root = this.lastSolution;
+        Solution root = lastSolution;
         if (null == root)
         {
             return Util.cloneBoxList(SokoMap.boxList);
@@ -81,8 +121,8 @@ public class Solution
         {
             solutList.add(0, root);
             root = root.lastSolution;
-            
         }
+        
         ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(SokoMap.boxList);
         
         for (int i = 0; i < solutList.size(); i++)
@@ -102,11 +142,11 @@ public class Solution
      */
     public ArrayList<Zuobiao> getBoxListBefore()
     {
-        if (null == this.lastSolution)
+        if (null == lastSolution)
         {
             return Util.cloneBoxList(SokoMap.boxList);
         }
-        return this.lastSolution.getBoxListAfter();
+        return lastSolution.getBoxListAfter();
     }
     
     /**
@@ -128,19 +168,6 @@ public class Solution
     /**
      * @return
      */
-    public Zuobiao getManBeforeStep()
-    {
-        if (lastSolution == null)
-        {
-            return SokoMap.man;
-        }
-        Zuobiao manAfter = getManAfterStep();
-        return ZuobiaoUtil.getMovePlayer(manAfter, step);
-    }
-    
-    /**
-     * @return
-     */
     public Zuobiao getManAfterStep()
     {
         if (lastSolution == null)
@@ -153,6 +180,19 @@ public class Solution
     }
     
     /**
+     * @return
+     */
+    public Zuobiao getManBeforeStep()
+    {
+        if (lastSolution == null)
+        {
+            return SokoMap.man;
+        }
+        Zuobiao manAfter = getManAfterStep();
+        return ZuobiaoUtil.getMovePlayer(manAfter, step);
+    }
+    
+    /**
      * @return 返回 result
      */
     public Result getResult()
@@ -160,10 +200,21 @@ public class Solution
         return result;
     }
     
+    private boolean isAllBoxGoal(ArrayList<Zuobiao> boxListAfterStep)
+    {
+        for (Zuobiao zuobiao : boxListAfterStep)
+        {
+            if (!SokoMap.getCell(zuobiao).check(CellType.gole))
+            {
+                
+                return false;
+            }
+        }
+        return true;
+    }
+    
     public void play()
     {
-        Logger.debug(this.toString());
-        
         ArrayList<Zuobiao> boxListAfterStep = stepToBox(getBoxListBefore());
         
         if (null == boxListAfterStep)
@@ -182,19 +233,6 @@ public class Solution
         }
         
         this.result = Result.needsub;
-    }
-    
-    private boolean isAllBoxGoal(ArrayList<Zuobiao> boxListAfterStep)
-    {
-        for (Zuobiao zuobiao : boxListAfterStep)
-        {
-            if (!SokoMap.getCell(zuobiao).check(CellType.gole))
-            {
-                
-                return false;
-            }
-        }
-        return true;
     }
     
     /**
@@ -217,7 +255,7 @@ public class Solution
         
         String boxsStr = Util.descZuobiaoList(boxList);
         
-        HashSet<Zuobiao> allPlayerCanGoCells =
+        ArrayList<Zuobiao> allPlayerCanGoCells =
             SolutionFactory.getAllPlayerCanGoCells(this);
             
         String manStr = Util.descZuobiaoList(allPlayerCanGoCells);
@@ -234,47 +272,6 @@ public class Solution
         }
         return boxList;
         
-    }
-    
-    /**
-     * 返回步数推动前的地图
-     * 
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public String drawBefore()
-    {
-        return draw(getManBeforeStep(), getBoxListBefore());
-    }
-    
-    /**
-     * 返回步数推动前的地图
-     * 
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public String drawAfter()
-    {
-        return draw(getManAfterStep(), getBoxListAfter());
-    }
-    
-    /**
-     * 根据传入的玩家位置，和箱子位置绘图
-     * 
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public String draw(Zuobiao man, ArrayList<Zuobiao> boxList)
-    {
-        StringBuilder builder = Util.mapStr();
-        Util.replaceZuobiao(builder, man, step == null ? "a" : step.getDesc());
-        
-        for (Zuobiao box : boxList)
-        {
-            Util.replaceZuobiao(builder, box, "B");
-        }
-        
-        return Util.drawMap(builder);
     }
     
     /** {@inheritDoc} */

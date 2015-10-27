@@ -151,7 +151,7 @@ public class DeadPoitUtil
         }
         
         // 如果不成功，获取该初始化人位置的等价位置
-        HashSet<Zuobiao> allPlayerCanGoCells =
+        ArrayList<Zuobiao> allPlayerCanGoCells =
             SolutionFactory.getAllPlayerCanGoCells(solu);
             
         // 四种情况，人在雕像的上下左右，且不是以上等价情况的位置，再次推断

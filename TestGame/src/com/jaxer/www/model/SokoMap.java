@@ -12,6 +12,8 @@ public class SokoMap
 {
     public static Cell[][] thisStepMap;
     
+    public static ArrayList<Zuobiao> manCanGoCells = new ArrayList<Zuobiao>();
+    
     public static int max_x;
     
     public static int max_y;
@@ -90,20 +92,24 @@ public class SokoMap
         {
             case empty:
                 ctype = CellType.empty;
+                manCanGoCells.add(new Zuobiao(x, y));
                 break;
                 
             case player:
                 ctype = CellType.empty;
                 man = new Zuobiao(x, y);
+                manCanGoCells.add(new Zuobiao(x, y));
                 break;
                 
             case box:
                 ctype = CellType.empty;
                 boxList.add(new Zuobiao(x, y));
+                manCanGoCells.add(new Zuobiao(x, y));
                 break;
                 
             case goal:
                 ctype = CellType.gole;
+                manCanGoCells.add(new Zuobiao(x, y));
                 break;
                 
             case wall:

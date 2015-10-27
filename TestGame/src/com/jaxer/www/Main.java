@@ -2,6 +2,7 @@ package com.jaxer.www;
 
 import java.util.ArrayList;
 
+import com.jaxer.www.Util.TimeStamps;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
 
@@ -29,6 +30,7 @@ public class Main
         // line.append("GGGMMMSMSSM;");
         // line.append("MMMMMPYSSSM;");
         // line.append("MMMMMSSMSSM");
+        
         line.append("MMMPMMMM;");
         line.append("MMSSSSMM;");
         line.append("SSYYSYSS;");
@@ -74,6 +76,7 @@ public class Main
                 System.out.println(gonglv.get(i));
             }
         }
+        TimeStamps.printMap();
         
     }
     
