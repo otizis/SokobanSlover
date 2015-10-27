@@ -256,7 +256,7 @@ public class Solution
         String boxsStr = Util.descZuobiaoList(boxList);
         
         ArrayList<Zuobiao> allPlayerCanGoCells =
-            SolutionFactory.getAllPlayerCanGoCells(this);
+            SolutionFactory.getPlayerCanGoCells(this);
             
         String manStr = Util.descZuobiaoList(allPlayerCanGoCells);
         

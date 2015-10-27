@@ -14,13 +14,6 @@ import com.jaxer.www.model.Zuobiao;
 
 public class Util
 {
-    
-    // /**
-    // * 地图特征，和步骤的map
-    // */
-    // private static HashMap<String, Integer> keySet =
-    // new HashMap<String, Integer>();
-    
     private final static boolean useSet = true;
     
     /**
@@ -34,6 +27,7 @@ public class Util
         
     public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
+        long begine = System.currentTimeMillis();
         ArrayList<Zuobiao> cloneBoxList =
             new ArrayList<Zuobiao>(boxList.size());
             
@@ -41,6 +35,7 @@ public class Util
         {
             cloneBoxList.add(box.myClone());
         }
+        TimeStamps.addTime("cloneBoxList", System.currentTimeMillis() - begine);
         return cloneBoxList;
     }
     
@@ -96,23 +91,6 @@ public class Util
         return result.toString();
     }
     
-    // /**
-    // * 同步获取key，按前后顺序
-    // *
-    // * @param key
-    // * @see [类、类#方法、类#成员]
-    // */
-    // public static String getSolutionKey(String key)
-    // {
-    // if (keySet.containsKey(key))
-    // {
-    // int num = keySet.get(key);
-    // keySet.put(key, ++num);
-    // return key + ":" + num;
-    // }
-    // keySet.put(key, 0);
-    // return key + ":0";
-    // }
     
     /**
      * 生成地图的特征字符串，即全盘描述

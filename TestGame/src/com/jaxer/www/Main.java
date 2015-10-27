@@ -20,23 +20,26 @@ public class Main
     public static void main(String[] args)
     {
         StringBuilder line = new StringBuilder();
-        // line.append("MMMMMSSMSSM;");
-        // line.append("MMMMMSSYYSM;");
-        // line.append("MMMMMSYMSSM;");
-        // line.append("GGGMMMSMSSM;");
-        // line.append("GSSMSSYSMSS;");
-        // line.append("GSSSSYSYSYS;");
-        // line.append("GSSMSSYSMSS;");
-        // line.append("GGGMMMSMSSM;");
-        // line.append("MMMMMPYSSSM;");
-        // line.append("MMMMMSSMSSM");
+//        line.append("MMMMMSSMSSM;");
+//        line.append("MMMMMSSBBSM;");
+//        line.append("MMMMMSBMSSM;");
+//        line.append("GGGMMMSMSSM;");
+//        line.append("GSSMSSBSMSS;");
+//        line.append("GSSSSBSBSBS;");
+//        line.append("GSSMSSBSMSS;");
+//        line.append("GGGMMMSMSSM;");
+//        line.append("MMMMMPBSSSM;");
+//        line.append("MMMMMSSMSSM");
         
-        line.append("MMMPMMMM;");
-        line.append("MMSSSSMM;");
-        line.append("SSYYSYSS;");
-        line.append("MGGGGGGM;");
-        line.append("SSYSYYSS;");
-        line.append("MMMSSMMM");
+        line.append("MMMMMSSSMMMMMMMMMM;");
+        line.append("MMMMMBSSMMMMMMMMMM;");
+        line.append("MMMMMSSBMMMMMMMMMM;");
+        line.append("MMMSSBSBSMMMMMMMMM;");
+        line.append("MMMSMSMMSMMMMMMMMM;");
+        line.append("MSSSMSMMSMMMMMSSGG;");
+        line.append("MSBSSBSSSSSSSSSSGG;");
+        line.append("MMMMMSMMMSMPMMSSGG;");
+        line.append("MMMMMSSSSSMMMMMMMM");
         
         SokoMap sokoMap = new SokoMap(line.toString());
         

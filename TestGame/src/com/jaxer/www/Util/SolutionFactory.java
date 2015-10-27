@@ -30,7 +30,7 @@ public class SolutionFactory
         
         ArrayList<Zuobiao> boxs = solu.getBoxListAfter();
         
-        ArrayList<Zuobiao> playerCanGoCells = getAllPlayerCanGoCells(solu);
+        ArrayList<Zuobiao> playerCanGoCells = getPlayerCanGoCells(solu);
         
         LinkedList<Solution> solutions = new LinkedList<Solution>();
         
@@ -91,7 +91,7 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static ArrayList<Zuobiao> getAllPlayerCanGoCells(Solution solu)
+    public static ArrayList<Zuobiao> getPlayerCanGoCells(Solution solu)
     {
         long beginTime = System.currentTimeMillis();
         

@@ -29,7 +29,7 @@ public class SokoMap
     
     public static final char wall = 'M';
     
-    public static final char box = 'Y';
+    public static final char box = 'B';
     
     public static final char goal = 'G';
     

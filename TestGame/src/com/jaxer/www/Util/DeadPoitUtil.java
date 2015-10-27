@@ -26,6 +26,7 @@ public class DeadPoitUtil
         {
             for (Cell cell : cells)
             {
+                
                 // 现在放着箱子的可跳过
                 if (SokoMap.boxList.contains(cell))
                 {
@@ -152,22 +153,31 @@ public class DeadPoitUtil
         
         // 如果不成功，获取该初始化人位置的等价位置
         ArrayList<Zuobiao> allPlayerCanGoCells =
-            SolutionFactory.getAllPlayerCanGoCells(solu);
+            SolutionFactory.getPlayerCanGoCells(solu);
             
         // 四种情况，人在雕像的上下左右，且不是以上等价情况的位置，再次推断
         for (AspectEnum aspect : AspectEnum.values())
         {
             
-            Zuobiao move = ZuobiaoUtil.getMove(zb, aspect);
-            if (isPointNeedGo(move))
+            Zuobiao zbMan = ZuobiaoUtil.getMove(zb, aspect);
+            if (zbMan == null)
             {
                 continue;
             }
-            if (allPlayerCanGoCells.contains(move))
+            if (!SokoMap.getCell(zbMan).check(CellType.empty))
             {
                 continue;
             }
-            SokoMap.man = move;
+            if (!isPointNeedGo(zbMan))
+            {
+                continue;
+            }
+            
+            if (allPlayerCanGoCells.contains(zbMan))
+            {
+                continue;
+            }
+            SokoMap.man = zbMan;
             Solution run = SolutionFactory.runByLevel(new Solution());
             if (run != null)
             {
