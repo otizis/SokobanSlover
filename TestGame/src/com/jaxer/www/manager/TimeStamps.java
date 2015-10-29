@@ -1,4 +1,4 @@
-package com.jaxer.www.Util;
+package com.jaxer.www.manager;
 
 import java.util.HashMap;
 import java.util.Set;

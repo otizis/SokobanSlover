@@ -1,11 +1,14 @@
-package com.jaxer.www.Util;
+package com.jaxer.www.manager;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import com.jaxer.www.Util.DeadPoitUtil;
+import com.jaxer.www.Util.Logger;
+import com.jaxer.www.Util.Util;
+import com.jaxer.www.Util.ZuobiaoUtil;
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.enums.CellType;
-import com.jaxer.www.enums.Result;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
 import com.jaxer.www.model.Zuobiao;
@@ -21,47 +24,71 @@ public class SolutionFactory
      */
     public static LinkedList<Solution> getNextSolution(Solution solu)
     {
+        
         if (solu == null)
         {
             return null;
         }
         long beginTime = System.currentTimeMillis();
+        
         Logger.debug("======开始计算下一步走法。");
         
-        ArrayList<Zuobiao> boxs = solu.getBoxListAfter();
+        ArrayList<Zuobiao> boxList = solu.getBoxListAfter();
         
-        ArrayList<Zuobiao> playerCanGoCells = getPlayerCanGoCells(solu);
-        
+        ArrayList<Zuobiao> playerCanGoCells =
+            getPlayerCanGoCells(boxList, solu.getManAfterStep());
+            
         LinkedList<Solution> solutions = new LinkedList<Solution>();
         
         // 计算每一个箱子能走的步法
-        for (int i = 0; i < boxs.size(); i++)
+        for (int i = 0; i < boxList.size(); i++)
         {
-            Zuobiao box = boxs.get(i);
+            Zuobiao box = boxList.get(i);
             
             // 历遍上下左右
-            for (AspectEnum aspce : AspectEnum.values())
+            for (AspectEnum aspect : AspectEnum.values())
             {
                 
-                Zuobiao zuobiaoGo = ZuobiaoUtil.getMove(box, aspce);
-                if (!canGo(solu, zuobiaoGo))
-                {
-                    continue;
-                }
-                // 目标位不是死角
-                if (!DeadPoitUtil.isPointNeedGo(zuobiaoGo))
-                {
-                    continue;
-                }
-                
                 // 推动时，站人的位置人能过去
-                Zuobiao zuobiaoMan = ZuobiaoUtil.getMovePlayer(box, aspce);
+                Zuobiao zuobiaoMan = ZuobiaoUtil.getMovePlayer(box, aspect);
                 if (!playerCanGoCells.contains(zuobiaoMan))
                 {
                     continue;
                 }
+                // 目标位，已经有箱子或是墙，不用推了
+                Zuobiao zuobiaoGo = ZuobiaoUtil.getMove(box, aspect);
+                if (!canGo(boxList, zuobiaoGo))
+                {
+                    continue;
+                }
+                // 目标位是死角，不用推了
+                if (DeadPoitUtil.isPointDie(zuobiaoGo))
+                {
+                    continue;
+                }
                 
-                solutions.add(new Solution(aspce, i, solu));
+                // 已经存在的特征地图不再使用
+                if (!notExist(boxList,
+                    box,
+                    aspect,
+                    playerCanGoCells,
+                    zuobiaoGo,
+                    solu.getKey()))
+                {
+                    Logger.debug("以上" + solu.getKey() + "结果重复，或不是最优解");
+                    continue;
+                }
+                
+                // 移动后是否成功
+                box.moveByAspect(aspect);
+                if (Util.isAllBoxGoal(boxList))
+                {
+                    SolutionManager.setSuccess(new Solution(aspect, i, solu));
+                    return null;
+                }
+                box.backByAspect(aspect);
+                
+                solutions.add(new Solution(aspect, i, solu));
             }
         }
         
@@ -81,7 +108,37 @@ public class SolutionFactory
         
         TimeStamps.addTime("Factory getNextSolution",
             System.currentTimeMillis() - beginTime);
+            
         return solutions;
+    }
+    
+    private static boolean notExist(ArrayList<Zuobiao> boxs, Zuobiao box,
+        AspectEnum aspect, ArrayList<Zuobiao> playerCanGoCells,
+        Zuobiao zuobiaoGo, String keys)
+    {
+        // 移动箱子，得到移动后的列表，生成字串后复原
+        box.moveByAspect(aspect);
+        StringBuilder boxsStr = Util.descZuobiaoList(boxs);
+        box.backByAspect(aspect);
+        
+        // 移动后，箱子位站人，移动后箱子位不能站人
+        StringBuilder manStr = null;
+        playerCanGoCells.add(0, box);
+        if (playerCanGoCells.contains(zuobiaoGo))
+        {
+            playerCanGoCells.remove(zuobiaoGo);
+            manStr = Util.descZuobiaoList(playerCanGoCells);
+            playerCanGoCells.add(zuobiaoGo);
+        }
+        else
+        {
+            manStr = Util.descZuobiaoList(playerCanGoCells);
+        }
+        playerCanGoCells.remove(0);
+        
+        boolean noExist = Util.putIfAb(boxsStr, manStr, keys);
+        
+        return noExist;
     }
     
     /**
@@ -93,17 +150,31 @@ public class SolutionFactory
      */
     public static ArrayList<Zuobiao> getPlayerCanGoCells(Solution solu)
     {
+        
+        return getPlayerCanGoCells(solu.getBoxListAfter(),
+            solu.getManAfterStep());
+    }
+    
+    /**
+     * 获取玩家能移动到的位置
+     * 
+     * @param curMap
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static ArrayList<Zuobiao> getPlayerCanGoCells(
+        ArrayList<Zuobiao> boxList, Zuobiao man)
+    {
         long beginTime = System.currentTimeMillis();
         
         // 地图中可以站人的坐标
         ArrayList<Zuobiao> emptyList = Util.cloneBoxList(SokoMap.manCanGoCells);
         
         // 先移出箱子列表的位置
-        emptyList.removeAll(solu.getBoxListAfter());
+        emptyList.removeAll(boxList);
         
         ArrayList<Zuobiao> canGoList = new ArrayList<Zuobiao>();
         // 把玩家现在的位置放入可以去的set中
-        Zuobiao man = solu.getManAfterStep();
         canGoList.add(man);
         emptyList.remove(man);
         
@@ -136,7 +207,7 @@ public class SolutionFactory
         if (Logger.isdebug)
         {
             StringBuilder mapStr = Util.mapStr();
-            for (Zuobiao zuobiao : solu.getBoxListAfter())
+            for (Zuobiao zuobiao : boxList)
             {
                 Util.replaceZuobiao(mapStr, zuobiao, "B");
             }
@@ -161,7 +232,8 @@ public class SolutionFactory
      * @param gotoCell
      * @see [类、类#方法、类#成员]
      */
-    private static boolean canGo(Solution solu, Zuobiao gotoZuobiao)
+    private static boolean canGo(ArrayList<Zuobiao> boxList,
+        Zuobiao gotoZuobiao)
     {
         long beginTime = System.currentTimeMillis();
         
@@ -176,7 +248,7 @@ public class SolutionFactory
             
         }
         // 目标位不是箱子
-        if (solu.getBoxListAfter().contains(gotoZuobiao))
+        if (boxList.contains(gotoZuobiao))
         {
             return false;
         }
@@ -193,8 +265,7 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static LinkedList<Solution> getNextSolutionsBatch(
-        LinkedList<Solution> needSub)
+    public static Solution loopNextSolutionsBatch(LinkedList<Solution> needSub)
     {
         
         LinkedList<Solution> nextSolutionList = new LinkedList<Solution>();
@@ -209,6 +280,12 @@ public class SolutionFactory
             LinkedList<Solution> temp =
                 SolutionFactory.getNextSolution(removeFirst);
                 
+            removeFirst = null;
+            
+            if (SolutionManager.getSuccess() != null)
+            {
+                return SolutionManager.getSuccess();
+            }
             if (null != temp)
             {
                 nextSolutionList.addAll(temp);
@@ -216,91 +293,8 @@ public class SolutionFactory
             }
         }
         
-        return nextSolutionList;
-    }
-    
-    /**
-     * 一层一层历遍根据走法衍生的走法
-     * 
-     * @return 最后成功的解法，无解返回null
-     * @see [类、类#方法、类#成员]
-     */
-    public static Solution runByLevel(Solution solution)
-    {
-        
-        // 获取现在能走的走法列表
-        LinkedList<Solution> nextSolution =
-            SolutionFactory.getNextSolution(solution);
-            
-        // 每走一步，获取下一步的走法列表，不断循环
-        int level = 1;
-        while (!nextSolution.isEmpty())
-        {
-            
-            Logger.info("开始走第" + level + "层分支，有走法：" + nextSolution.size());
-            
-            // 实施走法
-            LinkedList<Solution> needSub =
-                SolutionFactory.getSoultionNeedSub(nextSolution);
-                
-            // 有成功, 中断向下一级循环
-            if (needSub.size() == 1
-                && needSub.get(0).getResult() == Result.success)
-            {
-                return needSub.get(0);
-            }
-            
-            // 下一步的走法列表
-            nextSolution = SolutionFactory.getNextSolutionsBatch(needSub);
-            
-            level++;
-        }
-        
-        if (Logger.isdebug)
-        {
-            Util.printMapSet();
-        }
+        needSub.addAll(nextSolutionList);
         return null;
     }
     
-    /**
-     * 对每一种走法进行行走，返回走成功的走法
-     * 
-     * @param solutions
-     * @return
-     */
-    public static LinkedList<Solution> getSoultionNeedSub(
-        LinkedList<Solution> solutions)
-    {
-        long beginTime = System.currentTimeMillis();
-        
-        LinkedList<Solution> needSub = new LinkedList<Solution>();
-        
-        ProgressCounter pc = new ProgressCounter(solutions.size(), "演算走法列表");
-        
-        while (!solutions.isEmpty())
-        {
-            pc.addProgress();
-            Solution solu = solutions.removeFirst();
-            
-            solu.play();
-            
-            if (solu.getResult() == Result.success)
-            {
-                needSub.clear();
-                needSub.add(solu);
-                pc.end();
-                break;
-            }
-            if (solu.getResult() == Result.needsub)
-            {
-                needSub.add(solu);
-            }
-            
-        }
-        TimeStamps.addTime("Factory getSoultionNeedSub",
-            System.currentTimeMillis() - beginTime);
-            
-        return needSub;
-    }
 }

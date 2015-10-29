@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.jaxer.www.enums.CellType;
+import com.jaxer.www.manager.TimeStamps;
 import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Zuobiao;
@@ -19,8 +21,8 @@ public class Util
     /**
      * 地图特征值，如果出现过就会记录。 如果重复，表示出现过其他走出这个特征走法，本次为非最优的走法
      */
-    private static HashMap<String, String> mapMap =
-        useSet ? null : new HashMap<String, String>(1024);
+    private static HashMap<String, ArrayList<String>> mapMap =
+        useSet ? null : new HashMap<String, ArrayList<String>>(1024);
         
     private static HashSet<String> mapSet =
         !useSet ? null : new HashSet<String>(1024);
@@ -46,7 +48,7 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static String descZuobiaoList(Collection<Zuobiao> coll)
+    public static StringBuilder descZuobiaoList(Collection<Zuobiao> coll)
     {
         Zuobiao[] array = coll.toArray(new Zuobiao[0]);
         Arrays.sort(array, new Comparator<Zuobiao>()
@@ -71,7 +73,7 @@ public class Util
             buid.append(array[j].getY());
             buid.append(",");
         }
-        return buid.toString();
+        return buid;
     }
     
     public static String drawMap(StringBuilder mapStr)
@@ -90,7 +92,6 @@ public class Util
         result.append("\n");
         return result.toString();
     }
-    
     
     /**
      * 生成地图的特征字符串，即全盘描述
@@ -134,26 +135,38 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean putIfAb(String mapStr, String keys)
+    public static boolean putIfAb(StringBuilder boxsStr, StringBuilder manStr,
+        String keys)
     {
         if (useSet)
         {
-            if (mapSet.contains(mapStr))
+            String sy = boxsStr.append(manStr).toString();
+            if (mapSet.contains(sy))
             {
                 return false;
             }
-            mapSet.add(mapStr);
+            mapSet.add(sy);
             return true;
         }
         else
         {
             
-            if (mapMap.containsKey(mapStr))
-            {
-                mapMap.put(mapStr, keys + "," + mapMap.get(mapStr));
-                return false;
-            }
-            mapMap.put(mapStr, keys);
+            // if (mapMap.containsKey(boxsStr))
+            // {
+            // ArrayList<String> arrayList = mapMap.get(boxsStr);
+            // if (arrayList.contains(manStr))
+            // {
+            // return false;
+            // }
+            // else
+            // {
+            // arrayList.add(manStr);
+            // return true;
+            // }
+            // }
+            // ArrayList<String> arrayList = new ArrayList<String>();
+            // arrayList.add(manStr);
+            // mapMap.put(boxsStr, arrayList);
             return true;
         }
     }
@@ -193,5 +206,44 @@ public class Util
             mapMap.clear();
         }
         
+    }
+    
+    /**
+     * 所有的箱子都站在目标点上
+     * 
+     * @param boxList
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static boolean isAllBoxGoal(ArrayList<Zuobiao> boxList)
+    {
+        for (Zuobiao zuobiao : boxList)
+        {
+            if (!SokoMap.getCell(zuobiao).check(CellType.gole))
+            {
+                
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * 所有的目标点都有箱子覆盖
+     * 
+     * @param boxList
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList)
+    {
+        for (Zuobiao zb : SokoMap.goleList)
+        {
+            if (!boxList.contains(zb))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

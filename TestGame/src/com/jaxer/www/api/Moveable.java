@@ -14,4 +14,6 @@ public interface Moveable
     
     public void moveByAspect(AspectEnum aspect);
     
+    public void backByAspect(AspectEnum aspect);
+    
 }

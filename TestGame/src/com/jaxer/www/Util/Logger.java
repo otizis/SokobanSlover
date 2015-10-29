@@ -7,7 +7,7 @@ public class Logger
     public static boolean isInfo = true;
     
     // ÊÇ·ñÊä³ömap
-    public static boolean isoutput = false;
+    public static boolean isoutput = true;
     
     public static void debug(String str)
     {
@@ -46,5 +46,11 @@ public class Logger
     public static void turnOn()
     {
         isoutput = true;
+    }
+    
+    public static void error(String string)
+    {
+        System.err.println(string);
+        
     }
 }

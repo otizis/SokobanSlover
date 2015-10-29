@@ -5,6 +5,8 @@ import java.util.HashSet;
 
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.enums.CellType;
+import com.jaxer.www.manager.SolutionFactory;
+import com.jaxer.www.manager.SolutionManager;
 import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
@@ -39,7 +41,7 @@ public class DeadPoitUtil
                     continue;
                 }
                 
-                if (isPointDead(cell))
+                if (checkPoint(cell))
                 {
                     deadSet.add(cell);
                     continue;
@@ -72,9 +74,9 @@ public class DeadPoitUtil
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean isPointNeedGo(Zuobiao zb)
+    public static boolean isPointDie(Zuobiao zb)
     {
-        return !deadSet.contains(zb);
+        return deadSet.contains(zb);
         
     }
     
@@ -87,7 +89,7 @@ public class DeadPoitUtil
      * @return
      * @see [类、类#方法、类#成员]
      */
-    private static boolean isPointDead(Zuobiao zb)
+    private static boolean checkPoint(Zuobiao zb)
     {
         
         // 上 右 下 左 为固定的位置，标为1
@@ -131,7 +133,10 @@ public class DeadPoitUtil
     {
         // 不记录计算死点时的地图特征值，每次都重置
         Util.resetMapSet();
-        
+        if (zb.equals(new Zuobiao(6, 2)))
+        {
+            System.out.println(zb);
+        }
         ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(SokoMap.boxList);
         Zuobiao cloneMan = SokoMap.man;
         
@@ -142,7 +147,7 @@ public class DeadPoitUtil
         Solution solu = new Solution();
         
         // 获取该模式，人为初始值，能否推动到任一目标点
-        Solution runByLevel = SolutionFactory.runByLevel(solu);
+        Solution runByLevel = SolutionManager.runByLevel(solu);
         if (null != runByLevel)
         {
             // 复原
@@ -155,30 +160,31 @@ public class DeadPoitUtil
         ArrayList<Zuobiao> allPlayerCanGoCells =
             SolutionFactory.getPlayerCanGoCells(solu);
             
-        // 四种情况，人在雕像的上下左右，且不是以上等价情况的位置，再次推断
+        // 四种情况，人在箱子的上下左右，且不是以上等价情况的位置，再次推断
         for (AspectEnum aspect : AspectEnum.values())
         {
             
-            Zuobiao zbMan = ZuobiaoUtil.getMove(zb, aspect);
-            if (zbMan == null)
-            {
-                continue;
-            }
-            if (!SokoMap.getCell(zbMan).check(CellType.empty))
-            {
-                continue;
-            }
-            if (!isPointNeedGo(zbMan))
+            Zuobiao manOnEdge = ZuobiaoUtil.getMove(zb, aspect);
+            if (manOnEdge == null)
             {
                 continue;
             }
             
-            if (allPlayerCanGoCells.contains(zbMan))
+            if (SokoMap.getCell(manOnEdge).check(CellType.wall))
             {
                 continue;
             }
-            SokoMap.man = zbMan;
-            Solution run = SolutionFactory.runByLevel(new Solution());
+            if (isPointDie(manOnEdge))
+            {
+                continue;
+            }
+            if (allPlayerCanGoCells.contains(manOnEdge))
+            {
+                continue;
+            }
+            
+            SokoMap.man = manOnEdge;
+            Solution run = SolutionManager.runByLevel(new Solution());
             if (run != null)
             {
                 // 复原

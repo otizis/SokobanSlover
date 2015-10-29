@@ -2,7 +2,7 @@ package com.jaxer.www;
 
 import java.util.ArrayList;
 
-import com.jaxer.www.Util.TimeStamps;
+import com.jaxer.www.manager.TimeStamps;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
 
@@ -20,16 +20,16 @@ public class Main
     public static void main(String[] args)
     {
         StringBuilder line = new StringBuilder();
-//        line.append("MMMMMSSMSSM;");
-//        line.append("MMMMMSSBBSM;");
-//        line.append("MMMMMSBMSSM;");
-//        line.append("GGGMMMSMSSM;");
-//        line.append("GSSMSSBSMSS;");
-//        line.append("GSSSSBSBSBS;");
-//        line.append("GSSMSSBSMSS;");
-//        line.append("GGGMMMSMSSM;");
-//        line.append("MMMMMPBSSSM;");
-//        line.append("MMMMMSSMSSM");
+        // line.append("MMMMMSSMSSM;");
+        // line.append("MMMMMSSBBSM;");
+        // line.append("MMMMMSBMSSM;");
+        // line.append("GGGMMMSMSSM;");
+        // line.append("GSSMSSBSMSS;");
+        // line.append("GSSSSBSBSBS;");
+        // line.append("GSSMSSBSMSS;");
+        // line.append("GGGMMMSMSSM;");
+        // line.append("MMMMMPBSSSM;");
+        // line.append("MMMMMSSMSSM");
         
         line.append("MMMMMSSSMMMMMMMMMM;");
         line.append("MMMMMBSSMMMMMMMMMM;");
@@ -40,8 +40,14 @@ public class Main
         line.append("MSBSSBSSSSSSSSSSGG;");
         line.append("MMMMMSMMMSMPMMSSGG;");
         line.append("MMMMMSSSSSMMMMMMMM");
-        
         SokoMap sokoMap = new SokoMap(line.toString());
+        
+
+        
+        //
+        
+//        String convert = MapStrUtil.convert(MapLib.test2);
+//        SokoMap sokoMap = new SokoMap(convert);
         
         Solution lastOne = sokoMap.run();
         

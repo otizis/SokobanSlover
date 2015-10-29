@@ -2,12 +2,9 @@ package com.jaxer.www.model;
 
 import java.util.ArrayList;
 
-import com.jaxer.www.Util.Logger;
-import com.jaxer.www.Util.SolutionFactory;
 import com.jaxer.www.Util.Util;
 import com.jaxer.www.Util.ZuobiaoUtil;
 import com.jaxer.www.enums.AspectEnum;
-import com.jaxer.www.enums.CellType;
 import com.jaxer.www.enums.Result;
 
 /**
@@ -32,6 +29,14 @@ public class Solution
     
     private Result result;
     
+    /**
+     * @param 对result进行赋值
+     */
+    public void setResult(Result result)
+    {
+        this.result = result;
+    }
+
     private AspectEnum step;
     
     public Solution()
@@ -200,78 +205,9 @@ public class Solution
         return result;
     }
     
-    private boolean isAllBoxGoal(ArrayList<Zuobiao> boxListAfterStep)
+    public AspectEnum getStep()
     {
-        for (Zuobiao zuobiao : boxListAfterStep)
-        {
-            if (!SokoMap.getCell(zuobiao).check(CellType.gole))
-            {
-                
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    public void play()
-    {
-        ArrayList<Zuobiao> boxListAfterStep = stepToBox(getBoxListBefore());
-        
-        if (null == boxListAfterStep)
-        {
-            this.result = Result.failue;
-            return;
-        }
-        
-        // 判断是否完成
-        boolean allFinish = isAllBoxGoal(boxListAfterStep);
-        
-        if (allFinish)
-        {
-            this.result = Result.success;
-            return;
-        }
-        
-        this.result = Result.needsub;
-    }
-    
-    /**
-     * 获取该步走完后的box列表。 若不能走，或者走完属于死循环，返回null，方案终结。
-     * 
-     * @param boxList
-     *            
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public ArrayList<Zuobiao> stepToBox(ArrayList<Zuobiao> boxList)
-    {
-        
-        Zuobiao box = boxList.get(boxIndex);
-        box.moveByAspect(step);
-        if (ZuobiaoUtil.out(box))
-        {
-            return null;
-        }
-        
-        String boxsStr = Util.descZuobiaoList(boxList);
-        
-        ArrayList<Zuobiao> allPlayerCanGoCells =
-            SolutionFactory.getPlayerCanGoCells(this);
-            
-        String manStr = Util.descZuobiaoList(allPlayerCanGoCells);
-        
-        if (!Util.putIfAb(boxsStr + "|" + manStr, key))
-        {
-            Logger.debug("以上" + key + "结果重复，或不是最优解");
-            return null;
-        }
-        if (Logger.isDebugEnable())
-        {
-            Logger.debug("走完后：");
-            Logger.debug(drawAfter());
-        }
-        return boxList;
-        
+        return this.step;
     }
     
     /** {@inheritDoc} */

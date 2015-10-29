@@ -19,7 +19,6 @@ public class Zuobiao implements Moveable
         this.y = y;
     }
     
-    
     /**
      * @return 返回 x
      */
@@ -76,6 +75,35 @@ public class Zuobiao implements Moveable
                 
             default:
                 moveRight();
+        }
+        
+    }
+    
+    /**
+     * 回退，回复moveByAspect
+     * 
+     * @param aspect
+     * @see [类、类#方法、类#成员]
+     */
+    @Override
+    public void backByAspect(AspectEnum aspect)
+    {
+        switch (aspect)
+        {
+            case up:
+                moveDown();
+                break;
+                
+            case down:
+                moveUp();
+                break;
+                
+            case left:
+                moveRight();
+                break;
+                
+            default:
+                moveLeft();
         }
         
     }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import com.jaxer.www.Util.DeadPoitUtil;
 import com.jaxer.www.Util.Logger;
-import com.jaxer.www.Util.SolutionFactory;
 import com.jaxer.www.enums.CellType;
+import com.jaxer.www.manager.SolutionManager;
 import com.jaxer.www.myexception.MyException;
 
 public class SokoMap
@@ -13,6 +13,8 @@ public class SokoMap
     public static Cell[][] thisStepMap;
     
     public static ArrayList<Zuobiao> manCanGoCells = new ArrayList<Zuobiao>();
+    
+    public static ArrayList<Zuobiao> goleList = new ArrayList<Zuobiao>();
     
     public static int max_x;
     
@@ -24,6 +26,7 @@ public class SokoMap
     
     public static Cell getCell(Zuobiao zb)
     {
+        
         return thisStepMap[zb.x][zb.y];
     }
     
@@ -36,6 +39,10 @@ public class SokoMap
     public static final char player = 'P';
     
     public static final char empty = 'S';
+    
+    public static final char boxOnGoal = 'O';
+    
+    public static final char playerOnGoal = 'L';
     
     /**
      * 根据输入构造地图
@@ -97,6 +104,10 @@ public class SokoMap
                 
             case player:
                 ctype = CellType.empty;
+                if (man != null)
+                {
+                    throw new MyException("已经存在玩家位置，" + man);
+                }
                 man = new Zuobiao(x, y);
                 manCanGoCells.add(new Zuobiao(x, y));
                 break;
@@ -107,9 +118,26 @@ public class SokoMap
                 manCanGoCells.add(new Zuobiao(x, y));
                 break;
                 
+            case boxOnGoal:
+                ctype = CellType.gole;
+                boxList.add(new Zuobiao(x, y));
+                manCanGoCells.add(new Zuobiao(x, y));
+                break;
+                
+            case playerOnGoal:
+                ctype = CellType.gole;
+                if (man != null)
+                {
+                    throw new MyException("已经存在玩家位置，" + man);
+                }
+                man = new Zuobiao(x, y);
+                manCanGoCells.add(new Zuobiao(x, y));
+                break;
+                
             case goal:
                 ctype = CellType.gole;
                 manCanGoCells.add(new Zuobiao(x, y));
+                goleList.add(new Zuobiao(x, y));
                 break;
                 
             case wall:
@@ -136,7 +164,7 @@ public class SokoMap
         
         Logger.info(solution.drawBefore());
         
-        Solution lastOne = SolutionFactory.runByLevel(solution);
+        Solution lastOne = SolutionManager.runByLevel(solution);
         
         Long end = System.currentTimeMillis();
         

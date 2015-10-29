@@ -1,4 +1,6 @@
-package com.jaxer.www.Util;
+package com.jaxer.www.manager;
+
+import com.jaxer.www.Util.Logger;
 
 public class ProgressCounter
 {
