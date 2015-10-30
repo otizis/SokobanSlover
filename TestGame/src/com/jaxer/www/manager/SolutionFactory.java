@@ -1,6 +1,7 @@
 package com.jaxer.www.manager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import com.jaxer.www.Util.DeadPoitUtil;
@@ -29,8 +30,6 @@ public class SolutionFactory
         {
             return null;
         }
-        long beginTime = System.currentTimeMillis();
-        
         Logger.debug("======开始计算下一步走法。");
         
         ArrayList<Zuobiao> boxList = solu.getBoxListAfter();
@@ -106,9 +105,6 @@ public class SolutionFactory
             Logger.debug("======获取分支走法结束。");
         }
         
-        TimeStamps.addTime("Factory getNextSolution",
-            System.currentTimeMillis() - beginTime);
-            
         return solutions;
     }
     
@@ -118,12 +114,12 @@ public class SolutionFactory
     {
         // 移动箱子，得到移动后的列表，生成字串后复原
         box.moveByAspect(aspect);
-        StringBuilder boxsStr = Util.descZuobiaoList(boxs);
+        byte[] boxsStr = Util.descZuobiaoList(boxs);
         box.backByAspect(aspect);
         
         // 移动后，箱子位站人，移动后箱子位不能站人
-        StringBuilder manStr = null;
-        playerCanGoCells.add(0, box);
+        byte[] manStr = null;
+        playerCanGoCells.add(box);
         if (playerCanGoCells.contains(zuobiaoGo))
         {
             playerCanGoCells.remove(zuobiaoGo);
@@ -134,11 +130,9 @@ public class SolutionFactory
         {
             manStr = Util.descZuobiaoList(playerCanGoCells);
         }
-        playerCanGoCells.remove(0);
+        playerCanGoCells.remove(box);
         
-        boolean noExist = Util.putIfAb(boxsStr, manStr, keys);
-        
-        return noExist;
+        return Util.putIfAb(boxsStr, manStr, keys);
     }
     
     /**
@@ -165,10 +159,8 @@ public class SolutionFactory
     public static ArrayList<Zuobiao> getPlayerCanGoCells(
         ArrayList<Zuobiao> boxList, Zuobiao man)
     {
-        long beginTime = System.currentTimeMillis();
-        
         // 地图中可以站人的坐标
-        ArrayList<Zuobiao> emptyList = Util.cloneBoxList(SokoMap.manCanGoCells);
+        HashSet<Zuobiao> emptyList = Util.coverter(SokoMap.manCanGoCells);
         
         // 先移出箱子列表的位置
         emptyList.removeAll(boxList);
@@ -218,9 +210,7 @@ public class SolutionFactory
             
             Logger.info(Util.drawMap(mapStr));
         }
-        TimeStamps.addTime("Factory getAllPlayerCanGoCells",
-            System.currentTimeMillis() - beginTime);
-            
+
         return canGoList;
     }
     
@@ -235,8 +225,6 @@ public class SolutionFactory
     private static boolean canGo(ArrayList<Zuobiao> boxList,
         Zuobiao gotoZuobiao)
     {
-        long beginTime = System.currentTimeMillis();
-        
         if (gotoZuobiao == null)
         {
             return false;
@@ -252,8 +240,6 @@ public class SolutionFactory
         {
             return false;
         }
-        TimeStamps.addTime("Factory canGo",
-            System.currentTimeMillis() - beginTime);
             
         return true;
     }

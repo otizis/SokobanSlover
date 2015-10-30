@@ -11,7 +11,10 @@ public class Cell extends Zuobiao
     {
         super(x, y);
         this.item = item;
+        this.str = String.valueOf(x).concat(",").concat(String.valueOf(y));
     }
+    
+    private String str;
     
     public boolean check(CellType item)
     {
@@ -32,6 +35,11 @@ public class Cell extends Zuobiao
             default:
                 return "´í";
         }
+    }
+    
+    public String getStr()
+    {
+        return this.str;
     }
     
 }

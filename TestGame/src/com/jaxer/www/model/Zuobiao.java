@@ -3,12 +3,12 @@ package com.jaxer.www.model;
 import com.jaxer.www.api.Moveable;
 import com.jaxer.www.enums.AspectEnum;
 
-public class Zuobiao implements Moveable
+public class Zuobiao implements Moveable, Comparable<Zuobiao>
 {
     int x;
     
     int y;
-    
+
     public Zuobiao()
     {
     }
@@ -18,6 +18,7 @@ public class Zuobiao implements Moveable
         this.x = x;
         this.y = y;
     }
+    
     
     /**
      * @return ·µ»Ø x
@@ -162,13 +163,18 @@ public class Zuobiao implements Moveable
     @Override
     public String toString()
     {
-        StringBuilder builder = new StringBuilder();
-        builder.append("[x=");
-        builder.append(x);
-        builder.append(", y=");
-        builder.append(y);
-        builder.append("]");
-        return builder.toString();
+        return SokoMap.getCell(this).getStr();
+    }
+
+    
+    @Override
+    public int compareTo(Zuobiao other)
+    {
+        if (this.x == other.x)
+        {
+            return this.y - other.y;
+        }
+        return this.x - other.x;
     }
     
 }

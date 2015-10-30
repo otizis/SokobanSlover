@@ -2,6 +2,7 @@ package com.jaxer.www.model;
 
 import java.util.ArrayList;
 
+import com.jaxer.www.Main;
 import com.jaxer.www.Util.DeadPoitUtil;
 import com.jaxer.www.Util.Logger;
 import com.jaxer.www.enums.CellType;
@@ -169,6 +170,9 @@ public class SokoMap
         Long end = System.currentTimeMillis();
         
         System.out.println("ºÄÊ±£º" + (end - begin));
+        
+        Main.outputResult(lastOne);
+        
         return lastOne;
         
     }

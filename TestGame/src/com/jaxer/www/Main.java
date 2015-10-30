@@ -2,7 +2,8 @@ package com.jaxer.www;
 
 import java.util.ArrayList;
 
-import com.jaxer.www.manager.TimeStamps;
+import com.jaxer.www.Util.MapStrUtil;
+import com.jaxer.www.manager.MapLib;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
 
@@ -42,16 +43,11 @@ public class Main
         line.append("MMMMMSSSSSMMMMMMMM");
         SokoMap sokoMap = new SokoMap(line.toString());
         
-
-        
-        //
-        
-//        String convert = MapStrUtil.convert(MapLib.test2);
-//        SokoMap sokoMap = new SokoMap(convert);
+        // String convert = MapStrUtil.convert(MapLib.test2);
+        // SokoMap sokoMap = new SokoMap(convert);
         
         Solution lastOne = sokoMap.run();
         
-        outputResult(lastOne);
         
     }
     
@@ -62,7 +58,7 @@ public class Main
      *            
      * @see [类、类#方法、类#成员]
      */
-    private static void outputResult(Solution lastOne)
+    public static void outputResult(Solution lastOne)
     {
         if (lastOne == null)
         {
@@ -85,7 +81,6 @@ public class Main
                 System.out.println(gonglv.get(i));
             }
         }
-        TimeStamps.printMap();
         
     }
     

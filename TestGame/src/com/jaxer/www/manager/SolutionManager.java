@@ -69,11 +69,7 @@ public class SolutionManager
              System.out.println("²âÊÔÅÜ½áÊø¡£");
              }
         }
-        
-        if (Logger.isdebug)
-        {
-            Util.printMapSet();
-        }
+
         return null;
     }
     

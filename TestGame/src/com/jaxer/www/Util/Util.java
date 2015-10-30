@@ -2,34 +2,23 @@ package com.jaxer.www.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
+import com.jaxer.www.Filter.BloomFliter;
+import com.jaxer.www.api.MapFliter;
 import com.jaxer.www.enums.CellType;
-import com.jaxer.www.manager.TimeStamps;
 import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Zuobiao;
 
 public class Util
 {
-    private final static boolean useSet = true;
     
-    /**
-     * 地图特征值，如果出现过就会记录。 如果重复，表示出现过其他走出这个特征走法，本次为非最优的走法
-     */
-    private static HashMap<String, ArrayList<String>> mapMap =
-        useSet ? null : new HashMap<String, ArrayList<String>>(1024);
-        
-    private static HashSet<String> mapSet =
-        !useSet ? null : new HashSet<String>(1024);
-        
+    private static MapFliter<byte[]> fliter = new BloomFliter();
+    // private static MapFliter fliter = new HashSetFilter();
+    
     public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
-        long begine = System.currentTimeMillis();
         ArrayList<Zuobiao> cloneBoxList =
             new ArrayList<Zuobiao>(boxList.size());
             
@@ -37,8 +26,17 @@ public class Util
         {
             cloneBoxList.add(box.myClone());
         }
-        TimeStamps.addTime("cloneBoxList", System.currentTimeMillis() - begine);
         return cloneBoxList;
+    }
+    
+    public static HashSet<Zuobiao> coverter(ArrayList<Zuobiao> boxList)
+    {
+        HashSet<Zuobiao> boxsSet = new HashSet<Zuobiao>();
+        for (Zuobiao box : boxList)
+        {
+            boxsSet.add(box.myClone());
+        }
+        return boxsSet;
     }
     
     /**
@@ -48,32 +46,17 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static StringBuilder descZuobiaoList(Collection<Zuobiao> coll)
+    public static byte[] descZuobiaoList(ArrayList<Zuobiao> coll)
     {
-        Zuobiao[] array = coll.toArray(new Zuobiao[0]);
-        Arrays.sort(array, new Comparator<Zuobiao>()
+        byte[] desc = new byte[(SokoMap.max_x + 1) * (SokoMap.max_y + 1)];
+        for (Zuobiao b : coll)
         {
-            
-            @Override
-            public int compare(Zuobiao o1, Zuobiao o2)
-            {
-                if (o1.getX() == o2.getX())
-                {
-                    return o2.getY() - o1.getY();
-                }
-                return o2.getX() - o1.getX();
-            }
-            
-        });
-        
-        StringBuilder buid = new StringBuilder();
-        for (int j = 0; j < array.length; j++)
-        {
-            buid.append(array[j].getX());
-            buid.append(array[j].getY());
-            buid.append(",");
+            desc[b.getX()+(b.getY()*SokoMap.max_x)] = 1;
         }
-        return buid;
+        return desc;
+        // Zuobiao[] array = coll.toArray(new Zuobiao[coll.size()]);
+        // Arrays.sort(array);
+        // return Arrays.toString(array);
     }
     
     public static String drawMap(StringBuilder mapStr)
@@ -115,18 +98,18 @@ public class Util
         return buid;
     }
     
-    public static void printMapSet()
-    {
-        if (useSet)
-        {
-            return;
-        }
-        Set<String> mapStr = mapMap.keySet();
-        for (String string : mapStr)
-        {
-            System.out.println(string + " : " + mapMap.get(string));
-        }
-    }
+//    /**
+//     * 是否成功放入set，表示不存在重复
+//     * 
+//     * @param mapStr
+//     * @return
+//     * @see [类、类#方法、类#成员]
+//     */
+//    public static boolean putIfAb(String boxsStr, String manStr, String keys)
+//    {
+//        return fliter.isExist(boxsStr.concat(manStr));
+//        
+//    }
     
     /**
      * 是否成功放入set，表示不存在重复
@@ -135,40 +118,26 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean putIfAb(StringBuilder boxsStr, StringBuilder manStr,
-        String keys)
+    public static boolean putIfAb(byte[] boxsStr, byte[] manStr, String keys)
     {
-        if (useSet)
-        {
-            String sy = boxsStr.append(manStr).toString();
-            if (mapSet.contains(sy))
-            {
-                return false;
-            }
-            mapSet.add(sy);
-            return true;
-        }
-        else
-        {
-            
-            // if (mapMap.containsKey(boxsStr))
-            // {
-            // ArrayList<String> arrayList = mapMap.get(boxsStr);
-            // if (arrayList.contains(manStr))
-            // {
-            // return false;
-            // }
-            // else
-            // {
-            // arrayList.add(manStr);
-            // return true;
-            // }
-            // }
-            // ArrayList<String> arrayList = new ArrayList<String>();
-            // arrayList.add(manStr);
-            // mapMap.put(boxsStr, arrayList);
-            return true;
-        }
+        byte[] all = Arrays.copyOf(boxsStr, boxsStr.length+manStr.length);
+        System.arraycopy(manStr, 0, all, boxsStr.length, manStr.length);
+        
+        return fliter.isExist(all);
+        
+    }
+    
+    /**
+     * 清空记录
+     * 
+     * @param mapStr
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static void resetMapSet()
+    {
+        fliter.clear();
+        
     }
     
     /**
@@ -185,27 +154,6 @@ public class Util
         
         a.replace(indxe, indxe + 1, str);
         return a;
-    }
-    
-    /**
-     * 清空记录
-     * 
-     * @param mapStr
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public static void resetMapSet()
-    {
-        if (useSet)
-        {
-            mapSet.clear();
-        }
-        else
-        {
-            
-            mapMap.clear();
-        }
-        
     }
     
     /**
@@ -246,4 +194,5 @@ public class Util
         }
         return true;
     }
+    
 }
