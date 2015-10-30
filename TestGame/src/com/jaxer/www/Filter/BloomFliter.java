@@ -25,10 +25,10 @@ public class BloomFliter implements MapFliter<byte[]>
     {
         if (bloomFilter.mightContain(str))
         {
-            return false;
+            return true;
         }
         bloomFilter.put(str);
-        return true;
+        return false;
     }
     
     @Override

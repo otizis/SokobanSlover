@@ -36,7 +36,7 @@ public class Solution
     {
         this.result = result;
     }
-
+    
     private AspectEnum step;
     
     public Solution()
@@ -137,6 +137,59 @@ public class Solution
             moveBox.moveByAspect(solutList.get(i).step);
         }
         return cloneBoxList;
+    }
+    
+    /**
+     * 获取箱子列表和人，人的位置放在0
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    /**
+     * <一句话功能简述> <功能详细描述>
+     * 
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public ArrayList<Zuobiao> getBoxAndManAfter()
+    {
+        ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(SokoMap.boxList);
+        
+        // 若是根节点，直接返回
+        Solution root = lastSolution;
+        if (null == root)
+        {
+            cloneBoxList.add(0, SokoMap.man);
+            return cloneBoxList;
+        }
+        
+        ArrayList<Solution> solutList = new ArrayList<Solution>();
+        
+        solutList.add(this);
+        
+        while (root.lastSolution != null)
+        {
+            solutList.add(0, root);
+            root = root.lastSolution;
+        }
+        
+        Zuobiao man = null;
+        int size = solutList.size();
+        for (int i = 0; i < size; i++)
+        {
+            Solution solution = solutList.get(i);
+            int moveIndex = solution.getBoxIndex();
+            Zuobiao moveBox = cloneBoxList.get(moveIndex);
+            moveBox.moveByAspect(solution.step);
+            if ((i + 1) == size)
+            {
+                man = ZuobiaoUtil.getMovePlayer(moveBox, solution.step);
+            }
+        }
+        
+        cloneBoxList.add(0, man);
+        return cloneBoxList;
+        
     }
     
     /**

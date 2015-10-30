@@ -3,7 +3,6 @@ package com.jaxer.www.manager;
 import java.util.LinkedList;
 
 import com.jaxer.www.Util.Logger;
-import com.jaxer.www.Util.Util;
 import com.jaxer.www.model.Solution;
 
 public class SolutionManager
@@ -46,6 +45,10 @@ public class SolutionManager
             return slover;
         }
         
+        if (nextSolution == null)
+        {
+            return null;
+        }
         // 每走一步，获取下一步的走法列表，不断循环
         int level = 1;
         while (!nextSolution.isEmpty())
@@ -64,12 +67,8 @@ public class SolutionManager
             }
             
             level++;
-             if (level == 50)
-             {
-             System.out.println("测试跑结束。");
-             }
         }
-
+        
         return null;
     }
     

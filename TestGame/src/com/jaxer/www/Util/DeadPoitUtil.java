@@ -20,10 +20,9 @@ public class DeadPoitUtil
     
     public static void loadDeadSet()
     {
-        Logger.info("==开始死点推算==");
         Logger.turnOff();
+        Logger.info("==开始死点推算==");
         Long begin = System.currentTimeMillis();
-        
         for (Cell[] cells : SokoMap.thisStepMap)
         {
             for (Cell cell : cells)
@@ -56,15 +55,17 @@ public class DeadPoitUtil
             }
         }
         Long end = System.currentTimeMillis();
-        Logger.turnOn();
         Logger.info("==结束死点推算,耗时：" + (end - begin));
-        StringBuilder mapStr = Util.mapStr();
-        
-        for (Zuobiao point : deadSet)
+        Logger.turnOn();
+        if (Logger.isInfo)
         {
-            Util.replaceZuobiao(mapStr, point, "X");
+            StringBuilder mapStr = Util.mapStr();
+            for (Zuobiao point : deadSet)
+            {
+                Util.replaceZuobiao(mapStr, point, "X");
+            }
+            Logger.info(Util.drawMap(mapStr));
         }
-        Logger.info(Util.drawMap(mapStr));
     }
     
     /**
@@ -133,10 +134,7 @@ public class DeadPoitUtil
     {
         // 不记录计算死点时的地图特征值，每次都重置
         Util.resetMapSet();
-        if (zb.equals(new Zuobiao(6, 2)))
-        {
-            System.out.println(zb);
-        }
+        
         ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(SokoMap.boxList);
         Zuobiao cloneMan = SokoMap.man;
         

@@ -20,34 +20,9 @@ public class Main
     
     public static void main(String[] args)
     {
-        StringBuilder line = new StringBuilder();
-        // line.append("MMMMMSSMSSM;");
-        // line.append("MMMMMSSBBSM;");
-        // line.append("MMMMMSBMSSM;");
-        // line.append("GGGMMMSMSSM;");
-        // line.append("GSSMSSBSMSS;");
-        // line.append("GSSSSBSBSBS;");
-        // line.append("GSSMSSBSMSS;");
-        // line.append("GGGMMMSMSSM;");
-        // line.append("MMMMMPBSSSM;");
-        // line.append("MMMMMSSMSSM");
-        
-        line.append("MMMMMSSSMMMMMMMMMM;");
-        line.append("MMMMMBSSMMMMMMMMMM;");
-        line.append("MMMMMSSBMMMMMMMMMM;");
-        line.append("MMMSSBSBSMMMMMMMMM;");
-        line.append("MMMSMSMMSMMMMMMMMM;");
-        line.append("MSSSMSMMSMMMMMSSGG;");
-        line.append("MSBSSBSSSSSSSSSSGG;");
-        line.append("MMMMMSMMMSMPMMSSGG;");
-        line.append("MMMMMSSSSSMMMMMMMM");
-        SokoMap sokoMap = new SokoMap(line.toString());
-        
-        // String convert = MapStrUtil.convert(MapLib.test2);
-        // SokoMap sokoMap = new SokoMap(convert);
-        
-        Solution lastOne = sokoMap.run();
-        
+        // String mapStr = MapStrUtil.convert(MapLib.test2);
+        SokoMap sokoMap = new SokoMap(MapLib.test3.toString());
+        sokoMap.run();
         
     }
     

@@ -32,11 +32,12 @@ public class SolutionFactory
         }
         Logger.debug("======开始计算下一步走法。");
         
-        ArrayList<Zuobiao> boxList = solu.getBoxListAfter();
+        ArrayList<Zuobiao> boxList = solu.getBoxAndManAfter();
         
-        ArrayList<Zuobiao> playerCanGoCells =
-            getPlayerCanGoCells(boxList, solu.getManAfterStep());
-            
+        Zuobiao man = boxList.remove(0);
+        
+        ArrayList<Zuobiao> playerCanGoCells = getPlayerCanGoCells(boxList, man);
+        
         LinkedList<Solution> solutions = new LinkedList<Solution>();
         
         // 计算每一个箱子能走的步法
@@ -67,7 +68,7 @@ public class SolutionFactory
                 }
                 
                 // 已经存在的特征地图不再使用
-                if (!notExist(boxList,
+                if (isExist(boxList,
                     box,
                     aspect,
                     playerCanGoCells,
@@ -108,13 +109,13 @@ public class SolutionFactory
         return solutions;
     }
     
-    private static boolean notExist(ArrayList<Zuobiao> boxs, Zuobiao box,
+    private static boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao box,
         AspectEnum aspect, ArrayList<Zuobiao> playerCanGoCells,
         Zuobiao zuobiaoGo, String keys)
     {
         // 移动箱子，得到移动后的列表，生成字串后复原
         box.moveByAspect(aspect);
-        byte[] boxsStr = Util.descZuobiaoList(boxs);
+        byte[] boxsStr = Util.coverBox(boxs);
         box.backByAspect(aspect);
         
         // 移动后，箱子位站人，移动后箱子位不能站人
@@ -123,16 +124,16 @@ public class SolutionFactory
         if (playerCanGoCells.contains(zuobiaoGo))
         {
             playerCanGoCells.remove(zuobiaoGo);
-            manStr = Util.descZuobiaoList(playerCanGoCells);
+            manStr = Util.coverMan(playerCanGoCells, boxsStr);
             playerCanGoCells.add(zuobiaoGo);
         }
         else
         {
-            manStr = Util.descZuobiaoList(playerCanGoCells);
+            manStr = Util.coverMan(playerCanGoCells, boxsStr);
         }
         playerCanGoCells.remove(box);
         
-        return Util.putIfAb(boxsStr, manStr, keys);
+        return Util.isExist(manStr, keys);
     }
     
     /**
@@ -160,7 +161,7 @@ public class SolutionFactory
         ArrayList<Zuobiao> boxList, Zuobiao man)
     {
         // 地图中可以站人的坐标
-        HashSet<Zuobiao> emptyList = Util.coverter(SokoMap.manCanGoCells);
+        HashSet<Zuobiao> emptyList = new HashSet<>(SokoMap.manCanGoCells);
         
         // 先移出箱子列表的位置
         emptyList.removeAll(boxList);
@@ -210,7 +211,7 @@ public class SolutionFactory
             
             Logger.info(Util.drawMap(mapStr));
         }
-
+        
         return canGoList;
     }
     
@@ -240,7 +241,7 @@ public class SolutionFactory
         {
             return false;
         }
-            
+        
         return true;
     }
     

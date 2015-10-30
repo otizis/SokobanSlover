@@ -2,6 +2,7 @@ package com.jaxer.www.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 
 import com.jaxer.www.Filter.BloomFliter;
@@ -10,6 +11,7 @@ import com.jaxer.www.enums.CellType;
 import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Zuobiao;
+import com.jaxer.www.myexception.MyException;
 
 public class Util
 {
@@ -46,17 +48,36 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static byte[] descZuobiaoList(ArrayList<Zuobiao> coll)
+    public static byte[] coverBox(ArrayList<Zuobiao> coll)
     {
         byte[] desc = new byte[(SokoMap.max_x + 1) * (SokoMap.max_y + 1)];
         for (Zuobiao b : coll)
         {
-            desc[b.getX()+(b.getY()*SokoMap.max_x)] = 1;
+            desc[b.getX() + (b.getY() * SokoMap.max_x)] = 1;
         }
         return desc;
-        // Zuobiao[] array = coll.toArray(new Zuobiao[coll.size()]);
-        // Arrays.sort(array);
-        // return Arrays.toString(array);
+    }
+    
+    /**
+     * 将人坐标打孔到给的地图特征码中。 <功能详细描述>
+     * 
+     * @param mans
+     * @param mapByte
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static byte[] coverMan(ArrayList<Zuobiao> mans, byte[] mapByte)
+    {
+        for (Zuobiao b : mans)
+        {
+            int index = b.getX() + (b.getY() * SokoMap.max_x);
+            if (mapByte[index] == 1)
+            {
+                throw new MyException("描述有重复。");
+            }
+            mapByte[index] = 2;
+        }
+        return mapByte;
     }
     
     public static String drawMap(StringBuilder mapStr)
@@ -98,19 +119,6 @@ public class Util
         return buid;
     }
     
-//    /**
-//     * 是否成功放入set，表示不存在重复
-//     * 
-//     * @param mapStr
-//     * @return
-//     * @see [类、类#方法、类#成员]
-//     */
-//    public static boolean putIfAb(String boxsStr, String manStr, String keys)
-//    {
-//        return fliter.isExist(boxsStr.concat(manStr));
-//        
-//    }
-    
     /**
      * 是否成功放入set，表示不存在重复
      * 
@@ -118,11 +126,8 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean putIfAb(byte[] boxsStr, byte[] manStr, String keys)
+    public static boolean isExist(byte[] all, String keys)
     {
-        byte[] all = Arrays.copyOf(boxsStr, boxsStr.length+manStr.length);
-        System.arraycopy(manStr, 0, all, boxsStr.length, manStr.length);
-        
         return fliter.isExist(all);
         
     }
