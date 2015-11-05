@@ -68,7 +68,7 @@ public class SolutionFactory
                 }
                 
                 // 已经存在的特征地图不再使用
-                if (isExist(boxList, box, aspect, playerCanGoCells, zuobiaoGo))
+                if (isExist(boxList, box, aspect))
                 {
                     Logger.debug("以上结果重复，或不是最优解");
                     continue;
@@ -105,28 +105,18 @@ public class SolutionFactory
     }
     
     private static boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao box,
-        AspectEnum aspect, ArrayList<Zuobiao> playerCanGoCells,
-        Zuobiao zuobiaoGo)
+        AspectEnum aspect)
     {
+        Zuobiao man = box.myClone();
         // 移动箱子，得到移动后的列表，生成字串后复原
         box.moveByAspect(aspect);
         byte[] boxsStr = Util.coverBox(boxs);
-        box.backByAspect(aspect);
         
-        // 移动后，箱子位站人，移动后箱子位不能站人
-        byte[] manStr = null;
-        playerCanGoCells.add(box);
-        if (playerCanGoCells.contains(zuobiaoGo))
-        {
-            playerCanGoCells.remove(zuobiaoGo);
-            manStr = Util.coverMan(playerCanGoCells, boxsStr);
-            playerCanGoCells.add(zuobiaoGo);
-        }
-        else
-        {
-            manStr = Util.coverMan(playerCanGoCells, boxsStr);
-        }
-        playerCanGoCells.remove(box);
+        ArrayList<Zuobiao> canGoCellsAfter = getPlayerCanGoCells(boxs, man);
+        byte[] manStr = Util.coverMan(canGoCellsAfter, boxsStr);
+        
+        // 移动箱子，得到移动后的列表，生成字串后复原
+        box.backByAspect(aspect);
         
         return Util.isExist(manStr);
     }
