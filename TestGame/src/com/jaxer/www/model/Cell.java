@@ -29,7 +29,7 @@ public class Cell extends Zuobiao
             case empty:
                 return " ";
             case wall:
-                return "#";
+                return "W";
             case gole:
                 return "O";
             default:
