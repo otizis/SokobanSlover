@@ -4,20 +4,25 @@ import java.util.HashSet;
 
 import com.jaxer.www.api.MapFliter;
 
-public class HashSetFilter implements MapFliter<String>
+public class HashSetFilter implements MapFliter
 {
     private static HashSet<String> mapSet = new HashSet<String>(1024);
     
     @Override
-    public boolean isExist(String str)
+    public boolean isExist(byte[] all)
     {
-        
-        if (mapSet.contains(str))
+        StringBuilder builder = new StringBuilder();
+        for (byte b : all)
         {
-            return false;
+            builder.append(b);
         }
-        mapSet.add(str);
-        return true;
+        String a = builder.toString();
+        if (mapSet.contains(a))
+        {
+            return true;
+        }
+        mapSet.add(a);
+        return false;
     }
     
     @Override

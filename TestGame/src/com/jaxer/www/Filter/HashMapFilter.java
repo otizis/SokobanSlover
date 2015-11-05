@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import com.jaxer.www.api.MapFliter;
 
-public class HashMapFilter implements MapFliter<String>
+public class HashMapFilter implements MapFliter
 {
     
     /**
@@ -15,9 +15,9 @@ public class HashMapFilter implements MapFliter<String>
         new HashMap<String, ArrayList<String>>(1024);
         
     @Override
-    public boolean isExist(String str)
+    public boolean isExist(byte[] str)
     {
-        // TODO Auto-generated method stub
+        
         return false;
     }
     

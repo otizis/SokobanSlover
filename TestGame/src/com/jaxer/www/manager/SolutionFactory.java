@@ -68,14 +68,9 @@ public class SolutionFactory
                 }
                 
                 // 已经存在的特征地图不再使用
-                if (isExist(boxList,
-                    box,
-                    aspect,
-                    playerCanGoCells,
-                    zuobiaoGo,
-                    solu.getKey()))
+                if (isExist(boxList, box, aspect, playerCanGoCells, zuobiaoGo))
                 {
-                    Logger.debug("以上" + solu.getKey() + "结果重复，或不是最优解");
+                    Logger.debug("以上结果重复，或不是最优解");
                     continue;
                 }
                 
@@ -111,7 +106,7 @@ public class SolutionFactory
     
     private static boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao box,
         AspectEnum aspect, ArrayList<Zuobiao> playerCanGoCells,
-        Zuobiao zuobiaoGo, String keys)
+        Zuobiao zuobiaoGo)
     {
         // 移动箱子，得到移动后的列表，生成字串后复原
         box.moveByAspect(aspect);
@@ -133,7 +128,7 @@ public class SolutionFactory
         }
         playerCanGoCells.remove(box);
         
-        return Util.isExist(manStr, keys);
+        return Util.isExist(manStr);
     }
     
     /**

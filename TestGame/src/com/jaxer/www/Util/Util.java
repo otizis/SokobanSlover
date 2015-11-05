@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import com.jaxer.www.Filter.BloomFliter;
+import com.jaxer.www.Filter.HashSetFilter;
+import com.jaxer.www.Filter.TurnOffFliter;
 import com.jaxer.www.api.MapFliter;
 import com.jaxer.www.enums.CellType;
 import com.jaxer.www.model.Cell;
@@ -16,8 +18,10 @@ import com.jaxer.www.myexception.MyException;
 public class Util
 {
     
-    private static MapFliter<byte[]> fliter = new BloomFliter();
+    private static MapFliter fliter = new BloomFliter();
+    
     // private static MapFliter fliter = new HashSetFilter();
+    // private static MapFliter fliter = new TurnOffFliter();
     
     public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
@@ -48,12 +52,24 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
+    /**
+     * <一句话功能简述> <功能详细描述>
+     * 
+     * @param coll
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
     public static byte[] coverBox(ArrayList<Zuobiao> coll)
     {
         byte[] desc = new byte[(SokoMap.max_x + 1) * (SokoMap.max_y + 1)];
         for (Zuobiao b : coll)
         {
-            desc[b.getX() + (b.getY() * SokoMap.max_x)] = 1;
+            int i = getLen(b);
+            desc[i] = 1;
+        }
+        if (Logger.isdebug)
+        {
+            Logger.debug(Arrays.toString(desc));
         }
         return desc;
     }
@@ -70,14 +86,31 @@ public class Util
     {
         for (Zuobiao b : mans)
         {
-            int index = b.getX() + (b.getY() * SokoMap.max_x);
+            int index = getLen(b);
             if (mapByte[index] == 1)
             {
                 throw new MyException("描述有重复。");
             }
             mapByte[index] = 2;
         }
+        if (Logger.isdebug)
+        {
+            Logger.debug(Arrays.toString(mapByte));
+        }
         return mapByte;
+    }
+    
+    /**
+     * 转化二维坐标为一维数组的序号
+     * 
+     * @param b
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    private static int getLen(Zuobiao b)
+    {
+        int index = b.getX() + (b.getY() * (SokoMap.max_x + 1));
+        return index;
     }
     
     public static String drawMap(StringBuilder mapStr)
@@ -126,8 +159,9 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean isExist(byte[] all, String keys)
+    public static boolean isExist(byte[] all)
     {
+        
         return fliter.isExist(all);
         
     }

@@ -1,8 +1,8 @@
 package com.jaxer.www.api;
 
-public interface MapFliter<T>
+public interface MapFliter
 {
-    public boolean isExist(T t);
+    public boolean isExist(byte[] t);
     
     public void clear();
     

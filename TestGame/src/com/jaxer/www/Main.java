@@ -20,8 +20,8 @@ public class Main
     
     public static void main(String[] args)
     {
-        // String mapStr = MapStrUtil.convert(MapLib.test2);
-        SokoMap sokoMap = new SokoMap(MapLib.test3.toString());
+        String mapStr = MapStrUtil.convert(MapLib.test5);
+        SokoMap sokoMap = new SokoMap(mapStr);
         sokoMap.run();
         
     }

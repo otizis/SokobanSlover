@@ -20,22 +20,9 @@ public class Solution
     // 移动的box的序号
     private int boxIndex = -1;
     
-    // 算法的编号
-    String key = "0";
-    
     private Solution lastSolution;
     
     public int level;
-    
-    private Result result;
-    
-    /**
-     * @param 对result进行赋值
-     */
-    public void setResult(Result result)
-    {
-        this.result = result;
-    }
     
     private AspectEnum step;
     
@@ -53,7 +40,6 @@ public class Solution
         if (lastSolution != null)
         {
             this.level = lastSolution.level + 1;
-            // this.key = Util.getSolutionKey(lastSolution.key);
         }
     }
     
@@ -208,14 +194,6 @@ public class Solution
     }
     
     /**
-     * @return 返回 key
-     */
-    public String getKey()
-    {
-        return key;
-    }
-    
-    /**
      * @return 返回 lastSolution
      */
     public Solution getLastSolution()
@@ -248,14 +226,6 @@ public class Solution
         }
         Zuobiao manAfter = getManAfterStep();
         return ZuobiaoUtil.getMovePlayer(manAfter, step);
-    }
-    
-    /**
-     * @return 返回 result
-     */
-    public Result getResult()
-    {
-        return result;
     }
     
     public AspectEnum getStep()

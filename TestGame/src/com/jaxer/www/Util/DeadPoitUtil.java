@@ -20,7 +20,11 @@ public class DeadPoitUtil
     
     public static void loadDeadSet()
     {
-        Logger.turnOff();
+        if (!Logger.isprintDeadInfo)
+        {
+            Logger.turnOff();
+            
+        }
         Logger.info("==开始死点推算==");
         Long begin = System.currentTimeMillis();
         for (Cell[] cells : SokoMap.thisStepMap)
@@ -31,12 +35,20 @@ public class DeadPoitUtil
                 // 现在放着箱子的可跳过
                 if (SokoMap.boxList.contains(cell))
                 {
-                    Logger.debug("跳过" + cell + ",放着箱子不会是死点");
+                    if (Logger.isdebug)
+                    {
+                        
+                        Logger.debug("跳过" + cell + ",放着箱子不会是死点");
+                    }
                     continue;
                 }
                 if (cell.check(CellType.gole) || cell.check(CellType.wall))
                 {
-                    Logger.debug("跳过" + cell + ",墙和目标点不会是死点");
+                    if (Logger.isdebug)
+                    {
+                        Logger.debug("跳过" + cell + ",墙和目标点不会是死点");
+                        
+                    }
                     continue;
                 }
                 

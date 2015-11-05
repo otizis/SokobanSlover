@@ -41,7 +41,7 @@ public class SokoMap
     
     public static final char empty = 'S';
     
-    public static final char boxOnGoal = 'O';
+    public static final char boxOnGoal = 'R';
     
     public static final char playerOnGoal = 'L';
     
@@ -133,6 +133,7 @@ public class SokoMap
                 }
                 man = new Zuobiao(x, y);
                 manCanGoCells.add(new Zuobiao(x, y));
+                goleList.add(new Zuobiao(x, y));
                 break;
                 
             case goal:

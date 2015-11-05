@@ -6,8 +6,10 @@ public class Logger
     
     public static boolean isInfo = true;
     
-    // 是否输出map
     public static boolean isoutput = true;
+    
+    // 是否输出死点计算过程
+    public static boolean isprintDeadInfo = false;
     
     public static void debug(String str)
     {

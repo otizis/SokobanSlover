@@ -1,9 +1,15 @@
 package com.jaxer.www.Util;
 
 import com.jaxer.www.enums.Mf8Enum;
+import com.jaxer.www.manager.MapLib;
 
 public class MapStrUtil
 {
+    public static String convert(StringBuilder mapStr)
+    {
+        
+        return mapStr.toString();
+    }
     
     public static String convert(String mapStr)
     {
@@ -30,19 +36,6 @@ public class MapStrUtil
     
     public static void main(String[] args)
     {
-        String test = "########------;" + // LR
-            "#--#---#------;" + // LR
-            "#-*..--#------;" + // LR
-            "#-*$-$-#------;" + // LR
-            "#-.**$########;" + // LR
-            "#---.$---#@-##;" + // LR
-            "##.**$-#--*$##;" + // LR
-            "#--#-----.$.-#;" + // LR
-            "#######-$.*.-#;" + // LR
-            "------#-$.$.-#;" + // LR
-            "------##$.$*-#;" + // LR
-            "------##--#--#;" + // LR
-            "------########";
-        System.out.println(convert(test));
+        System.out.println(convert(MapLib.test2));
     }
 }
