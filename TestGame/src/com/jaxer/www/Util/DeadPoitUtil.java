@@ -1,25 +1,21 @@
 package com.jaxer.www.Util;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.enums.CellType;
-import com.jaxer.www.manager.SolutionFactory;
-import com.jaxer.www.manager.SolutionManager;
 import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.SokoMap;
-import com.jaxer.www.model.Solution;
 import com.jaxer.www.model.Zuobiao;
 
 public class DeadPoitUtil
 {
-    private static boolean smart = true;
+    private static boolean smart = false;
     
-    static HashSet<Zuobiao> deadSet = new HashSet<Zuobiao>();
-    
-    public static void loadDeadSet()
+    public static HashSet<Zuobiao> loadDeadSet(SokoMap sokoMap)
     {
+        HashSet<Zuobiao> deadSet = new HashSet<Zuobiao>();
+        
         if (!Logger.isprintDeadInfo)
         {
             Logger.turnOff();
@@ -27,13 +23,13 @@ public class DeadPoitUtil
         }
         Logger.info("==开始死点推算==");
         Long begin = System.currentTimeMillis();
-        for (Cell[] cells : SokoMap.thisStepMap)
+        for (Cell[] cells : sokoMap.getThisStepMap())
         {
             for (Cell cell : cells)
             {
                 
                 // 现在放着箱子的可跳过
-                if (SokoMap.boxList.contains(cell))
+                if (sokoMap.getBoxList().contains(cell))
                 {
                     if (Logger.isdebug)
                     {
@@ -52,13 +48,15 @@ public class DeadPoitUtil
                     continue;
                 }
                 
-                if (checkPoint(cell))
+                if (checkPoint(sokoMap, cell))
                 {
                     deadSet.add(cell);
                     continue;
                 }
                 
-                if (smart && smartDeadPoint(cell))
+                if (smart
+                // && smartDeadPoint(cell)
+                )
                 {
                     deadSet.add(cell);
                     
@@ -71,26 +69,14 @@ public class DeadPoitUtil
         Logger.turnOn();
         if (Logger.isInfo)
         {
-            StringBuilder mapStr = Util.mapStr();
+            StringBuilder mapStr = sokoMap.mapStr();
             for (Zuobiao point : deadSet)
             {
-                Util.replaceZuobiao(mapStr, point, "X");
+                Util.replaceZuobiao(mapStr, point, "X", sokoMap.getMax_x());
             }
-            Logger.info(Util.drawMap(mapStr));
+            Logger.info(Util.drawMap(mapStr, sokoMap.getMax_x()));
         }
-    }
-    
-    /**
-     * 该点位是否是死点,墙角
-     * 
-     * @param zb
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public static boolean isPointDie(Zuobiao zb)
-    {
-        return deadSet.contains(zb);
-        
+        return deadSet;
     }
     
     /**
@@ -102,19 +88,18 @@ public class DeadPoitUtil
      * @return
      * @see [类、类#方法、类#成员]
      */
-    private static boolean checkPoint(Zuobiao zb)
+    private static boolean checkPoint(SokoMap sokomap, Zuobiao zb)
     {
         
         // 上 右 下 左 为固定的位置，标为1
-        AspectEnum[] UpRiDoLe =
-            {AspectEnum.up, AspectEnum.left, AspectEnum.down, AspectEnum.right};
-            
+        AspectEnum[] UpRiDoLe = {AspectEnum.up, AspectEnum.left, AspectEnum.down, AspectEnum.right};
+        
         boolean[] isWall = {false, false, false, false};
         
         for (int i = 0; i < UpRiDoLe.length; i++)
         {
-            Zuobiao edge = ZuobiaoUtil.getMove(zb, UpRiDoLe[i]);
-            if (edge == null || SokoMap.getCell(edge).check(CellType.wall))
+            Zuobiao edge = sokomap.getMove(zb, UpRiDoLe[i]);
+            if (edge == null || sokomap.getCell(edge).check(CellType.wall))
             {
                 isWall[i] = true;
             }
@@ -135,79 +120,77 @@ public class DeadPoitUtil
         return false;
     }
     
-    /**
-     * 死点推断，移除所有雕像，只放一个雕像在推断的点，看是否能移动到任一个目标点。
-     * 如果不能，再测试人位置是否可以有其他情况，历遍上下左右的位置，再次进行推断。
-     * 
-     * @param zb 箱子的坐标
-     * @see [类、类#方法、类#成员]
-     */
-    public static boolean smartDeadPoint(Zuobiao zb)
-    {
-        // 不记录计算死点时的地图特征值，每次都重置
-        Util.resetMapSet();
-        
-        ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(SokoMap.boxList);
-        Zuobiao cloneMan = SokoMap.man;
-        
-        ArrayList<Zuobiao> deadPointList = new ArrayList<Zuobiao>();
-        deadPointList.add(zb);
-        SokoMap.boxList = deadPointList;
-        
-        Solution solu = new Solution();
-        
-        // 获取该模式，人为初始值，能否推动到任一目标点
-        Solution runByLevel = SolutionManager.runByLevel(solu);
-        if (null != runByLevel)
-        {
-            // 复原
-            SokoMap.boxList = cloneBoxList;
-            SokoMap.man = cloneMan;
-            return false;
-        }
-        
-        // 如果不成功，获取该初始化人位置的等价位置
-        ArrayList<Zuobiao> allPlayerCanGoCells =
-            SolutionFactory.getPlayerCanGoCells(solu);
-            
-        // 四种情况，人在箱子的上下左右，且不是以上等价情况的位置，再次推断
-        for (AspectEnum aspect : AspectEnum.values())
-        {
-            
-            Zuobiao manOnEdge = ZuobiaoUtil.getMove(zb, aspect);
-            if (manOnEdge == null)
-            {
-                continue;
-            }
-            
-            if (SokoMap.getCell(manOnEdge).check(CellType.wall))
-            {
-                continue;
-            }
-            if (isPointDie(manOnEdge))
-            {
-                continue;
-            }
-            if (allPlayerCanGoCells.contains(manOnEdge))
-            {
-                continue;
-            }
-            
-            SokoMap.man = manOnEdge;
-            Solution run = SolutionManager.runByLevel(new Solution());
-            if (run != null)
-            {
-                // 复原
-                SokoMap.boxList = cloneBoxList;
-                SokoMap.man = cloneMan;
-                return false;
-            }
-        }
-        
-        // 复原
-        SokoMap.boxList = cloneBoxList;
-        SokoMap.man = cloneMan;
-        return true;
-    }
-    
+    // /**
+    // * 死点推断，移除所有雕像，只放一个雕像在推断的点，看是否能移动到任一个目标点。 如果不能，再测试人位置是否可以有其他情况，历遍上下左右的位置，再次进行推断。
+    // *
+    // * @param zb 箱子的坐标
+    // * @see [类、类#方法、类#成员]
+    // */
+    // public static boolean smartDeadPoint(Zuobiao zb)
+    // {
+    // // 不记录计算死点时的地图特征值，每次都重置
+    // Util.resetMapSet();
+    //
+    // ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(SokoMap.boxList);
+    // Zuobiao cloneMan = SokoMap.man;
+    //
+    // ArrayList<Zuobiao> deadPointList = new ArrayList<Zuobiao>();
+    // deadPointList.add(zb);
+    // SokoMap.boxList = deadPointList;
+    //
+    // Solution solu = new Solution();
+    //
+    // // 获取该模式，人为初始值，能否推动到任一目标点
+    // Solution runByLevel = SolutionManager.runByLevel(solu);
+    // if (null != runByLevel)
+    // {
+    // // 复原
+    // SokoMap.boxList = cloneBoxList;
+    // SokoMap.man = cloneMan;
+    // return false;
+    // }
+    //
+    // // 如果不成功，获取该初始化人位置的等价位置
+    // ArrayList<Zuobiao> allPlayerCanGoCells = SolutionFactory.getPlayerCanGoCells(solu);
+    //
+    // // 四种情况，人在箱子的上下左右，且不是以上等价情况的位置，再次推断
+    // for (AspectEnum aspect : AspectEnum.values())
+    // {
+    //
+    // Zuobiao manOnEdge = ZuobiaoUtil.getMove(zb, aspect);
+    // if (manOnEdge == null)
+    // {
+    // continue;
+    // }
+    //
+    // if (SokoMap.getCell(manOnEdge).check(CellType.wall))
+    // {
+    // continue;
+    // }
+    // if (isPointDie(manOnEdge))
+    // {
+    // continue;
+    // }
+    // if (allPlayerCanGoCells.contains(manOnEdge))
+    // {
+    // continue;
+    // }
+    //
+    // SokoMap.man = manOnEdge;
+    // Solution run = SolutionManager.runByLevel(new Solution());
+    // if (run != null)
+    // {
+    // // 复原
+    // SokoMap.boxList = cloneBoxList;
+    // SokoMap.man = cloneMan;
+    // return false;
+    // }
+    // }
+    //
+    // // 复原
+    // SokoMap.boxList = cloneBoxList;
+    // SokoMap.man = cloneMan;
+    // return true;
+    // }
+    //
 }

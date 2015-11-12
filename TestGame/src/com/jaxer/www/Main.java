@@ -20,7 +20,8 @@ public class Main
     
     public static void main(String[] args)
     {
-        String mapStr = MapStrUtil.convert(MapLib.map1);
+
+        String mapStr = MapStrUtil.convert(MapLib.test3);
         SokoMap sokoMap = new SokoMap(mapStr);
         sokoMap.run();
         
@@ -46,7 +47,7 @@ public class Main
             Solution solut = lastOne;
             do
             {
-                gonglv.add(0, solut.drawAfter());
+                gonglv.add(0, solut.toString());
                 solut = solut.getLastSolution();
             } while (solut != null);
             

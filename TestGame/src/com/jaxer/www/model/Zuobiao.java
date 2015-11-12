@@ -8,7 +8,7 @@ public class Zuobiao implements Moveable, Comparable<Zuobiao>
     int x;
     
     int y;
-
+    
     public Zuobiao()
     {
     }
@@ -18,7 +18,6 @@ public class Zuobiao implements Moveable, Comparable<Zuobiao>
         this.x = x;
         this.y = y;
     }
-    
     
     /**
      * @return ·µ»Ø x
@@ -158,14 +157,20 @@ public class Zuobiao implements Moveable, Comparable<Zuobiao>
         this.y = y;
     }
     
-    /** {@inheritDoc} */
-    
+    /**
+     * @return
+     */
     @Override
     public String toString()
     {
-        return SokoMap.getCell(this).getStr();
+        StringBuilder builder = new StringBuilder();
+        builder.append("(");
+        builder.append(x);
+        builder.append(",");
+        builder.append(y);
+        builder.append(")");
+        return builder.toString();
     }
-
     
     @Override
     public int compareTo(Zuobiao other)
