@@ -182,4 +182,23 @@ public class Zuobiao implements Moveable, Comparable<Zuobiao>
         return this.x - other.x;
     }
     
+    public Zuobiao getDown()
+    {
+        return new Zuobiao(x, y + 1);
+    }
+    
+    public Zuobiao getLeft()
+    {
+        return new Zuobiao(x - 1, y);
+    }
+    
+    public Zuobiao getRight()
+    {
+        return new Zuobiao(x + 1, y);
+    }
+    
+    public Zuobiao getUp()
+    {
+        return new Zuobiao(x, y - 1);
+    }
 }

@@ -3,7 +3,7 @@ package com.jaxer.www.Util;
 import com.jaxer.www.enums.Mf8Enum;
 import com.jaxer.www.manager.MapLib;
 
-public class MapStrUtil
+public class MapStrConverter
 {
     public static String convert(StringBuilder mapStr)
     {

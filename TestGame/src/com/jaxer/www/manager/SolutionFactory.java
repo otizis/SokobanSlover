@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import com.jaxer.www.Util.Logger;
 import com.jaxer.www.Util.Util;
 import com.jaxer.www.enums.AspectEnum;
+import com.jaxer.www.model.FastSet;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
 import com.jaxer.www.model.Zuobiao;
@@ -32,7 +33,7 @@ public class SolutionFactory
         
         Zuobiao man = boxList.remove(0);
         
-        ArrayList<Zuobiao> playerCanGoCells = sokoMap.getPlayerCanGoCells(boxList, man);
+        FastSet playerCanGoCells = sokoMap.getPlayerCanGoCells(boxList, man);
         
         LinkedList<Solution> solutions = new LinkedList<Solution>();
         
@@ -72,9 +73,9 @@ public class SolutionFactory
                 
                 // 移动后是否成功
                 box.moveByAspect(aspect);
-                if (Util.isAllBoxGoal(boxList,sokoMap))
+                if (Util.isAllBoxGoal(boxList, sokoMap))
                 {
-                    SolutionManager.setSuccess(new Solution(aspect, i, solu));
+                    sokoMap.setSuccess(new Solution(aspect, i, solu));
                     return null;
                 }
                 box.backByAspect(aspect);
@@ -100,22 +101,6 @@ public class SolutionFactory
         return solutions;
     }
     
-    
-    // /**
-    // * 获取玩家能移动到的位置
-    // *
-    // * @param curMap
-    // * @return
-    // * @see [类、类#方法、类#成员]
-    // */
-    // public static ArrayList<Zuobiao> getPlayerCanGoCells(Solution solu)
-    // {
-    //
-    // return getPlayerCanGoCells(solu.getBoxListAfter(), solu.getManAfterStep());
-    // }
-    
-
-    
     /**
      * 批量获取走法的下一步走法。
      * 
@@ -123,7 +108,7 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static Solution loopNextSolutionsBatch(LinkedList<Solution> needSub, SokoMap sokoMap)
+    public static void loopNextSolutionsBatch(LinkedList<Solution> needSub, SokoMap sokoMap)
     {
         
         LinkedList<Solution> nextSolutionList = new LinkedList<Solution>();
@@ -139,9 +124,9 @@ public class SolutionFactory
             
             removeFirst = null;
             
-            if (SolutionManager.getSuccess() != null)
+            if (sokoMap.getSuccess() != null)
             {
-                return SolutionManager.getSuccess();
+                return;
             }
             if (null != temp)
             {
@@ -151,7 +136,6 @@ public class SolutionFactory
         }
         
         needSub.addAll(nextSolutionList);
-        return null;
     }
     
 }

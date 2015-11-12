@@ -5,7 +5,6 @@ import com.jaxer.www.enums.AspectEnum;
 /**
  * 走法
  * 
- * @author yejiangtao
  * @version [版本号, 2015年9月19日]
  * @see [相关类/方法]
  * @since [产品/模块版本]

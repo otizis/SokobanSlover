@@ -15,9 +15,8 @@ public class Util
     
     public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
-        ArrayList<Zuobiao> cloneBoxList =
-            new ArrayList<Zuobiao>(boxList.size());
-            
+        ArrayList<Zuobiao> cloneBoxList = new ArrayList<Zuobiao>(boxList.size());
+        
         for (Zuobiao box : boxList)
         {
             cloneBoxList.add(box.myClone());
@@ -35,11 +34,10 @@ public class Util
         return boxsSet;
     }
     
-    
-    public static String drawMap(StringBuilder mapStr,int max_x)
+    public static String drawMap(StringBuilder mapStr, int map_max_x)
     {
         StringBuilder result = new StringBuilder();
-        int width = max_x + 1;
+        int width = map_max_x + 1;
         for (int i = 0; i < mapStr.length(); i++)
         {
             if (i % width == 0)
@@ -53,9 +51,6 @@ public class Util
         return result.toString();
     }
     
-    
-    
-    
     /**
      * 生成地图的特征字符串，即全盘描述
      * 
@@ -63,8 +58,7 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb,
-        String str,int sokomap_Max_X)
+    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb, String str, int sokomap_Max_X)
     {
         int indxe = zb.getY() * (sokomap_Max_X + 1) + zb.getX();
         
@@ -79,7 +73,7 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean isAllBoxGoal(ArrayList<Zuobiao> boxList,SokoMap sokoMap)
+    public static boolean isAllBoxGoal(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
     {
         for (Zuobiao zuobiao : boxList)
         {
@@ -99,7 +93,7 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList,SokoMap sokoMap)
+    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
     {
         for (Zuobiao zb : sokoMap.getGoleList())
         {

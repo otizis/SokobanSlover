@@ -12,46 +12,26 @@ import com.jaxer.www.model.Zuobiao;
 
 public class SolutionManager
 {
-    private static Solution success;
-    
-    /**
-     * @return 返回 success
-     */
-    public static Solution getSuccess()
-    {
-        return success;
-    }
-    
-    /**
-     * @param 对success进行赋值
-     */
-    public static void setSuccess(Solution success)
-    {
-        SolutionManager.success = success;
-    }
-    
     /**
      * 一层一层历遍根据走法衍生的走法
      * 
      * @return 最后成功的解法，无解返回null
      * @see [类、类#方法、类#成员]
      */
-    public static Solution runByLevel(Solution solution, SokoMap sokoMap)
+    public static void runByLevel(SokoMap sokoMap)
     {
         
         // 获取现在能走的走法列表
-        LinkedList<Solution> nextSolution = SolutionFactory.getNextSolution(solution, sokoMap);
+        LinkedList<Solution> nextSolution = SolutionFactory.getNextSolution(new Solution(), sokoMap);
         
-        if (success != null)
+        if (sokoMap.getSuccess() != null)
         {
-            Solution slover = success;
-            success = null;
-            return slover;
+            return;
         }
         
         if (nextSolution == null)
         {
-            return null;
+            return;
         }
         // 每走一步，获取下一步的走法列表，不断循环
         int level = 1;
@@ -61,18 +41,16 @@ public class SolutionManager
             Logger.info("开始走第" + level + "层分支，有走法：" + nextSolution.size());
             
             // 下一步的走法列表
-            Solution solver = SolutionFactory.loopNextSolutionsBatch(nextSolution, sokoMap);
+            SolutionFactory.loopNextSolutionsBatch(nextSolution, sokoMap);
             
-            if (solver != null)
+            if (sokoMap.getSuccess() != null)
             {
-                success = null;
-                return solver;
+                return;
             }
             
             level++;
         }
         
-        return null;
     }
     
     /**
@@ -130,10 +108,7 @@ public class SolutionManager
      */
     public static String drawBefore(Solution solu, SokoMap sokoMap)
     {
-        return draw(getManBeforeStep(solu, sokoMap),
-            getBoxListBefore(solu, sokoMap),
-            solu.getStep(),
-            sokoMap);
+        return draw(getManBeforeStep(solu, sokoMap), getBoxListBefore(solu, sokoMap), solu.getStep(), sokoMap);
     }
     
     /**
@@ -145,11 +120,11 @@ public class SolutionManager
     public static String draw(Zuobiao man, ArrayList<Zuobiao> boxList, AspectEnum step, SokoMap sokoMap)
     {
         StringBuilder builder = sokoMap.mapStr();
-        Util.replaceZuobiao(builder, man, step == null ? "a" : step.getDesc(),sokoMap.getMax_x());
+        Util.replaceZuobiao(builder, man, step == null ? "a" : step.getDesc(), sokoMap.getMax_x());
         
         for (Zuobiao box : boxList)
         {
-            Util.replaceZuobiao(builder, box, "B",sokoMap.getMax_x());
+            Util.replaceZuobiao(builder, box, "B", sokoMap.getMax_x());
         }
         
         return Util.drawMap(builder, sokoMap.getMax_x());
