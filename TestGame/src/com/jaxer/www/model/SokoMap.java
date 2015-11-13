@@ -389,7 +389,8 @@ public class SokoMap
         return mapCells;
     }
     
-    public boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao box, AspectEnum aspect)
+    public boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao box,
+        AspectEnum aspect)
     {
         Zuobiao man = box.myClone();
         // 移动箱子，得到移动后的列表，生成字串后复原
@@ -595,60 +596,70 @@ public class SokoMap
                 solut = solut.getLastSolution();
             } while (solut != null);
             
+            int stepNum = gonglv.size() - 1;
             AnimatedGifEncoder e = new AnimatedGifEncoder();
             e.setRepeat(0);
-            e.start(gifName + "_" + gonglv.size() + ".gif");
+            e.start(gifName + "_" + stepNum + ".gif");
             e.setQuality(1);
             e.setDelay(500);
             
             int fontSize = 15;
-            int g_iWidth = (int)((max_x+1) * 2 * (8 / 15d) * fontSize) + 1;
-            int g_iHeight = (max_y + 3) * fontSize;
+            int width = (int)((max_x + 1) * 2 * (8 / 15d) * fontSize) + 1;
+            int height = (max_y + 3) * fontSize + 3;
             for (int i = 0; i < gonglv.size(); i++)
             {
                 System.out.println(i);
                 String str = SolutionManager.drawBefore(gonglv.get(i), this);
                 System.out.println(str);
                 
-                BufferedImage g_oImage = new BufferedImage(g_iWidth, g_iHeight, BufferedImage.TYPE_3BYTE_BGR);
-                Graphics graphics = g_oImage.createGraphics();
-                
-                graphics.setColor(Color.WHITE);
-                graphics.fillRect(0, 0, g_iWidth, g_iHeight);
-                
-                graphics.setColor(Color.BLACK);
-                graphics.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
-                int y = 10;
-                graphics.drawString("step:" + i + "/" + gonglv.size(), 0, y);
-                for (String line : str.split("\n"))
-                {
-                    graphics.drawString(line, 0, y += fontSize);
-                }
-                graphics.dispose();
+                BufferedImage g_oImage =
+                    getGifFrame(stepNum, fontSize, width, height, i, str);
                 e.addFrame(g_oImage);
+                
                 // 生成推动后的
-                y = 10;
                 str = SolutionManager.drawAfter(gonglv.get(i), this);
-                g_oImage = new BufferedImage(g_iWidth, g_iHeight, BufferedImage.TYPE_BYTE_GRAY);
-                graphics = g_oImage.createGraphics();
-                
-                graphics.setColor(Color.WHITE);
-                graphics.fillRect(0, 0, g_iWidth, g_iHeight);
-                
-                graphics.setColor(Color.BLACK);
-                graphics.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
-                graphics.drawString("step:" + i + "/" + gonglv.size(), 0, y);
-                for (String line : str.split("\n"))
-                {
-                    graphics.drawString(line, 0, y += fontSize);
-                }
-                graphics.dispose();
+                g_oImage =
+                    getGifFrame(stepNum, fontSize, width, height, i, str);
                 e.addFrame(g_oImage);
                 
             }
             e.finish();
         }
         
+    }
+    
+    /**
+     * 获取一帧图片
+     * 
+     * @param stepNum 总步数
+     * @param fontSize 字体大小
+     * @param w 图片宽度
+     * @param h 图片高度
+     * @param i 该步数
+     * @param str 图形字符串
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    private BufferedImage getGifFrame(int stepNum, int fontSize, int w, int h,
+        int i, String str)
+    {
+        BufferedImage g_oImage =
+            new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
+        Graphics graphics = g_oImage.createGraphics();
+        
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, w, h);
+        
+        graphics.setColor(Color.BLACK);
+        graphics.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
+        graphics.drawString("step:" + i + "/" + stepNum, 2, fontSize);
+        int y = fontSize;
+        for (String line : str.split("\n"))
+        {
+            graphics.drawString(line, 2, fontSize += y);
+        }
+        graphics.dispose();
+        return g_oImage;
     }
     
 }

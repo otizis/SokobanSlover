@@ -17,10 +17,11 @@ public class Main
     public static void main(String[] args)
     {
         
-        String a = "#############|#-$-....----#|#-$$**.*$$$-#|#---....--$-#|######-######|---#-----#---|---#--$--#---|---##-####---|---#-----#---|---#--$--#---|---####-@#---|------####---";
-        String mapStr = MapStrConverter.convert(MapLib.test3);
+        String a =
+            "#############|#-$-....----#|#-$$**.*$$$-#|#---....--$-#|######-######|---#-----#---|---#--$--#---|---##-####---|---#-----#---|---#--$--#---|---####-@#---|------####---";
+        String mapStr = MapStrConverter.convert(MapLib.map1);
         SokoMap sokoMap = new SokoMap(mapStr);
-        sokoMap.run("map1");
+        sokoMap.run("map_" + System.currentTimeMillis());
         
     }
     
