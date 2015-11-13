@@ -28,7 +28,7 @@ public class Cell extends Zuobiao
             case wall:
                 return "W";
             case gole:
-                return "O";
+                return ".";
             default:
                 return "´í";
         }

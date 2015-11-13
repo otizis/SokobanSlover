@@ -67,23 +67,23 @@ public class Util
     }
     
     /**
-     * 所有的箱子都站在目标点上
+     * 有几个箱子不在目标点上
      * 
      * @param boxList
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean isAllBoxGoal(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
+    public static int boxsNumNotGole(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
     {
+        int rs = boxList.size();
         for (Zuobiao zuobiao : boxList)
         {
-            if (!sokoMap.getCell(zuobiao).check(CellType.gole))
+            if (sokoMap.getCell(zuobiao).check(CellType.gole))
             {
-                
-                return false;
+                rs--;
             }
         }
-        return true;
+        return rs;
     }
     
     /**

@@ -120,7 +120,8 @@ public class SolutionManager
     public static String draw(Zuobiao man, ArrayList<Zuobiao> boxList, AspectEnum step, SokoMap sokoMap)
     {
         StringBuilder builder = sokoMap.mapStr();
-        Util.replaceZuobiao(builder, man, step == null ? "a" : step.getDesc(), sokoMap.getMax_x());
+        Util.replaceZuobiao(builder, man, "a", sokoMap.getMax_x());
+        // Util.replaceZuobiao(builder, man, step == null ? "a" : step.getDesc(), sokoMap.getMax_x());
         
         for (Zuobiao box : boxList)
         {

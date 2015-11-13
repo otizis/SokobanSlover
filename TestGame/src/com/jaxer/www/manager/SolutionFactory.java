@@ -1,6 +1,7 @@
 package com.jaxer.www.manager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.jaxer.www.Util.Logger;
@@ -73,14 +74,15 @@ public class SolutionFactory
                 
                 // 移动后是否成功
                 box.moveByAspect(aspect);
-                if (Util.isAllBoxGoal(boxList, sokoMap))
+                int less = Util.boxsNumNotGole(boxList, sokoMap);
+                if (less == 0)
                 {
                     sokoMap.setSuccess(new Solution(aspect, i, solu));
                     return null;
                 }
                 box.backByAspect(aspect);
                 
-                solutions.add(new Solution(aspect, i, solu));
+                solutions.add(new Solution(aspect, i, solu, less));
             }
         }
         
@@ -131,11 +133,50 @@ public class SolutionFactory
             if (null != temp)
             {
                 nextSolutionList.addAll(temp);
-                Logger.debug("=============");
             }
         }
+        int all = nextSolutionList.size();
+        if (all < 500000)
+        {
+            needSub.addAll(nextSolutionList);
+            return;
+        }
         
-        needSub.addAll(nextSolutionList);
+        int level = 1;
+        while (true)
+        {
+            Iterator<Solution> iterator = nextSolutionList.iterator();
+            double count = 0;
+            while (iterator.hasNext())
+            {
+                Solution next = iterator.next();
+                
+                if (next.getBoxsNotGole() == level)
+                {
+                    needSub.add(next);
+                    count++;
+                }
+            }
+            Logger
+                .info(all + "中留下" + level + "个箱子未中的有" + count + "个,占" + Math.round(count * 10000 / all) / 100.0 + "%");
+            if (level == sokoMap.getGoleList().size())
+            {
+                break;
+            }
+            int maxCount = 700000;
+            if (count > maxCount)
+            {
+                
+                Logger.info(">" + maxCount + ",抛弃" + (all - count) + "其他。");
+                break;
+            }
+            if (count != 0 && (count / all) > 0.2)
+            {
+                Logger.info(">20%抛弃" + (all - count) + "其他。");
+                break;
+            }
+            level++;
+        }
     }
     
 }

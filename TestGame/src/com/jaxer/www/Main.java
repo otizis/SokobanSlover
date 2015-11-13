@@ -16,10 +16,11 @@ public class Main
     
     public static void main(String[] args)
     {
-
+        
+        String a = "#############|#-$-....----#|#-$$**.*$$$-#|#---....--$-#|######-######|---#-----#---|---#--$--#---|---##-####---|---#-----#---|---#--$--#---|---####-@#---|------####---";
         String mapStr = MapStrConverter.convert(MapLib.test3);
         SokoMap sokoMap = new SokoMap(mapStr);
-        sokoMap.run();
+        sokoMap.run("map1");
         
     }
     

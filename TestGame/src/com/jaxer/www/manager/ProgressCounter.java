@@ -15,7 +15,7 @@ public class ProgressCounter
     /**
      * 输出精度的颗粒
      */
-    private final int accuracy = 10;
+    private final int accuracy = 20;
     
     public ProgressCounter(long total, String desc)
     {
@@ -25,7 +25,7 @@ public class ProgressCounter
     
     public void addProgress()
     {
-        if (total < 20000)
+        if (total < 50000)
         {
             return;
         }

@@ -1,6 +1,7 @@
 package com.jaxer.www.model;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import com.jaxer.www.myexception.MyException;
 
@@ -18,6 +19,9 @@ public class FastSet
         map_x = x;
     }
     
+    /**
+     * true表示存在于集合中
+     */
     boolean[] mapBytes;
     
     public boolean[] getMapBytes()
@@ -58,18 +62,22 @@ public class FastSet
     
     public void removeAll(Collection<Zuobiao> paramCollection)
     {
-        for (Zuobiao zuobiao : paramCollection)
+        Iterator<Zuobiao> iterator = paramCollection.iterator();
+        while (iterator.hasNext())
         {
-            int index = getLen(zuobiao);
+            Zuobiao next = iterator.next();
+            int index = getLen(next);
             mapBytes[index] = false;
         }
     }
     
     public void addAll(Collection<Zuobiao> paramCollection)
     {
-        for (Zuobiao zuobiao : paramCollection)
+        Iterator<Zuobiao> iterator = paramCollection.iterator();
+        while (iterator.hasNext())
         {
-            int index = getLen(zuobiao);
+            Zuobiao next = iterator.next();
+            int index = getLen(next);
             mapBytes[index] = true;
         }
     }

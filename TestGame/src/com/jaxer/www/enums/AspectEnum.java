@@ -2,7 +2,7 @@ package com.jaxer.www.enums;
 
 public enum AspectEnum
 {
-    up("¡ü", ""), right("¡ú", ""), down("¡ý", ""), left("¡û", "");
+    up("^", ""), right(">", ""), down("v", ""), left("<", "");
     
     String desc;
     

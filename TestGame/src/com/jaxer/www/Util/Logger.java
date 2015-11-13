@@ -9,7 +9,7 @@ public class Logger
     public static boolean isoutput = true;
     
     // 是否输出死点计算过程
-    public static boolean isprintDeadInfo = false;
+    public static boolean isprintDeadInfo = true;
     
     public static void debug(String str)
     {

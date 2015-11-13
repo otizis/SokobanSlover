@@ -16,6 +16,8 @@ public class Solution
     
     private Solution lastSolution;
     
+    private int boxsNotGole;
+    
     public int level;
     
     private AspectEnum step;
@@ -37,6 +39,12 @@ public class Solution
         }
     }
     
+    public Solution(AspectEnum step, int boxIndex, Solution lastSolution, int boxsNotGole)
+    {
+        this(step, boxIndex, lastSolution);
+        this.boxsNotGole = boxsNotGole;
+    }
+    
     public int getBoxIndex()
     {
         return boxIndex;
@@ -55,6 +63,14 @@ public class Solution
         return this.step;
     }
     
+    /**
+     * @return ·µ»Ø boxsNotGole
+     */
+    public int getBoxsNotGole()
+    {
+        return boxsNotGole;
+    }
+    
     /** {@inheritDoc} */
     @Override
     public String toString()
@@ -66,7 +82,7 @@ public class Solution
         StringBuilder builder = new StringBuilder();
         builder.append("L");
         builder.append(level);
-        //builder.append(getBoxListBefore().get(boxIndex));
+        // builder.append(getBoxListBefore().get(boxIndex));
         builder.append(",");
         builder.append(step.getDesc());
         return builder.toString();

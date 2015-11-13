@@ -1,5 +1,9 @@
 package com.jaxer.www.model;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,6 +15,7 @@ import com.jaxer.www.Util.Util;
 import com.jaxer.www.api.MapFliter;
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.enums.CellType;
+import com.jaxer.www.gif.AnimatedGifEncoder;
 import com.jaxer.www.manager.SolutionManager;
 import com.jaxer.www.myexception.MyException;
 
@@ -319,17 +324,17 @@ public class SokoMap
      */
     public FastSet getPlayerCanGoCells(ArrayList<Zuobiao> boxList, Zuobiao man)
     {
-        FastSet fastSet = new FastSet(this.max_x, this.max_y);
+        FastSet meightGo = new FastSet(this.max_x, this.max_y);
         // 地图中可以站人的坐标
-        fastSet.addAll(this.manCanGoCells);
+        meightGo.addAll(this.manCanGoCells);
         
         // 先移出箱子列表的位置
-        fastSet.removeAll(boxList);
+        meightGo.removeAll(boxList);
         
         ArrayList<Zuobiao> canGoList = new ArrayList<Zuobiao>();
         // 把玩家现在的位置放入可以去的set中
         canGoList.add(man);
-        fastSet.remove(man);
+        meightGo.remove(man);
         
         // 新增的坐标数
         int count = 1;
@@ -346,9 +351,9 @@ public class SokoMap
                 {
                     Zuobiao manEdge = getMove(canGo, asp);
                     
-                    if (manEdge != null && fastSet.contains(manEdge))
+                    if (manEdge != null && meightGo.contains(manEdge))
                     {
-                        fastSet.remove(manEdge);
+                        meightGo.remove(manEdge);
                         canGoList.add(manEdge);
                         addTemp++;
                     }
@@ -371,9 +376,9 @@ public class SokoMap
             
             Logger.info(Util.drawMap(mapStr, max_x));
         }
-        fastSet.clear();
-        fastSet.addAll(canGoList);
-        return fastSet;
+        meightGo.clear();
+        meightGo.addAll(canGoList);
+        return meightGo;
     }
     
     /**
@@ -546,7 +551,7 @@ public class SokoMap
      * @param map
      * @see [类、类#方法、类#成员]
      */
-    public void run()
+    public void run(String gifName)
     {
         
         Long begin = System.currentTimeMillis();
@@ -561,9 +566,9 @@ public class SokoMap
         
         Long end = System.currentTimeMillis();
         
-        outputResult();
+        outputResult(gifName);
         
-        System.out.println("耗时：" + (end - begin));
+        System.out.println("耗时：" + (end - begin) + "ms");
         
     }
     
@@ -574,7 +579,7 @@ public class SokoMap
      *            
      * @see [类、类#方法、类#成员]
      */
-    public void outputResult()
+    public void outputResult(String gifName)
     {
         if (success == null)
         {
@@ -590,11 +595,58 @@ public class SokoMap
                 solut = solut.getLastSolution();
             } while (solut != null);
             
+            AnimatedGifEncoder e = new AnimatedGifEncoder();
+            e.setRepeat(0);
+            e.start(gifName + "_" + gonglv.size() + ".gif");
+            e.setQuality(1);
+            e.setDelay(500);
+            
+            int fontSize = 15;
+            int g_iWidth = (int)((max_x+1) * 2 * (8 / 15d) * fontSize) + 1;
+            int g_iHeight = (max_y + 3) * fontSize;
             for (int i = 0; i < gonglv.size(); i++)
             {
                 System.out.println(i);
-                System.out.println(SolutionManager.drawBefore(gonglv.get(i), this));
+                String str = SolutionManager.drawBefore(gonglv.get(i), this);
+                System.out.println(str);
+                
+                BufferedImage g_oImage = new BufferedImage(g_iWidth, g_iHeight, BufferedImage.TYPE_3BYTE_BGR);
+                Graphics graphics = g_oImage.createGraphics();
+                
+                graphics.setColor(Color.WHITE);
+                graphics.fillRect(0, 0, g_iWidth, g_iHeight);
+                
+                graphics.setColor(Color.BLACK);
+                graphics.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
+                int y = 10;
+                graphics.drawString("step:" + i + "/" + gonglv.size(), 0, y);
+                for (String line : str.split("\n"))
+                {
+                    graphics.drawString(line, 0, y += fontSize);
+                }
+                graphics.dispose();
+                e.addFrame(g_oImage);
+                // 生成推动后的
+                y = 10;
+                str = SolutionManager.drawAfter(gonglv.get(i), this);
+                g_oImage = new BufferedImage(g_iWidth, g_iHeight, BufferedImage.TYPE_BYTE_GRAY);
+                graphics = g_oImage.createGraphics();
+                
+                graphics.setColor(Color.WHITE);
+                graphics.fillRect(0, 0, g_iWidth, g_iHeight);
+                
+                graphics.setColor(Color.BLACK);
+                graphics.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
+                graphics.drawString("step:" + i + "/" + gonglv.size(), 0, y);
+                for (String line : str.split("\n"))
+                {
+                    graphics.drawString(line, 0, y += fontSize);
+                }
+                graphics.dispose();
+                e.addFrame(g_oImage);
+                
             }
+            e.finish();
         }
         
     }
