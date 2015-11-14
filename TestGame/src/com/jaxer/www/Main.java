@@ -17,9 +17,7 @@ public class Main
     public static void main(String[] args)
     {
         
-        String a =
-            "#############|#-$-....----#|#-$$**.*$$$-#|#---....--$-#|######-######|---#-----#---|---#--$--#---|---##-####---|---#-----#---|---#--$--#---|---####-@#---|------####---";
-        String mapStr = MapStrConverter.convert(MapLib.map1);
+        String mapStr = MapStrConverter.convert(MapLib.anima);
         SokoMap sokoMap = new SokoMap(mapStr);
         sokoMap.run("map_" + System.currentTimeMillis());
         

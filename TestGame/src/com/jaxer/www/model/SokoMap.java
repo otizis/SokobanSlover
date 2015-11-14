@@ -599,9 +599,8 @@ public class SokoMap
             int stepNum = gonglv.size() - 1;
             AnimatedGifEncoder e = new AnimatedGifEncoder();
             e.setRepeat(0);
-            e.start(gifName + "_" + stepNum + ".gif");
-            e.setQuality(1);
             e.setDelay(500);
+            e.start(gifName + "_" + stepNum + ".gif");
             
             int fontSize = 15;
             int width = (int)((max_x + 1) * 2 * (8 / 15d) * fontSize) + 1;

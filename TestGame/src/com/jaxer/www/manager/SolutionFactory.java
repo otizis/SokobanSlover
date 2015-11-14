@@ -1,6 +1,8 @@
 package com.jaxer.www.manager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -21,7 +23,8 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static LinkedList<Solution> getNextSolution(Solution solu, SokoMap sokoMap)
+    public static LinkedList<Solution> getNextSolution(Solution solu,
+        SokoMap sokoMap)
     {
         
         if (solu == null)
@@ -30,8 +33,9 @@ public class SolutionFactory
         }
         Logger.debug("======开始计算下一步走法。");
         
-        ArrayList<Zuobiao> boxList = SolutionManager.getBoxAndManAfter(solu, sokoMap);
-        
+        ArrayList<Zuobiao> boxList =
+            SolutionManager.getBoxAndManAfter(solu, sokoMap);
+            
         Zuobiao man = boxList.remove(0);
         
         FastSet playerCanGoCells = sokoMap.getPlayerCanGoCells(boxList, man);
@@ -110,20 +114,32 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static void loopNextSolutionsBatch(LinkedList<Solution> needSub, SokoMap sokoMap)
+    public static void loopNextSolutionsBatch(LinkedList<Solution> needSub,
+        SokoMap sokoMap)
     {
-        
+        Collections.sort(needSub, new Comparator<Solution>()
+        {
+            
+            @Override
+            public int compare(Solution o1, Solution o2)
+            {
+                return o1.getBoxsNotGole() - o2.getBoxsNotGole();
+            }
+            
+        });
         LinkedList<Solution> nextSolutionList = new LinkedList<Solution>();
         
         ProgressCounter pc = new ProgressCounter(needSub.size(), "获取下一步走法");
+        int maxCount = 100 * 10000;
         while (!needSub.isEmpty())
         {
             pc.addProgress();
             
             Solution removeFirst = needSub.removeFirst();
             
-            LinkedList<Solution> temp = SolutionFactory.getNextSolution(removeFirst, sokoMap);
-            
+            LinkedList<Solution> temp =
+                SolutionFactory.getNextSolution(removeFirst, sokoMap);
+                
             removeFirst = null;
             
             if (sokoMap.getSuccess() != null)
@@ -134,6 +150,11 @@ public class SolutionFactory
             {
                 nextSolutionList.addAll(temp);
             }
+            if (nextSolutionList.size() > maxCount)
+            {
+                needSub.clear();
+                break;
+            }
         }
         int all = nextSolutionList.size();
         if (all < 500000)
@@ -143,7 +164,7 @@ public class SolutionFactory
         }
         
         int level = 1;
-        while (true)
+        while (level <= sokoMap.getGoleList().size())
         {
             Iterator<Solution> iterator = nextSolutionList.iterator();
             double count = 0;
@@ -157,24 +178,16 @@ public class SolutionFactory
                     count++;
                 }
             }
-            Logger
-                .info(all + "中留下" + level + "个箱子未中的有" + count + "个,占" + Math.round(count * 10000 / all) / 100.0 + "%");
-            if (level == sokoMap.getGoleList().size())
-            {
-                break;
-            }
-            int maxCount = 700000;
+            Logger.info(all + "中留下" + level + "个箱子未中的有" + count + "个,占"
+                + Math.round(count * 10000 / all) / 100.0 + "%");
+                
             if (count > maxCount)
             {
                 
                 Logger.info(">" + maxCount + ",抛弃" + (all - count) + "其他。");
                 break;
             }
-            if (count != 0 && (count / all) > 0.2)
-            {
-                Logger.info(">20%抛弃" + (all - count) + "其他。");
-                break;
-            }
+            
             level++;
         }
     }

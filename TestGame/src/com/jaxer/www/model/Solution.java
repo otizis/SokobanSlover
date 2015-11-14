@@ -39,7 +39,8 @@ public class Solution
         }
     }
     
-    public Solution(AspectEnum step, int boxIndex, Solution lastSolution, int boxsNotGole)
+    public Solution(AspectEnum step, int boxIndex, Solution lastSolution,
+        int boxsNotGole)
     {
         this(step, boxIndex, lastSolution);
         this.boxsNotGole = boxsNotGole;
@@ -82,6 +83,8 @@ public class Solution
         StringBuilder builder = new StringBuilder();
         builder.append("L");
         builder.append(level);
+        builder.append(",left");
+        builder.append(boxsNotGole);
         // builder.append(getBoxListBefore().get(boxIndex));
         builder.append(",");
         builder.append(step.getDesc());
