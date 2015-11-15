@@ -1,5 +1,7 @@
 package com.jaxer.www.model;
 
+import java.util.ArrayList;
+
 import com.jaxer.www.enums.AspectEnum;
 
 /**
@@ -11,6 +13,36 @@ import com.jaxer.www.enums.AspectEnum;
  */
 public class Solution
 {
+    private int uesTime = 0;
+    
+    public void addTime()
+    {
+        uesTime++;
+    }
+    
+    public boolean isHot()
+    {
+        return uesTime > 10 * 10000;
+    }
+    
+    private ArrayList<Zuobiao> boxList;
+    
+    /**
+     * @return 返回 boxList
+     */
+    public ArrayList<Zuobiao> getBoxList()
+    {
+        return boxList;
+    }
+    
+    /**
+     * @param 对boxList进行赋值
+     */
+    public void setBoxList(ArrayList<Zuobiao> boxList)
+    {
+        this.boxList = boxList;
+    }
+    
     // 移动的box的序号
     private int boxIndex = -1;
     

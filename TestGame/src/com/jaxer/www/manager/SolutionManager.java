@@ -18,12 +18,55 @@ public class SolutionManager
      * @return 最后成功的解法，无解返回null
      * @see [类、类#方法、类#成员]
      */
+    public static void runLeft(SokoMap sokoMap)
+    {
+        
+        // 获取现在能走的走法列表
+        LinkedList<Solution> nextSolution = sokoMap.getNextSolutionList();
+        
+        sokoMap.setNextSolutionList(null);
+        
+        if (sokoMap.getSuccess() != null)
+        {
+            return;
+        }
+        
+        if (nextSolution == null)
+        {
+            return;
+        }
+        // 每走一步，获取下一步的走法列表，不断循环
+        while (!nextSolution.isEmpty())
+        {
+            
+            Logger.info("开始走暂存的第" + nextSolution.getFirst().level + "层分支，有走法："
+                + nextSolution.size());
+                
+            // 下一步的走法列表
+            SolutionFactory.loopNextSolutionsBatch(nextSolution, sokoMap);
+            
+            if (sokoMap.getSuccess() != null)
+            {
+                return;
+            }
+            
+        }
+        
+    }
+    
+    /**
+     * 一层一层历遍根据走法衍生的走法
+     * 
+     * @return 最后成功的解法，无解返回null
+     * @see [类、类#方法、类#成员]
+     */
     public static void runByLevel(SokoMap sokoMap)
     {
         
         // 获取现在能走的走法列表
-        LinkedList<Solution> nextSolution = SolutionFactory.getNextSolution(new Solution(), sokoMap);
-        
+        LinkedList<Solution> nextSolution =
+            SolutionFactory.getNextSolution(new Solution(), sokoMap);
+            
         if (sokoMap.getSuccess() != null)
         {
             return;
@@ -59,7 +102,8 @@ public class SolutionManager
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static ArrayList<Zuobiao> getBoxListAfter(Solution solu, SokoMap sokoMap)
+    public static ArrayList<Zuobiao> getBoxListAfter(Solution solu,
+        SokoMap sokoMap)
     {
         // 若是根节点，直接返回
         Solution root = solu.getLastSolution();
@@ -68,6 +112,10 @@ public class SolutionManager
             return Util.cloneBoxList(sokoMap.getBoxList());
         }
         
+        if (solu.isHot())
+        {
+            return Util.cloneBoxList(solu.getBoxList());
+        }
         ArrayList<Solution> solutList = new ArrayList<Solution>();
         
         solutList.add(solu);
@@ -78,13 +126,19 @@ public class SolutionManager
             root = root.getLastSolution();
         }
         
-        ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(sokoMap.getBoxList());
-        
+        ArrayList<Zuobiao> cloneBoxList =
+            Util.cloneBoxList(sokoMap.getBoxList());
+            
         for (int i = 0; i < solutList.size(); i++)
         {
             int moveIndex = solutList.get(i).getBoxIndex();
             Zuobiao moveBox = cloneBoxList.get(moveIndex);
             moveBox.moveByAspect(solutList.get(i).getStep());
+        }
+        solu.addTime();
+        if (solu.isHot())
+        {
+            solu.setBoxList(Util.cloneBoxList(cloneBoxList));
         }
         return cloneBoxList;
     }
@@ -97,7 +151,10 @@ public class SolutionManager
      */
     public static String drawAfter(Solution solu, SokoMap sokoMap)
     {
-        return draw(getManAfterStep(solu, sokoMap), getBoxListAfter(solu, sokoMap), solu.getStep(), sokoMap);
+        return draw(getManAfterStep(solu, sokoMap),
+            getBoxListAfter(solu, sokoMap),
+            solu.getStep(),
+            sokoMap);
     }
     
     /**
@@ -108,7 +165,10 @@ public class SolutionManager
      */
     public static String drawBefore(Solution solu, SokoMap sokoMap)
     {
-        return draw(getManBeforeStep(solu, sokoMap), getBoxListBefore(solu, sokoMap), solu.getStep(), sokoMap);
+        return draw(getManBeforeStep(solu, sokoMap),
+            getBoxListBefore(solu, sokoMap),
+            solu.getStep(),
+            sokoMap);
     }
     
     /**
@@ -117,11 +177,13 @@ public class SolutionManager
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static String draw(Zuobiao man, ArrayList<Zuobiao> boxList, AspectEnum step, SokoMap sokoMap)
+    public static String draw(Zuobiao man, ArrayList<Zuobiao> boxList,
+        AspectEnum step, SokoMap sokoMap)
     {
         StringBuilder builder = sokoMap.mapStr();
         Util.replaceZuobiao(builder, man, "a", sokoMap.getMax_x());
-        // Util.replaceZuobiao(builder, man, step == null ? "a" : step.getDesc(), sokoMap.getMax_x());
+        // Util.replaceZuobiao(builder, man, step == null ? "a" :
+        // step.getDesc(), sokoMap.getMax_x());
         
         for (Zuobiao box : boxList)
         {
@@ -137,10 +199,12 @@ public class SolutionManager
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static ArrayList<Zuobiao> getBoxAndManAfter(Solution solu, SokoMap sokoMap)
+    public static ArrayList<Zuobiao> getBoxAndManAfter(Solution solu,
+        SokoMap sokoMap)
     {
-        ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(sokoMap.getBoxList());
-        
+        ArrayList<Zuobiao> cloneBoxList =
+            Util.cloneBoxList(sokoMap.getBoxList());
+            
         // 若是根节点，直接返回
         Solution root = solu.getLastSolution();
         if (null == root)
@@ -184,7 +248,8 @@ public class SolutionManager
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static ArrayList<Zuobiao> getBoxListBefore(Solution solu, SokoMap sokoMap)
+    public static ArrayList<Zuobiao> getBoxListBefore(Solution solu,
+        SokoMap sokoMap)
     {
         if (null == solu.getLastSolution())
         {

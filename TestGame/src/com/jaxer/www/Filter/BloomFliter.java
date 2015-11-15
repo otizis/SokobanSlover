@@ -6,7 +6,7 @@ import com.jaxer.www.api.MapFliter;
 
 public class BloomFliter implements MapFliter
 {
-    int expectedInsertions = 100000000;
+    int expectedInsertions = Integer.MAX_VALUE / 10;
     
     public BloomFliter()
     {

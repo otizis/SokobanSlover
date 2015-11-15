@@ -81,8 +81,17 @@ public class SolutionFactory
                 int less = Util.boxsNumNotGole(boxList, sokoMap);
                 if (less == 0)
                 {
-                    sokoMap.setSuccess(new Solution(aspect, i, solu));
-                    return null;
+                    Solution s = new Solution(aspect, i, solu);
+                    if (sokoMap.getSuccess() == null)
+                    {
+                        sokoMap.setSuccess(s);
+                        return null;
+                    }
+                    if (s.level < sokoMap.getSuccess().level)
+                    {
+                        sokoMap.setSuccess(s);
+                        return null;
+                    }
                 }
                 box.backByAspect(aspect);
                 
@@ -150,12 +159,9 @@ public class SolutionFactory
             {
                 nextSolutionList.addAll(temp);
             }
-            if (nextSolutionList.size() > maxCount)
-            {
-                needSub.clear();
-                break;
-            }
+            
         }
+        
         int all = nextSolutionList.size();
         if (all < 500000)
         {
@@ -167,7 +173,7 @@ public class SolutionFactory
         while (level <= sokoMap.getGoleList().size())
         {
             Iterator<Solution> iterator = nextSolutionList.iterator();
-            double count = 0;
+            int count = 0;
             while (iterator.hasNext())
             {
                 Solution next = iterator.next();
@@ -176,19 +182,26 @@ public class SolutionFactory
                 {
                     needSub.add(next);
                     count++;
+                    if (count > maxCount)
+                    {
+                        break;
+                    }
                 }
             }
             Logger.info(all + "中留下" + level + "个箱子未中的有" + count + "个,占"
-                + Math.round(count * 10000 / all) / 100.0 + "%");
-                
+                + Math.round(count * 100.0 / all) + "%");
             if (count > maxCount)
             {
-                
-                Logger.info(">" + maxCount + ",抛弃" + (all - count) + "其他。");
                 break;
             }
-            
             level++;
+        }
+        
+        // 缓存超过的
+        if (sokoMap.getNextSolutionList() == null)
+        {
+            
+            sokoMap.setNextSolutionList(nextSolutionList);
         }
     }
     

@@ -7,8 +7,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import com.jaxer.www.Filter.BloomFliter;
+import com.jaxer.www.Filter.FastMapFilter;
 import com.jaxer.www.Util.DeadPoitUtil;
 import com.jaxer.www.Util.Logger;
 import com.jaxer.www.Util.Util;
@@ -21,6 +23,24 @@ import com.jaxer.www.myexception.MyException;
 
 public class SokoMap
 {
+    private LinkedList<Solution> nextSolutionList;
+    
+    /**
+     * @return 返回 nextSolutionList
+     */
+    public LinkedList<Solution> getNextSolutionList()
+    {
+        return nextSolutionList;
+    }
+    
+    /**
+     * @param 对nextSolutionList进行赋值
+     */
+    public void setNextSolutionList(LinkedList<Solution> nextSolutionList)
+    {
+        this.nextSolutionList = nextSolutionList;
+    }
+    
     private Solution success;
     
     /**
@@ -565,6 +585,10 @@ public class SokoMap
         
         SolutionManager.runByLevel(this);
         
+        while (nextSolutionList != null)
+        {
+            SolutionManager.runByLevel(this);
+        }
         Long end = System.currentTimeMillis();
         
         outputResult(gifName);

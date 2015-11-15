@@ -1,0 +1,393 @@
+BloomFliter	src\com\jaxer\www\Filter\BloomFliter.java	/^    public BloomFliter()$/;"	m	class:BloomFliter
+BloomFliter	src\com\jaxer\www\Filter\BloomFliter.java	/^    public BloomFliter(int expectedInsertions)$/;"	m	class:BloomFliter
+BloomFliter	src\com\jaxer\www\Filter\BloomFliter.java	/^public class BloomFliter implements MapFliter$/;"	c
+bloomFilter	src\com\jaxer\www\Filter\BloomFliter.java	/^    BloomFilter<byte[]> bloomFilter;$/;"	f	class:BloomFliter
+clear	src\com\jaxer\www\Filter\BloomFliter.java	/^    public void clear()$/;"	m	class:BloomFliter
+com.jaxer.www.Filter	src\com\jaxer\www\Filter\BloomFliter.java	/^package com.jaxer.www.Filter;$/;"	p
+expectedInsertions	src\com\jaxer\www\Filter\BloomFliter.java	/^    int expectedInsertions = 100000000;$/;"	f	class:BloomFliter
+isExist	src\com\jaxer\www\Filter\BloomFliter.java	/^    public boolean isExist(byte[] str)$/;"	m	class:BloomFliter
+HashMapFilter	src\com\jaxer\www\Filter\HashMapFilter.java	/^public class HashMapFilter implements MapFliter$/;"	c
+clear	src\com\jaxer\www\Filter\HashMapFilter.java	/^    public void clear()$/;"	m	class:HashMapFilter
+com.jaxer.www.Filter	src\com\jaxer\www\Filter\HashMapFilter.java	/^package com.jaxer.www.Filter;$/;"	p
+isExist	src\com\jaxer\www\Filter\HashMapFilter.java	/^    public boolean isExist(byte[] str)$/;"	m	class:HashMapFilter
+mapMap	src\com\jaxer\www\Filter\HashMapFilter.java	/^    private static HashMap<String, ArrayList<String>> mapMap =$/;"	f	class:HashMapFilter	file:
+HashSetFilter	src\com\jaxer\www\Filter\HashSetFilter.java	/^public class HashSetFilter implements MapFliter$/;"	c
+clear	src\com\jaxer\www\Filter\HashSetFilter.java	/^    public void clear()$/;"	m	class:HashSetFilter
+com.jaxer.www.Filter	src\com\jaxer\www\Filter\HashSetFilter.java	/^package com.jaxer.www.Filter;$/;"	p
+isExist	src\com\jaxer\www\Filter\HashSetFilter.java	/^    public boolean isExist(byte[] all)$/;"	m	class:HashSetFilter
+mapSet	src\com\jaxer\www\Filter\HashSetFilter.java	/^    private static HashSet<String> mapSet = new HashSet<String>(1024);$/;"	f	class:HashSetFilter	file:
+TurnOffFliter	src\com\jaxer\www\Filter\TurnOffFliter.java	/^public class TurnOffFliter implements MapFliter$/;"	c
+clear	src\com\jaxer\www\Filter\TurnOffFliter.java	/^    public void clear()$/;"	m	class:TurnOffFliter
+com.jaxer.www.Filter	src\com\jaxer\www\Filter\TurnOffFliter.java	/^package com.jaxer.www.Filter;$/;"	p
+isExist	src\com\jaxer\www\Filter\TurnOffFliter.java	/^    public boolean isExist(byte[] t)$/;"	m	class:TurnOffFliter
+Main	src\com\jaxer\www\Main.java	/^public class Main$/;"	c
+com.jaxer.www	src\com\jaxer\www\Main.java	/^package com.jaxer.www;$/;"	p
+main	src\com\jaxer\www\Main.java	/^    public static void main(String[] args)$/;"	m	class:Main
+DeadPoitUtil	src\com\jaxer\www\Util\DeadPoitUtil.java	/^public class DeadPoitUtil$/;"	c
+checkPoint	src\com\jaxer\www\Util\DeadPoitUtil.java	/^    private static boolean checkPoint(SokoMap sokomap, Zuobiao zb)$/;"	m	class:DeadPoitUtil	file:
+com.jaxer.www.Util	src\com\jaxer\www\Util\DeadPoitUtil.java	/^package com.jaxer.www.Util;$/;"	p
+loadDeadSet	src\com\jaxer\www\Util\DeadPoitUtil.java	/^    public static HashSet<Zuobiao> loadDeadSet(SokoMap sokoMap)$/;"	m	class:DeadPoitUtil
+smart	src\com\jaxer\www\Util\DeadPoitUtil.java	/^    private static boolean smart = true;$/;"	f	class:DeadPoitUtil	file:
+smartDeadPoint	src\com\jaxer\www\Util\DeadPoitUtil.java	/^    public static boolean smartDeadPoint(SokoMap sokoMap, Zuobiao zb)$/;"	m	class:DeadPoitUtil
+Logger	src\com\jaxer\www\Util\Logger.java	/^public class Logger$/;"	c
+com.jaxer.www.Util	src\com\jaxer\www\Util\Logger.java	/^package com.jaxer.www.Util;$/;"	p
+debug	src\com\jaxer\www\Util\Logger.java	/^    public static void debug(String str)$/;"	m	class:Logger
+error	src\com\jaxer\www\Util\Logger.java	/^    public static void error(String string)$/;"	m	class:Logger
+info	src\com\jaxer\www\Util\Logger.java	/^    public static void info(String str)$/;"	m	class:Logger
+isDebugEnable	src\com\jaxer\www\Util\Logger.java	/^    public static boolean isDebugEnable()$/;"	m	class:Logger
+isInfo	src\com\jaxer\www\Util\Logger.java	/^    public static boolean isInfo = true;$/;"	f	class:Logger
+isdebug	src\com\jaxer\www\Util\Logger.java	/^    public static boolean isdebug = false;$/;"	f	class:Logger
+isoutput	src\com\jaxer\www\Util\Logger.java	/^    public static boolean isoutput = true;$/;"	f	class:Logger
+isprintDeadInfo	src\com\jaxer\www\Util\Logger.java	/^    public static boolean isprintDeadInfo = true;$/;"	f	class:Logger
+turnOff	src\com\jaxer\www\Util\Logger.java	/^    public static void turnOff()$/;"	m	class:Logger
+turnOn	src\com\jaxer\www\Util\Logger.java	/^    public static void turnOn()$/;"	m	class:Logger
+MapStrConverter	src\com\jaxer\www\Util\MapStrConverter.java	/^public class MapStrConverter$/;"	c
+com.jaxer.www.Util	src\com\jaxer\www\Util\MapStrConverter.java	/^package com.jaxer.www.Util;$/;"	p
+convert	src\com\jaxer\www\Util\MapStrConverter.java	/^    public static String convert(String mapStr)$/;"	m	class:MapStrConverter
+convert	src\com\jaxer\www\Util\MapStrConverter.java	/^    public static String convert(StringBuilder mapStr)$/;"	m	class:MapStrConverter
+main	src\com\jaxer\www\Util\MapStrConverter.java	/^    public static void main(String[] args)$/;"	m	class:MapStrConverter
+Util	src\com\jaxer\www\Util\Util.java	/^public class Util$/;"	c
+boxsNumNotGole	src\com\jaxer\www\Util\Util.java	/^    public static int boxsNumNotGole(ArrayList<Zuobiao> boxList, SokoMap sokoMap)$/;"	m	class:Util
+cloneBoxList	src\com\jaxer\www\Util\Util.java	/^    public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)$/;"	m	class:Util
+com.jaxer.www.Util	src\com\jaxer\www\Util\Util.java	/^package com.jaxer.www.Util;$/;"	p
+coverter	src\com\jaxer\www\Util\Util.java	/^    public static HashSet<Zuobiao> coverter(ArrayList<Zuobiao> boxList)$/;"	m	class:Util
+drawMap	src\com\jaxer\www\Util\Util.java	/^    public static String drawMap(StringBuilder mapStr, int map_max_x)$/;"	m	class:Util
+isAllGoalCover	src\com\jaxer\www\Util\Util.java	/^    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList, SokoMap sokoMap)$/;"	m	class:Util
+replaceZuobiao	src\com\jaxer\www\Util\Util.java	/^    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb, String str, int sokomap_Max_X)$/;"	m	class:Util
+MapFliter	src\com\jaxer\www\api\MapFliter.java	/^public interface MapFliter$/;"	i
+clear	src\com\jaxer\www\api\MapFliter.java	/^    public void clear();$/;"	m	interface:MapFliter
+com.jaxer.www.api	src\com\jaxer\www\api\MapFliter.java	/^package com.jaxer.www.api;$/;"	p
+isExist	src\com\jaxer\www\api\MapFliter.java	/^    public boolean isExist(byte[] t);$/;"	m	interface:MapFliter
+Moveable	src\com\jaxer\www\api\Moveable.java	/^public interface Moveable$/;"	i
+backByAspect	src\com\jaxer\www\api\Moveable.java	/^    public void backByAspect(AspectEnum aspect);$/;"	m	interface:Moveable
+com.jaxer.www.api	src\com\jaxer\www\api\Moveable.java	/^package com.jaxer.www.api;$/;"	p
+moveByAspect	src\com\jaxer\www\api\Moveable.java	/^    public void moveByAspect(AspectEnum aspect);$/;"	m	interface:Moveable
+moveDown	src\com\jaxer\www\api\Moveable.java	/^    public void moveDown();$/;"	m	interface:Moveable
+moveLeft	src\com\jaxer\www\api\Moveable.java	/^    public void moveLeft();$/;"	m	interface:Moveable
+moveRight	src\com\jaxer\www\api\Moveable.java	/^    public void moveRight();$/;"	m	interface:Moveable
+moveUp	src\com\jaxer\www\api\Moveable.java	/^    public void moveUp();$/;"	m	interface:Moveable
+AspectEnum	src\com\jaxer\www\enums\AspectEnum.java	/^    AspectEnum(String a, String b)$/;"	m	class:AspectEnum
+AspectEnum	src\com\jaxer\www\enums\AspectEnum.java	/^public enum AspectEnum$/;"	g
+com.jaxer.www.enums	src\com\jaxer\www\enums\AspectEnum.java	/^package com.jaxer.www.enums;$/;"	p
+desc	src\com\jaxer\www\enums\AspectEnum.java	/^    String desc;$/;"	f	class:AspectEnum
+down	src\com\jaxer\www\enums\AspectEnum.java	/^    up("^", ""), right(">", ""), down("v", ""), left("<", "");$/;"	e	enum:AspectEnum	file:
+getDesc	src\com\jaxer\www\enums\AspectEnum.java	/^    public String getDesc()$/;"	m	class:AspectEnum
+left	src\com\jaxer\www\enums\AspectEnum.java	/^    up("^", ""), right(">", ""), down("v", ""), left("<", "");$/;"	e	enum:AspectEnum	file:
+right	src\com\jaxer\www\enums\AspectEnum.java	/^    up("^", ""), right(">", ""), down("v", ""), left("<", "");$/;"	e	enum:AspectEnum	file:
+up	src\com\jaxer\www\enums\AspectEnum.java	/^    up("^", ""), right(">", ""), down("v", ""), left("<", "");$/;"	e	enum:AspectEnum	file:
+CellType	src\com\jaxer\www\enums\CellType.java	/^public enum CellType$/;"	g
+com.jaxer.www.enums	src\com\jaxer\www\enums\CellType.java	/^package com.jaxer.www.enums;$/;"	p
+empty	src\com\jaxer\www\enums\CellType.java	/^    empty;$/;"	e	enum:CellType	file:
+gole	src\com\jaxer\www\enums\CellType.java	/^    gole,$/;"	e	enum:CellType	file:
+wall	src\com\jaxer\www\enums\CellType.java	/^    wall,$/;"	e	enum:CellType	file:
+Mf8Enum	src\com\jaxer\www\enums\Mf8Enum.java	/^    Mf8Enum(char source, char dect)$/;"	m	class:Mf8Enum
+Mf8Enum	src\com\jaxer\www\enums\Mf8Enum.java	/^public enum Mf8Enum$/;"	g
+box	src\com\jaxer\www\enums\Mf8Enum.java	/^    box('$', SokoMap.box),$/;"	e	enum:Mf8Enum	file:
+boxOnGoal	src\com\jaxer\www\enums\Mf8Enum.java	/^    boxOnGoal('*', SokoMap.boxOnGoal),$/;"	e	enum:Mf8Enum	file:
+com.jaxer.www.enums	src\com\jaxer\www\enums\Mf8Enum.java	/^package com.jaxer.www.enums;$/;"	p
+dect	src\com\jaxer\www\enums\Mf8Enum.java	/^    private char dect;$/;"	f	class:Mf8Enum	file:
+error	src\com\jaxer\www\enums\Mf8Enum.java	/^    public static char error = 'E';$/;"	f	class:Mf8Enum
+getDect	src\com\jaxer\www\enums\Mf8Enum.java	/^    public static char getDect(char source)$/;"	m	class:Mf8Enum
+goal	src\com\jaxer\www\enums\Mf8Enum.java	/^    goal('.', SokoMap.goal),$/;"	e	enum:Mf8Enum	file:
+player1	src\com\jaxer\www\enums\Mf8Enum.java	/^    player1('@', SokoMap.player),$/;"	e	enum:Mf8Enum	file:
+player2	src\com\jaxer\www\enums\Mf8Enum.java	/^    player2('a', SokoMap.player),$/;"	e	enum:Mf8Enum	file:
+playerOnGoal1	src\com\jaxer\www\enums\Mf8Enum.java	/^    playerOnGoal1('x', SokoMap.playerOnGoal),$/;"	e	enum:Mf8Enum	file:
+playerOnGoal2	src\com\jaxer\www\enums\Mf8Enum.java	/^    playerOnGoal2('+', SokoMap.playerOnGoal),$/;"	e	enum:Mf8Enum	file:
+source	src\com\jaxer\www\enums\Mf8Enum.java	/^    private char source;$/;"	f	class:Mf8Enum	file:
+space1	src\com\jaxer\www\enums\Mf8Enum.java	/^    space1('-', SokoMap.empty),$/;"	e	enum:Mf8Enum	file:
+space2	src\com\jaxer\www\enums\Mf8Enum.java	/^    space2(' ', SokoMap.empty),$/;"	e	enum:Mf8Enum	file:
+split1	src\com\jaxer\www\enums\Mf8Enum.java	/^    split1(';', ';'), split2('|', ';')$/;"	e	enum:Mf8Enum	file:
+split2	src\com\jaxer\www\enums\Mf8Enum.java	/^    split1(';', ';'), split2('|', ';')$/;"	e	enum:Mf8Enum	file:
+wall1	src\com\jaxer\www\enums\Mf8Enum.java	/^    wall1('#', SokoMap.wall),$/;"	e	enum:Mf8Enum	file:
+wall2	src\com\jaxer\www\enums\Mf8Enum.java	/^    wall2('H', SokoMap.wall),$/;"	e	enum:Mf8Enum	file:
+wall3	src\com\jaxer\www\enums\Mf8Enum.java	/^    wall3('_', SokoMap.wall),$/;"	e	enum:Mf8Enum	file:
+Result	src\com\jaxer\www\enums\Result.java	/^public enum Result$/;"	g
+com.jaxer.www.enums	src\com\jaxer\www\enums\Result.java	/^package com.jaxer.www.enums;$/;"	p
+failue	src\com\jaxer\www\enums\Result.java	/^    failue,$/;"	e	enum:Result	file:
+needsub	src\com\jaxer\www\enums\Result.java	/^    needsub;$/;"	e	enum:Result	file:
+success	src\com\jaxer\www\enums\Result.java	/^    success,$/;"	e	enum:Result	file:
+AnimatedGifEncoder	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^public class AnimatedGifEncoder {$/;"	c
+addFrame	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public boolean addFrame(BufferedImage im) {$/;"	m	class:AnimatedGifEncoder
+analyzePixels	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void analyzePixels() {$/;"	m	class:AnimatedGifEncoder
+closeStream	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected boolean closeStream = false; \/\/ close stream when finished$/;"	f	class:AnimatedGifEncoder
+colorDepth	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int colorDepth; \/\/ number of bit planes$/;"	f	class:AnimatedGifEncoder
+colorTab	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected byte[] colorTab; \/\/ RGB palette$/;"	f	class:AnimatedGifEncoder
+com.jaxer.www.gif	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^package com.jaxer.www.gif;$/;"	p
+delay	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int delay = 0; \/\/ frame delay (hundredths)$/;"	f	class:AnimatedGifEncoder
+dispose	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int dispose = -1; \/\/ disposal code (-1 = use default)$/;"	f	class:AnimatedGifEncoder
+findClosest	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int findClosest(Color c) {$/;"	m	class:AnimatedGifEncoder
+finish	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public boolean finish() {$/;"	m	class:AnimatedGifEncoder
+firstFrame	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected boolean firstFrame = true;$/;"	f	class:AnimatedGifEncoder
+getImagePixels	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void getImagePixels() {$/;"	m	class:AnimatedGifEncoder
+height	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int height;$/;"	f	class:AnimatedGifEncoder
+image	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected BufferedImage image; \/\/ current frame$/;"	f	class:AnimatedGifEncoder
+indexedPixels	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected byte[] indexedPixels; \/\/ converted frame indexed to palette$/;"	f	class:AnimatedGifEncoder
+out	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected OutputStream out;$/;"	f	class:AnimatedGifEncoder
+palSize	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int palSize = 7; \/\/ color table size (bits-1)$/;"	f	class:AnimatedGifEncoder
+pixels	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected byte[] pixels; \/\/ BGR byte array from frame$/;"	f	class:AnimatedGifEncoder
+repeat	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int repeat = -1; \/\/ no repeat$/;"	f	class:AnimatedGifEncoder
+sample	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int sample = 10; \/\/ default sample interval for quantizer$/;"	f	class:AnimatedGifEncoder
+setDelay	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public void setDelay(int ms) {$/;"	m	class:AnimatedGifEncoder
+setDispose	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public void setDispose(int code) {$/;"	m	class:AnimatedGifEncoder
+setFrameRate	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public void setFrameRate(float fps) {$/;"	m	class:AnimatedGifEncoder
+setQuality	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public void setQuality(int quality) {$/;"	m	class:AnimatedGifEncoder
+setRepeat	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public void setRepeat(int iter) {$/;"	m	class:AnimatedGifEncoder
+setSize	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public void setSize(int w, int h) {$/;"	m	class:AnimatedGifEncoder
+setTransparent	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public void setTransparent(Color c) {$/;"	m	class:AnimatedGifEncoder
+sizeSet	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected boolean sizeSet = false; \/\/ if false, get size from first frame$/;"	f	class:AnimatedGifEncoder
+start	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public boolean start(OutputStream os) {$/;"	m	class:AnimatedGifEncoder
+start	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	public boolean start(String file) {$/;"	m	class:AnimatedGifEncoder
+started	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected boolean started = false; \/\/ ready to output frames$/;"	f	class:AnimatedGifEncoder
+transIndex	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int transIndex; \/\/ transparent index in color table$/;"	f	class:AnimatedGifEncoder
+transparent	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected Color transparent = null; \/\/ transparent color if given$/;"	f	class:AnimatedGifEncoder
+usedEntry	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected boolean[] usedEntry = new boolean[256]; \/\/ active palette entries$/;"	f	class:AnimatedGifEncoder
+width	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected int width; \/\/ image size$/;"	f	class:AnimatedGifEncoder
+writeGraphicCtrlExt	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void writeGraphicCtrlExt() throws IOException {$/;"	m	class:AnimatedGifEncoder
+writeImageDesc	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void writeImageDesc() throws IOException {$/;"	m	class:AnimatedGifEncoder
+writeLSD	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void writeLSD() throws IOException {$/;"	m	class:AnimatedGifEncoder
+writeNetscapeExt	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void writeNetscapeExt() throws IOException {$/;"	m	class:AnimatedGifEncoder
+writePalette	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void writePalette() throws IOException {$/;"	m	class:AnimatedGifEncoder
+writePixels	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void writePixels() throws IOException {$/;"	m	class:AnimatedGifEncoder
+writeShort	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void writeShort(int value) throws IOException {$/;"	m	class:AnimatedGifEncoder
+writeString	src\com\jaxer\www\gif\AnimatedGifEncoder.java	/^	protected void writeString(String s) throws IOException {$/;"	m	class:AnimatedGifEncoder
+BITS	src\com\jaxer\www\gif\LZWEncoder.java	/^	static final int BITS = 12;$/;"	f	class:LZWEncoder
+ClearCode	src\com\jaxer\www\gif\LZWEncoder.java	/^	int ClearCode;$/;"	f	class:LZWEncoder
+EOF	src\com\jaxer\www\gif\LZWEncoder.java	/^	private static final int EOF = -1;$/;"	f	class:LZWEncoder	file:
+EOFCode	src\com\jaxer\www\gif\LZWEncoder.java	/^	int EOFCode;$/;"	f	class:LZWEncoder
+HSIZE	src\com\jaxer\www\gif\LZWEncoder.java	/^	static final int HSIZE = 5003; \/\/ 80% occupancy$/;"	f	class:LZWEncoder
+LZWEncoder	src\com\jaxer\www\gif\LZWEncoder.java	/^	LZWEncoder(int width, int height, byte[] pixels, int color_depth) {$/;"	m	class:LZWEncoder
+LZWEncoder	src\com\jaxer\www\gif\LZWEncoder.java	/^class LZWEncoder {$/;"	c
+MAXCODE	src\com\jaxer\www\gif\LZWEncoder.java	/^	final int MAXCODE(int n_bits) {$/;"	m	class:LZWEncoder
+a_count	src\com\jaxer\www\gif\LZWEncoder.java	/^	int a_count;$/;"	f	class:LZWEncoder
+accum	src\com\jaxer\www\gif\LZWEncoder.java	/^	byte[] accum = new byte[256];$/;"	f	class:LZWEncoder
+char_out	src\com\jaxer\www\gif\LZWEncoder.java	/^	void char_out(byte c, OutputStream outs) throws IOException {$/;"	m	class:LZWEncoder
+cl_block	src\com\jaxer\www\gif\LZWEncoder.java	/^	void cl_block(OutputStream outs) throws IOException {$/;"	m	class:LZWEncoder
+cl_hash	src\com\jaxer\www\gif\LZWEncoder.java	/^	void cl_hash(int hsize) {$/;"	m	class:LZWEncoder
+clear_flg	src\com\jaxer\www\gif\LZWEncoder.java	/^	boolean clear_flg = false;$/;"	f	class:LZWEncoder
+codetab	src\com\jaxer\www\gif\LZWEncoder.java	/^	int[] codetab = new int[HSIZE];$/;"	f	class:LZWEncoder
+com.jaxer.www.gif	src\com\jaxer\www\gif\LZWEncoder.java	/^package com.jaxer.www.gif;$/;"	p
+compress	src\com\jaxer\www\gif\LZWEncoder.java	/^	void compress(int init_bits, OutputStream outs) throws IOException {$/;"	m	class:LZWEncoder
+curPixel	src\com\jaxer\www\gif\LZWEncoder.java	/^	private int curPixel;$/;"	f	class:LZWEncoder	file:
+cur_accum	src\com\jaxer\www\gif\LZWEncoder.java	/^	int cur_accum = 0;$/;"	f	class:LZWEncoder
+cur_bits	src\com\jaxer\www\gif\LZWEncoder.java	/^	int cur_bits = 0;$/;"	f	class:LZWEncoder
+encode	src\com\jaxer\www\gif\LZWEncoder.java	/^	void encode(OutputStream os) throws IOException {$/;"	m	class:LZWEncoder
+flush_char	src\com\jaxer\www\gif\LZWEncoder.java	/^	void flush_char(OutputStream outs) throws IOException {$/;"	m	class:LZWEncoder
+free_ent	src\com\jaxer\www\gif\LZWEncoder.java	/^	int free_ent = 0; \/\/ first unused entry$/;"	f	class:LZWEncoder
+g_init_bits	src\com\jaxer\www\gif\LZWEncoder.java	/^	int g_init_bits;$/;"	f	class:LZWEncoder
+hsize	src\com\jaxer\www\gif\LZWEncoder.java	/^	int hsize = HSIZE; \/\/ for dynamic table sizing$/;"	f	class:LZWEncoder
+htab	src\com\jaxer\www\gif\LZWEncoder.java	/^	int[] htab = new int[HSIZE];$/;"	f	class:LZWEncoder
+imgH	src\com\jaxer\www\gif\LZWEncoder.java	/^	private int imgW, imgH;$/;"	f	class:LZWEncoder	file:
+imgW	src\com\jaxer\www\gif\LZWEncoder.java	/^	private int imgW, imgH;$/;"	f	class:LZWEncoder	file:
+initCodeSize	src\com\jaxer\www\gif\LZWEncoder.java	/^	private int initCodeSize;$/;"	f	class:LZWEncoder	file:
+masks	src\com\jaxer\www\gif\LZWEncoder.java	/^	int masks[] = { 0x0000, 0x0001, 0x0003, 0x0007, 0x000F, 0x001F, 0x003F,$/;"	f	class:LZWEncoder
+maxbits	src\com\jaxer\www\gif\LZWEncoder.java	/^	int maxbits = BITS; \/\/ user settable max # bits\/code$/;"	f	class:LZWEncoder
+maxcode	src\com\jaxer\www\gif\LZWEncoder.java	/^	int maxcode; \/\/ maximum code, given n_bits$/;"	f	class:LZWEncoder
+maxmaxcode	src\com\jaxer\www\gif\LZWEncoder.java	/^	int maxmaxcode = 1 << BITS; \/\/ should NEVER generate this code$/;"	f	class:LZWEncoder
+n_bits	src\com\jaxer\www\gif\LZWEncoder.java	/^	int n_bits; \/\/ number of bits\/code$/;"	f	class:LZWEncoder
+nextPixel	src\com\jaxer\www\gif\LZWEncoder.java	/^	private int nextPixel() {$/;"	m	class:LZWEncoder	file:
+output	src\com\jaxer\www\gif\LZWEncoder.java	/^	void output(int code, OutputStream outs) throws IOException {$/;"	m	class:LZWEncoder
+pixAry	src\com\jaxer\www\gif\LZWEncoder.java	/^	private byte[] pixAry;$/;"	f	class:LZWEncoder	file:
+remaining	src\com\jaxer\www\gif\LZWEncoder.java	/^	private int remaining;$/;"	f	class:LZWEncoder	file:
+NeuQuant	src\com\jaxer\www\gif\NeuQuant.java	/^	public NeuQuant(byte[] thepic, int len, int sample) {$/;"	m	class:NeuQuant
+NeuQuant	src\com\jaxer\www\gif\NeuQuant.java	/^public class NeuQuant {$/;"	c
+alphabiasshift	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int alphabiasshift = 10; \/* alpha starts at 1.0 *\/$/;"	f	class:NeuQuant
+alphadec	src\com\jaxer\www\gif\NeuQuant.java	/^	protected int alphadec; \/* biased by 10 bits *\/$/;"	f	class:NeuQuant
+alpharadbias	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int alpharadbias = (((int) 1) << alpharadbshift);$/;"	f	class:NeuQuant
+alpharadbshift	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int alpharadbshift = (alphabiasshift + radbiasshift);$/;"	f	class:NeuQuant
+alterneigh	src\com\jaxer\www\gif\NeuQuant.java	/^	protected void alterneigh(int rad, int i, int b, int g, int r) {$/;"	m	class:NeuQuant
+altersingle	src\com\jaxer\www\gif\NeuQuant.java	/^	protected void altersingle(int alpha, int i, int b, int g, int r) {$/;"	m	class:NeuQuant
+beta	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int beta = (intbias >> betashift); \/* beta = 1\/1024 *\/$/;"	f	class:NeuQuant
+betagamma	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int betagamma = (intbias << (gammashift - betashift));$/;"	f	class:NeuQuant
+betashift	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int betashift = 10;$/;"	f	class:NeuQuant
+bias	src\com\jaxer\www\gif\NeuQuant.java	/^	protected int[] bias = new int[netsize];$/;"	f	class:NeuQuant
+colorMap	src\com\jaxer\www\gif\NeuQuant.java	/^	public byte[] colorMap() {$/;"	m	class:NeuQuant
+com.jaxer.www.gif	src\com\jaxer\www\gif\NeuQuant.java	/^package com.jaxer.www.gif;$/;"	p
+contest	src\com\jaxer\www\gif\NeuQuant.java	/^	protected int contest(int b, int g, int r) {$/;"	m	class:NeuQuant
+freq	src\com\jaxer\www\gif\NeuQuant.java	/^	protected int[] freq = new int[netsize];$/;"	f	class:NeuQuant
+gamma	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int gamma = (((int) 1) << gammashift);$/;"	f	class:NeuQuant
+gammashift	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int gammashift = 10; \/* gamma = 1024 *\/$/;"	f	class:NeuQuant
+initalpha	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int initalpha = (((int) 1) << alphabiasshift);$/;"	f	class:NeuQuant
+initrad	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int initrad = (netsize >> 3); \/*$/;"	f	class:NeuQuant
+initradius	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int initradius = (initrad * radiusbias); \/*$/;"	f	class:NeuQuant
+intbias	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int intbias = (((int) 1) << intbiasshift);$/;"	f	class:NeuQuant
+intbiasshift	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int intbiasshift = 16; \/* bias for fractions *\/$/;"	f	class:NeuQuant
+inxbuild	src\com\jaxer\www\gif\NeuQuant.java	/^	public void inxbuild() {$/;"	m	class:NeuQuant
+learn	src\com\jaxer\www\gif\NeuQuant.java	/^	public void learn() {$/;"	m	class:NeuQuant
+lengthcount	src\com\jaxer\www\gif\NeuQuant.java	/^	protected int lengthcount; \/* lengthcount = H*W*3 *\/$/;"	f	class:NeuQuant
+map	src\com\jaxer\www\gif\NeuQuant.java	/^	public int map(int b, int g, int r) {$/;"	m	class:NeuQuant
+maxnetpos	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int maxnetpos = (netsize - 1);$/;"	f	class:NeuQuant
+minpicturebytes	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int minpicturebytes = (3 * prime4);$/;"	f	class:NeuQuant
+ncycles	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int ncycles = 100; \/* no. of learning cycles *\/$/;"	f	class:NeuQuant
+netbiasshift	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int netbiasshift = 4; \/* bias for colour values *\/$/;"	f	class:NeuQuant
+netindex	src\com\jaxer\www\gif\NeuQuant.java	/^	protected int[] netindex = new int[256];$/;"	f	class:NeuQuant
+netsize	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int netsize = 256; \/* number of colours used *\/$/;"	f	class:NeuQuant
+network	src\com\jaxer\www\gif\NeuQuant.java	/^	protected int[][] network; \/* the network itself - [netsize][4] *\/$/;"	f	class:NeuQuant
+prime1	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int prime1 = 499;$/;"	f	class:NeuQuant
+prime2	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int prime2 = 491;$/;"	f	class:NeuQuant
+prime3	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int prime3 = 487;$/;"	f	class:NeuQuant
+prime4	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int prime4 = 503;$/;"	f	class:NeuQuant
+process	src\com\jaxer\www\gif\NeuQuant.java	/^	public byte[] process() {$/;"	m	class:NeuQuant
+radbias	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int radbias = (((int) 1) << radbiasshift);$/;"	f	class:NeuQuant
+radbiasshift	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int radbiasshift = 8;$/;"	f	class:NeuQuant
+radiusbias	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int radiusbias = (((int) 1) << radiusbiasshift);$/;"	f	class:NeuQuant
+radiusbiasshift	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int radiusbiasshift = 6; \/* at 32.0 biased by 6 bits *\/$/;"	f	class:NeuQuant
+radiusdec	src\com\jaxer\www\gif\NeuQuant.java	/^	protected static final int radiusdec = 30; \/* factor of 1\/30 each cycle *\/$/;"	f	class:NeuQuant
+radpower	src\com\jaxer\www\gif\NeuQuant.java	/^	protected int[] radpower = new int[initrad];$/;"	f	class:NeuQuant
+samplefac	src\com\jaxer\www\gif\NeuQuant.java	/^	protected int samplefac; \/* sampling factor 1..30 *\/$/;"	f	class:NeuQuant
+thepicture	src\com\jaxer\www\gif\NeuQuant.java	/^	protected byte[] thepicture; \/* the input image itself *\/$/;"	f	class:NeuQuant
+unbiasnet	src\com\jaxer\www\gif\NeuQuant.java	/^	public void unbiasnet() {$/;"	m	class:NeuQuant
+MapLib	src\com\jaxer\www\manager\MapLib.java	/^public class MapLib$/;"	c
+anima	src\com\jaxer\www\manager\MapLib.java	/^    public static final String anima = "############|" + "##---------#|"$/;"	f	class:MapLib
+com.jaxer.www.manager	src\com\jaxer\www\manager\MapLib.java	/^package com.jaxer.www.manager;$/;"	p
+map1	src\com\jaxer\www\manager\MapLib.java	/^    public static final String map1 = \/\/ r$/;"	f	class:MapLib
+map2	src\com\jaxer\www\manager\MapLib.java	/^    public static final String map2 = \/\/ r$/;"	f	class:MapLib
+map3	src\com\jaxer\www\manager\MapLib.java	/^    public static final String map3 = \/\/$/;"	f	class:MapLib
+test	src\com\jaxer\www\manager\MapLib.java	/^    public static final String test = \/\/$/;"	f	class:MapLib
+test2	src\com\jaxer\www\manager\MapLib.java	/^    public static final String test2 = \/\/$/;"	f	class:MapLib
+test3	src\com\jaxer\www\manager\MapLib.java	/^    public static final StringBuilder test3 = new StringBuilder()\/\/ LR$/;"	f	class:MapLib
+test4	src\com\jaxer\www\manager\MapLib.java	/^    public static final StringBuilder test4 = new StringBuilder()\/\/ LR$/;"	f	class:MapLib
+test5	src\com\jaxer\www\manager\MapLib.java	/^    public static final StringBuilder test5 = new StringBuilder()\/\/ LR$/;"	f	class:MapLib
+test6	src\com\jaxer\www\manager\MapLib.java	/^    public static final StringBuilder test6 = new StringBuilder()\/\/ LR$/;"	f	class:MapLib
+test9_17	src\com\jaxer\www\manager\MapLib.java	/^    public static final String test9_17 = \/\/$/;"	f	class:MapLib
+ProgressCounter	src\com\jaxer\www\manager\ProgressCounter.java	/^    public ProgressCounter(long total, String desc)$/;"	m	class:ProgressCounter
+ProgressCounter	src\com\jaxer\www\manager\ProgressCounter.java	/^public class ProgressCounter$/;"	c
+accuracy	src\com\jaxer\www\manager\ProgressCounter.java	/^    private final int accuracy = 20;$/;"	f	class:ProgressCounter	file:
+addProgress	src\com\jaxer\www\manager\ProgressCounter.java	/^    public void addProgress()$/;"	m	class:ProgressCounter
+com.jaxer.www.manager	src\com\jaxer\www\manager\ProgressCounter.java	/^package com.jaxer.www.manager;$/;"	p
+desc	src\com\jaxer\www\manager\ProgressCounter.java	/^    private String desc;$/;"	f	class:ProgressCounter	file:
+end	src\com\jaxer\www\manager\ProgressCounter.java	/^    public void end()$/;"	m	class:ProgressCounter
+lastPrecent	src\com\jaxer\www\manager\ProgressCounter.java	/^    private int lastPrecent = 0;$/;"	f	class:ProgressCounter	file:
+progress	src\com\jaxer\www\manager\ProgressCounter.java	/^    private long progress = 0;$/;"	f	class:ProgressCounter	file:
+toString	src\com\jaxer\www\manager\ProgressCounter.java	/^    public String toString()$/;"	m	class:ProgressCounter
+total	src\com\jaxer\www\manager\ProgressCounter.java	/^    private long total;$/;"	f	class:ProgressCounter	file:
+SolutionFactory	src\com\jaxer\www\manager\SolutionFactory.java	/^public class SolutionFactory$/;"	c
+com.jaxer.www.manager	src\com\jaxer\www\manager\SolutionFactory.java	/^package com.jaxer.www.manager;$/;"	p
+getNextSolution	src\com\jaxer\www\manager\SolutionFactory.java	/^    public static LinkedList<Solution> getNextSolution(Solution solu,$/;"	m	class:SolutionFactory
+loopNextSolutionsBatch	src\com\jaxer\www\manager\SolutionFactory.java	/^    public static void loopNextSolutionsBatch(LinkedList<Solution> needSub,$/;"	m	class:SolutionFactory
+SolutionManager	src\com\jaxer\www\manager\SolutionManager.java	/^public class SolutionManager$/;"	c
+com.jaxer.www.manager	src\com\jaxer\www\manager\SolutionManager.java	/^package com.jaxer.www.manager;$/;"	p
+draw	src\com\jaxer\www\manager\SolutionManager.java	/^    public static String draw(Zuobiao man, ArrayList<Zuobiao> boxList, AspectEnum step, SokoMap sokoMap)$/;"	m	class:SolutionManager
+drawAfter	src\com\jaxer\www\manager\SolutionManager.java	/^    public static String drawAfter(Solution solu, SokoMap sokoMap)$/;"	m	class:SolutionManager
+drawBefore	src\com\jaxer\www\manager\SolutionManager.java	/^    public static String drawBefore(Solution solu, SokoMap sokoMap)$/;"	m	class:SolutionManager
+getBoxAndManAfter	src\com\jaxer\www\manager\SolutionManager.java	/^    public static ArrayList<Zuobiao> getBoxAndManAfter(Solution solu, SokoMap sokoMap)$/;"	m	class:SolutionManager
+getBoxListAfter	src\com\jaxer\www\manager\SolutionManager.java	/^    public static ArrayList<Zuobiao> getBoxListAfter(Solution solu, SokoMap sokoMap)$/;"	m	class:SolutionManager
+getBoxListBefore	src\com\jaxer\www\manager\SolutionManager.java	/^    public static ArrayList<Zuobiao> getBoxListBefore(Solution solu, SokoMap sokoMap)$/;"	m	class:SolutionManager
+getManAfterStep	src\com\jaxer\www\manager\SolutionManager.java	/^    public static Zuobiao getManAfterStep(Solution solu, SokoMap sokoMap)$/;"	m	class:SolutionManager
+getManBeforeStep	src\com\jaxer\www\manager\SolutionManager.java	/^    public static Zuobiao getManBeforeStep(Solution solu, SokoMap sokoMap)$/;"	m	class:SolutionManager
+runByLevel	src\com\jaxer\www\manager\SolutionManager.java	/^    public static void runByLevel(SokoMap sokoMap)$/;"	m	class:SolutionManager
+Cell	src\com\jaxer\www\model\Cell.java	/^    public Cell(int x, int y, CellType item)$/;"	m	class:Cell
+Cell	src\com\jaxer\www\model\Cell.java	/^public class Cell extends Zuobiao$/;"	c
+check	src\com\jaxer\www\model\Cell.java	/^    public boolean check(CellType item)$/;"	m	class:Cell
+com.jaxer.www.model	src\com\jaxer\www\model\Cell.java	/^package com.jaxer.www.model;$/;"	p
+draw	src\com\jaxer\www\model\Cell.java	/^    public String draw()$/;"	m	class:Cell
+item	src\com\jaxer\www\model\Cell.java	/^    private CellType item = CellType.empty;$/;"	f	class:Cell	file:
+FastSet	src\com\jaxer\www\model\FastSet.java	/^    public FastSet(int x, int y)$/;"	m	class:FastSet
+FastSet	src\com\jaxer\www\model\FastSet.java	/^public class FastSet$/;"	c
+addAll	src\com\jaxer\www\model\FastSet.java	/^    public void addAll(Collection<Zuobiao> paramCollection)$/;"	m	class:FastSet
+clear	src\com\jaxer\www\model\FastSet.java	/^    public void clear()$/;"	m	class:FastSet
+com.jaxer.www.model	src\com\jaxer\www\model\FastSet.java	/^package com.jaxer.www.model;$/;"	p
+contains	src\com\jaxer\www\model\FastSet.java	/^    public boolean contains(Zuobiao zb)$/;"	m	class:FastSet
+getLen	src\com\jaxer\www\model\FastSet.java	/^    private int getLen(Zuobiao b)$/;"	m	class:FastSet	file:
+getMapBytes	src\com\jaxer\www\model\FastSet.java	/^    public boolean[] getMapBytes()$/;"	m	class:FastSet
+len	src\com\jaxer\www\model\FastSet.java	/^    int len;$/;"	f	class:FastSet
+mapBytes	src\com\jaxer\www\model\FastSet.java	/^    boolean[] mapBytes;$/;"	f	class:FastSet
+map_x	src\com\jaxer\www\model\FastSet.java	/^    int map_x;$/;"	f	class:FastSet
+remove	src\com\jaxer\www\model\FastSet.java	/^    public void remove(Zuobiao zb)$/;"	m	class:FastSet
+removeAll	src\com\jaxer\www\model\FastSet.java	/^    public void removeAll(Collection<Zuobiao> paramCollection)$/;"	m	class:FastSet
+SokoMap	src\com\jaxer\www\model\SokoMap.java	/^    public SokoMap(SokoMap soure, ArrayList<Zuobiao> boxList, Zuobiao man)$/;"	m	class:SokoMap
+SokoMap	src\com\jaxer\www\model\SokoMap.java	/^    public SokoMap(String mapStr)$/;"	m	class:SokoMap
+SokoMap	src\com\jaxer\www\model\SokoMap.java	/^public class SokoMap$/;"	c
+box	src\com\jaxer\www\model\SokoMap.java	/^    public static final char box = 'B';$/;"	f	class:SokoMap
+boxList	src\com\jaxer\www\model\SokoMap.java	/^    private ArrayList<Zuobiao> boxList = new ArrayList<Zuobiao>();$/;"	f	class:SokoMap	file:
+boxOnGoal	src\com\jaxer\www\model\SokoMap.java	/^    public static final char boxOnGoal = 'R';$/;"	f	class:SokoMap
+canGo	src\com\jaxer\www\model\SokoMap.java	/^    public boolean canGo(ArrayList<Zuobiao> boxList, Zuobiao gotoZuobiao)$/;"	m	class:SokoMap
+com.jaxer.www.model	src\com\jaxer\www\model\SokoMap.java	/^package com.jaxer.www.model;$/;"	p
+coverBox	src\com\jaxer\www\model\SokoMap.java	/^    public byte[] coverBox(ArrayList<Zuobiao> coll)$/;"	m	class:SokoMap
+coverMan	src\com\jaxer\www\model\SokoMap.java	/^    public byte[] coverMan(FastSet mans, byte[] mapByte)$/;"	m	class:SokoMap
+deadSet	src\com\jaxer\www\model\SokoMap.java	/^    HashSet<Zuobiao> deadSet = null;$/;"	f	class:SokoMap
+empty	src\com\jaxer\www\model\SokoMap.java	/^    public static final char empty = 'S';$/;"	f	class:SokoMap
+fliter	src\com\jaxer\www\model\SokoMap.java	/^    private MapFliter fliter = new BloomFliter();$/;"	f	class:SokoMap	file:
+getBoxList	src\com\jaxer\www\model\SokoMap.java	/^    public ArrayList<Zuobiao> getBoxList()$/;"	m	class:SokoMap
+getCell	src\com\jaxer\www\model\SokoMap.java	/^    public Cell getCell(Zuobiao zb)$/;"	m	class:SokoMap
+getGifFrame	src\com\jaxer\www\model\SokoMap.java	/^    private BufferedImage getGifFrame(int stepNum, int fontSize, int w, int h,$/;"	m	class:SokoMap	file:
+getGoleList	src\com\jaxer\www\model\SokoMap.java	/^    public ArrayList<Zuobiao> getGoleList()$/;"	m	class:SokoMap
+getLen	src\com\jaxer\www\model\SokoMap.java	/^    private int getLen(Zuobiao b)$/;"	m	class:SokoMap	file:
+getMan	src\com\jaxer\www\model\SokoMap.java	/^    public Zuobiao getMan()$/;"	m	class:SokoMap
+getManCanGoCells	src\com\jaxer\www\model\SokoMap.java	/^    public ArrayList<Zuobiao> getManCanGoCells()$/;"	m	class:SokoMap
+getMax_x	src\com\jaxer\www\model\SokoMap.java	/^    public int getMax_x()$/;"	m	class:SokoMap
+getMax_y	src\com\jaxer\www\model\SokoMap.java	/^    public int getMax_y()$/;"	m	class:SokoMap
+getMove	src\com\jaxer\www\model\SokoMap.java	/^    public Zuobiao getMove(Zuobiao moveItem, AspectEnum asp)$/;"	m	class:SokoMap
+getMovePlayer	src\com\jaxer\www\model\SokoMap.java	/^    public Zuobiao getMovePlayer(Zuobiao moveItem, AspectEnum asp)$/;"	m	class:SokoMap
+getPlayerCanGoCells	src\com\jaxer\www\model\SokoMap.java	/^    public FastSet getPlayerCanGoCells(ArrayList<Zuobiao> boxList, Zuobiao man)$/;"	m	class:SokoMap
+getSuccess	src\com\jaxer\www\model\SokoMap.java	/^    public Solution getSuccess()$/;"	m	class:SokoMap
+getThisStepMap	src\com\jaxer\www\model\SokoMap.java	/^    public Cell[][] getThisStepMap()$/;"	m	class:SokoMap
+goal	src\com\jaxer\www\model\SokoMap.java	/^    public static final char goal = 'G';$/;"	f	class:SokoMap
+goleList	src\com\jaxer\www\model\SokoMap.java	/^    private ArrayList<Zuobiao> goleList = new ArrayList<Zuobiao>();$/;"	f	class:SokoMap	file:
+isExist	src\com\jaxer\www\model\SokoMap.java	/^    public boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao box,$/;"	m	class:SokoMap
+isPointDie	src\com\jaxer\www\model\SokoMap.java	/^    public boolean isPointDie(Zuobiao zb)$/;"	m	class:SokoMap
+loadCell	src\com\jaxer\www\model\SokoMap.java	/^    private void loadCell(String[] lns, int y, int x)$/;"	m	class:SokoMap	file:
+loadLine	src\com\jaxer\www\model\SokoMap.java	/^    private void loadLine(String[] lns, int y)$/;"	m	class:SokoMap	file:
+man	src\com\jaxer\www\model\SokoMap.java	/^    private Zuobiao man;$/;"	f	class:SokoMap	file:
+manCanGoCells	src\com\jaxer\www\model\SokoMap.java	/^    private ArrayList<Zuobiao> manCanGoCells = new ArrayList<Zuobiao>();$/;"	f	class:SokoMap	file:
+mapCells	src\com\jaxer\www\model\SokoMap.java	/^    private Cell[][] mapCells;$/;"	f	class:SokoMap	file:
+mapStr	src\com\jaxer\www\model\SokoMap.java	/^    public StringBuilder mapStr()$/;"	m	class:SokoMap
+max_x	src\com\jaxer\www\model\SokoMap.java	/^    private int max_x;$/;"	f	class:SokoMap	file:
+max_y	src\com\jaxer\www\model\SokoMap.java	/^    private int max_y;$/;"	f	class:SokoMap	file:
+out	src\com\jaxer\www\model\SokoMap.java	/^    public boolean out(Zuobiao box)$/;"	m	class:SokoMap
+outputResult	src\com\jaxer\www\model\SokoMap.java	/^    public void outputResult(String gifName)$/;"	m	class:SokoMap
+player	src\com\jaxer\www\model\SokoMap.java	/^    public static final char player = 'P';$/;"	f	class:SokoMap
+playerOnGoal	src\com\jaxer\www\model\SokoMap.java	/^    public static final char playerOnGoal = 'L';$/;"	f	class:SokoMap
+run	src\com\jaxer\www\model\SokoMap.java	/^    public void run(String gifName)$/;"	m	class:SokoMap
+setSuccess	src\com\jaxer\www\model\SokoMap.java	/^    public void setSuccess(Solution success)$/;"	m	class:SokoMap
+success	src\com\jaxer\www\model\SokoMap.java	/^    private Solution success;$/;"	f	class:SokoMap	file:
+wall	src\com\jaxer\www\model\SokoMap.java	/^    public static final char wall = 'M';$/;"	f	class:SokoMap
+Solution	src\com\jaxer\www\model\Solution.java	/^    public Solution()$/;"	m	class:Solution
+Solution	src\com\jaxer\www\model\Solution.java	/^    public Solution(AspectEnum step, int boxIndex, Solution lastSolution)$/;"	m	class:Solution
+Solution	src\com\jaxer\www\model\Solution.java	/^    public Solution(AspectEnum step, int boxIndex, Solution lastSolution,$/;"	m	class:Solution
+Solution	src\com\jaxer\www\model\Solution.java	/^public class Solution$/;"	c
+boxIndex	src\com\jaxer\www\model\Solution.java	/^    private int boxIndex = -1;$/;"	f	class:Solution	file:
+boxsNotGole	src\com\jaxer\www\model\Solution.java	/^    private int boxsNotGole;$/;"	f	class:Solution	file:
+com.jaxer.www.model	src\com\jaxer\www\model\Solution.java	/^package com.jaxer.www.model;$/;"	p
+getBoxIndex	src\com\jaxer\www\model\Solution.java	/^    public int getBoxIndex()$/;"	m	class:Solution
+getBoxsNotGole	src\com\jaxer\www\model\Solution.java	/^    public int getBoxsNotGole()$/;"	m	class:Solution
+getLastSolution	src\com\jaxer\www\model\Solution.java	/^    public Solution getLastSolution()$/;"	m	class:Solution
+getStep	src\com\jaxer\www\model\Solution.java	/^    public AspectEnum getStep()$/;"	m	class:Solution
+lastSolution	src\com\jaxer\www\model\Solution.java	/^    private Solution lastSolution;$/;"	f	class:Solution	file:
+level	src\com\jaxer\www\model\Solution.java	/^    public int level;$/;"	f	class:Solution
+step	src\com\jaxer\www\model\Solution.java	/^    private AspectEnum step;$/;"	f	class:Solution	file:
+toString	src\com\jaxer\www\model\Solution.java	/^    public String toString()$/;"	m	class:Solution
+Zuobiao	src\com\jaxer\www\model\Zuobiao.java	/^    public Zuobiao()$/;"	m	class:Zuobiao
+Zuobiao	src\com\jaxer\www\model\Zuobiao.java	/^    public Zuobiao(int x, int y)$/;"	m	class:Zuobiao
+Zuobiao	src\com\jaxer\www\model\Zuobiao.java	/^public class Zuobiao implements Moveable, Comparable<Zuobiao>$/;"	c
+backByAspect	src\com\jaxer\www\model\Zuobiao.java	/^    public void backByAspect(AspectEnum aspect)$/;"	m	class:Zuobiao
+com.jaxer.www.model	src\com\jaxer\www\model\Zuobiao.java	/^package com.jaxer.www.model;$/;"	p
+compareTo	src\com\jaxer\www\model\Zuobiao.java	/^    public int compareTo(Zuobiao other)$/;"	m	class:Zuobiao
+equals	src\com\jaxer\www\model\Zuobiao.java	/^    public boolean equals(Object obj)$/;"	m	class:Zuobiao
+getDown	src\com\jaxer\www\model\Zuobiao.java	/^    public Zuobiao getDown()$/;"	m	class:Zuobiao
+getLeft	src\com\jaxer\www\model\Zuobiao.java	/^    public Zuobiao getLeft()$/;"	m	class:Zuobiao
+getRight	src\com\jaxer\www\model\Zuobiao.java	/^    public Zuobiao getRight()$/;"	m	class:Zuobiao
+getUp	src\com\jaxer\www\model\Zuobiao.java	/^    public Zuobiao getUp()$/;"	m	class:Zuobiao
+getX	src\com\jaxer\www\model\Zuobiao.java	/^    public int getX()$/;"	m	class:Zuobiao
+getY	src\com\jaxer\www\model\Zuobiao.java	/^    public int getY()$/;"	m	class:Zuobiao
+hashCode	src\com\jaxer\www\model\Zuobiao.java	/^    public int hashCode()$/;"	m	class:Zuobiao
+moveByAspect	src\com\jaxer\www\model\Zuobiao.java	/^    public void moveByAspect(AspectEnum aspect)$/;"	m	class:Zuobiao
+moveDown	src\com\jaxer\www\model\Zuobiao.java	/^    public void moveDown()$/;"	m	class:Zuobiao
+moveLeft	src\com\jaxer\www\model\Zuobiao.java	/^    public void moveLeft()$/;"	m	class:Zuobiao
+moveRight	src\com\jaxer\www\model\Zuobiao.java	/^    public void moveRight()$/;"	m	class:Zuobiao
+moveUp	src\com\jaxer\www\model\Zuobiao.java	/^    public void moveUp()$/;"	m	class:Zuobiao
+myClone	src\com\jaxer\www\model\Zuobiao.java	/^    public Zuobiao myClone()$/;"	m	class:Zuobiao
+setX	src\com\jaxer\www\model\Zuobiao.java	/^    public void setX(int x)$/;"	m	class:Zuobiao
+setY	src\com\jaxer\www\model\Zuobiao.java	/^    public void setY(int y)$/;"	m	class:Zuobiao
+toString	src\com\jaxer\www\model\Zuobiao.java	/^    public String toString()$/;"	m	class:Zuobiao
+x	src\com\jaxer\www\model\Zuobiao.java	/^    int x;$/;"	f	class:Zuobiao
+y	src\com\jaxer\www\model\Zuobiao.java	/^    int y;$/;"	f	class:Zuobiao
+MyException	src\com\jaxer\www\myexception\MyException.java	/^    public MyException(String string)$/;"	m	class:MyException
+MyException	src\com\jaxer\www\myexception\MyException.java	/^public class MyException extends RuntimeException$/;"	c
+com.jaxer.www.myexception	src\com\jaxer\www\myexception\MyException.java	/^package com.jaxer.www.myexception;$/;"	p
+serialVersionUID	src\com\jaxer\www\myexception\MyException.java	/^    private static final long serialVersionUID = -6248110763740443002L;$/;"	f	class:MyException	file:
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_PROGRAM_VERSION	5.8	//
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
