@@ -76,8 +76,16 @@ public class SolutionFactory
                     continue;
                 }
                 
-                // 移动后是否成功
                 box.moveByAspect(aspect);
+                // 移动后，是否有箱子组成了死围
+                if(Util.checkRound(boxList,sokoMap)){
+                    continue;
+                };
+                
+                
+                
+                
+                // 移动后是否成功
                 int less = Util.boxsNumNotGole(boxList, sokoMap);
                 if (less == 0)
                 {

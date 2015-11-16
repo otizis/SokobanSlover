@@ -12,11 +12,33 @@ public class Util
     
     // private static MapFliter fliter = new HashSetFilter();
     // private static MapFliter fliter = new TurnOffFliter();
+    /**
+     * 获取列表unitCount个个数的组合可能，index为序号。
+     * 
+     * @param list
+     * @param unitCount
+     * @param index
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    // public static ArrayList<Zuobiao> getAllUnit(ArrayList<Zuobiao> list,
+    // int unitCount, int index)
+    // {
+    // ArrayList<Zuobiao> result = new ArrayList<Zuobiao>();
+    // int indexAll = 0;
+    // for (int i = 1; i <= unitCount; i++)
+    // {
+    //
+    // }
+    //
+    // }
+    //
     
     public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
-        ArrayList<Zuobiao> cloneBoxList = new ArrayList<Zuobiao>(boxList.size());
-        
+        ArrayList<Zuobiao> cloneBoxList =
+            new ArrayList<Zuobiao>(boxList.size());
+            
         for (Zuobiao box : boxList)
         {
             cloneBoxList.add(box.myClone());
@@ -58,7 +80,8 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb, String str, int sokomap_Max_X)
+    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb,
+        String str, int sokomap_Max_X)
     {
         int indxe = zb.getY() * (sokomap_Max_X + 1) + zb.getX();
         
@@ -73,7 +96,8 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static int boxsNumNotGole(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
+    public static int boxsNumNotGole(ArrayList<Zuobiao> boxList,
+        SokoMap sokoMap)
     {
         int rs = boxList.size();
         for (Zuobiao zuobiao : boxList)
@@ -93,7 +117,8 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
+    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList,
+        SokoMap sokoMap)
     {
         for (Zuobiao zb : sokoMap.getGoleList())
         {
@@ -103,6 +128,25 @@ public class Util
             }
         }
         return true;
+    }
+    
+    /**
+     * 存在死围返回true
+     * 
+     * @param boxList
+     * @param sokoMap
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static boolean checkRound(ArrayList<Zuobiao> boxList,
+        SokoMap sokoMap)
+    {
+        ArrayList<Zuobiao[]> roundDeadPoint = sokoMap.getRoundDeadPoint();
+        
+        // TODO
+        
+        return false;
+        
     }
     
 }

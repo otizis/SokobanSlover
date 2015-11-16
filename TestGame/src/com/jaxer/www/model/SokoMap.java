@@ -77,6 +77,14 @@ public class SokoMap
     
     HashSet<Zuobiao> deadSet = null;
     
+    /**
+     * @return 返回 deadSet
+     */
+    public HashSet<Zuobiao> getDeadSet()
+    {
+        return deadSet;
+    }
+    
     private MapFliter fliter = new BloomFliter();
     
     private ArrayList<Zuobiao> goleList = new ArrayList<Zuobiao>();
@@ -577,7 +585,11 @@ public class SokoMap
         
         Long begin = System.currentTimeMillis();
         
+        // 单点死点推算
         this.deadSet = DeadPoitUtil.loadDeadSet(this);
+        
+        // 多点死点推算
+        DeadPoitUtil.roundDeadPoitSet(this);
         
         Solution solution = new Solution();
         
@@ -685,4 +697,15 @@ public class SokoMap
         return g_oImage;
     }
     
+    ArrayList<Zuobiao[]> roundDeadPoint;
+    
+    public void setRoundDeadPoint(ArrayList<Zuobiao[]> roundDeadPoint)
+    {
+        this.roundDeadPoint = roundDeadPoint;
+    }
+    
+    public ArrayList<Zuobiao[]> getRoundDeadPoint()
+    {
+        return roundDeadPoint;
+    }
 }
