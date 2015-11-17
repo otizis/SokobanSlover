@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import com.jaxer.www.Filter.BloomFliter;
-import com.jaxer.www.Filter.FastMapFilter;
+import com.jaxer.www.Filter.TurnOffFliter;
 import com.jaxer.www.Util.DeadPoitUtil;
 import com.jaxer.www.Util.Logger;
 import com.jaxer.www.Util.Util;
@@ -23,42 +23,6 @@ import com.jaxer.www.myexception.MyException;
 
 public class SokoMap
 {
-    private LinkedList<Solution> nextSolutionList;
-    
-    /**
-     * @return 返回 nextSolutionList
-     */
-    public LinkedList<Solution> getNextSolutionList()
-    {
-        return nextSolutionList;
-    }
-    
-    /**
-     * @param 对nextSolutionList进行赋值
-     */
-    public void setNextSolutionList(LinkedList<Solution> nextSolutionList)
-    {
-        this.nextSolutionList = nextSolutionList;
-    }
-    
-    private Solution success;
-    
-    /**
-     * @return 返回 success
-     */
-    public Solution getSuccess()
-    {
-        return success;
-    }
-    
-    /**
-     * @param 对success进行赋值
-     */
-    public void setSuccess(Solution success)
-    {
-        this.success = success;
-    }
-    
     public static final char box = 'B';
     
     public static final char boxOnGoal = 'R';
@@ -77,7 +41,7 @@ public class SokoMap
     
     HashSet<Zuobiao> deadSet = null;
     
-    private MapFliter fliter = new BloomFliter();
+    private MapFliter fliter;
     
     private ArrayList<Zuobiao> goleList = new ArrayList<Zuobiao>();
     
@@ -85,11 +49,17 @@ public class SokoMap
     
     private ArrayList<Zuobiao> manCanGoCells = new ArrayList<Zuobiao>();
     
+    private Cell[][] mapCells;
+    
     private int max_x;
     
     private int max_y;
     
-    private Cell[][] mapCells;
+    private LinkedList<Solution> nextSolutionList;
+    
+    private ArrayList<Zuobiao[]> roundDeadPoint;
+    
+    private Solution success;
     
     public SokoMap(SokoMap soure, ArrayList<Zuobiao> boxList, Zuobiao man)
     {
@@ -101,6 +71,23 @@ public class SokoMap
         this.manCanGoCells = Util.cloneBoxList(soure.manCanGoCells);
         this.max_x = soure.max_x;
         this.max_y = soure.max_y;
+        fliter = new BloomFliter();
+    }
+    
+    /**
+     * 带参数，使用小的fliter
+     */
+    public SokoMap(SokoMap source, ArrayList<Zuobiao> boxList2, Zuobiao man2, boolean b)
+    {
+        this.mapCells = source.mapCells;
+        this.boxList = boxList2;
+        this.man = man2;
+        this.deadSet = new HashSet<Zuobiao>();
+        this.goleList = Util.cloneBoxList(source.goleList);
+        this.manCanGoCells = Util.cloneBoxList(source.manCanGoCells);
+        this.max_x = source.max_x;
+        this.max_y = source.max_y;
+        fliter = new TurnOffFliter();
     }
     
     /**
@@ -117,6 +104,7 @@ public class SokoMap
         {
             loadLine(lns, y);
         }
+        fliter = new BloomFliter();
         max_x = mapCells.length - 1;
         max_y = mapCells[0].length - 1;
     }
@@ -214,6 +202,46 @@ public class SokoMap
     {
         
         return mapCells[zb.x][zb.y];
+    }
+    
+    /**
+     * @return 返回 deadSet
+     */
+    public HashSet<Zuobiao> getDeadSet()
+    {
+        return deadSet;
+    }
+    
+    /**
+     * 获取一帧图片
+     * 
+     * @param stepNum 总步数
+     * @param fontSize 字体大小
+     * @param w 图片宽度
+     * @param h 图片高度
+     * @param i 该步数
+     * @param str 图形字符串
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    private BufferedImage getGifFrame(int stepNum, int fontSize, int w, int h, int i, String str)
+    {
+        BufferedImage g_oImage = new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
+        Graphics graphics = g_oImage.createGraphics();
+        
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, w, h);
+        
+        graphics.setColor(Color.BLACK);
+        graphics.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
+        graphics.drawString("step:" + i + "/" + stepNum, 2, fontSize);
+        int y = fontSize;
+        for (String line : str.split("\n"))
+        {
+            graphics.drawString(line, 2, fontSize += y);
+        }
+        graphics.dispose();
+        return g_oImage;
     }
     
     /**
@@ -336,6 +364,14 @@ public class SokoMap
     }
     
     /**
+     * @return 返回 nextSolutionList
+     */
+    public LinkedList<Solution> getNextSolutionList()
+    {
+        return nextSolutionList;
+    }
+    
+    /**
      * 获取玩家能移动到的位置
      * 
      * @param curMap
@@ -402,6 +438,31 @@ public class SokoMap
     }
     
     /**
+     * 获取死点列表
+     * 
+     * @param zb
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public ArrayList<Zuobiao> getPointDieList()
+    {
+        return new ArrayList<Zuobiao>(deadSet);
+    }
+    
+    public ArrayList<Zuobiao[]> getRoundDeadPoint()
+    {
+        return roundDeadPoint;
+    }
+    
+    /**
+     * @return 返回 success
+     */
+    public Solution getSuccess()
+    {
+        return success;
+    }
+    
+    /**
      * @return 返回 thisStepMap
      */
     public Cell[][] getThisStepMap()
@@ -409,8 +470,7 @@ public class SokoMap
         return mapCells;
     }
     
-    public boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao box,
-        AspectEnum aspect)
+    public boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao box, AspectEnum aspect)
     {
         Zuobiao man = box.myClone();
         // 移动箱子，得到移动后的列表，生成字串后复原
@@ -567,37 +627,6 @@ public class SokoMap
     }
     
     /**
-     * 运行算法
-     * 
-     * @param map
-     * @see [类、类#方法、类#成员]
-     */
-    public void run(String gifName)
-    {
-        
-        Long begin = System.currentTimeMillis();
-        
-        this.deadSet = DeadPoitUtil.loadDeadSet(this);
-        
-        Solution solution = new Solution();
-        
-        Logger.info(SolutionManager.drawBefore(solution, this));
-        
-        SolutionManager.runByLevel(this);
-        
-        while (nextSolutionList != null)
-        {
-            SolutionManager.runByLevel(this);
-        }
-        Long end = System.currentTimeMillis();
-        
-        outputResult(gifName);
-        
-        System.out.println("耗时：" + (end - begin) + "ms");
-        
-    }
-    
-    /**
      * 输出结果
      * 
      * @param lastOne
@@ -622,8 +651,8 @@ public class SokoMap
             
             int stepNum = gonglv.size() - 1;
             AnimatedGifEncoder e = new AnimatedGifEncoder();
+            e.setFrameRate(2);
             e.setRepeat(0);
-            e.setDelay(500);
             e.start(gifName + "_" + stepNum + ".gif");
             
             int fontSize = 15;
@@ -635,14 +664,12 @@ public class SokoMap
                 String str = SolutionManager.drawBefore(gonglv.get(i), this);
                 System.out.println(str);
                 
-                BufferedImage g_oImage =
-                    getGifFrame(stepNum, fontSize, width, height, i, str);
+                BufferedImage g_oImage = getGifFrame(stepNum, fontSize, width, height, i, str);
                 e.addFrame(g_oImage);
                 
                 // 生成推动后的
                 str = SolutionManager.drawAfter(gonglv.get(i), this);
-                g_oImage =
-                    getGifFrame(stepNum, fontSize, width, height, i, str);
+                g_oImage = getGifFrame(stepNum, fontSize, width, height, i, str);
                 e.addFrame(g_oImage);
                 
             }
@@ -652,37 +679,62 @@ public class SokoMap
     }
     
     /**
-     * 获取一帧图片
+     * 运行算法
      * 
-     * @param stepNum 总步数
-     * @param fontSize 字体大小
-     * @param w 图片宽度
-     * @param h 图片高度
-     * @param i 该步数
-     * @param str 图形字符串
-     * @return
+     * @param map
      * @see [类、类#方法、类#成员]
      */
-    private BufferedImage getGifFrame(int stepNum, int fontSize, int w, int h,
-        int i, String str)
+    public void run(String gifName)
     {
-        BufferedImage g_oImage =
-            new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
-        Graphics graphics = g_oImage.createGraphics();
         
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(0, 0, w, h);
+        Long begin = System.currentTimeMillis();
         
-        graphics.setColor(Color.BLACK);
-        graphics.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
-        graphics.drawString("step:" + i + "/" + stepNum, 2, fontSize);
-        int y = fontSize;
-        for (String line : str.split("\n"))
+        // 单点死点推算
+        this.deadSet = DeadPoitUtil.loadDeadSet(this);
+        
+        Solution solution = new Solution();
+        Logger.info(SolutionManager.drawBefore(solution, this));
+        // 等效于墙的空点
+        DeadPoitUtil.convertWall(this);
+        
+        Logger.info(SolutionManager.drawBefore(solution, this));
+        
+        // 多点死点推算
+        DeadPoitUtil.roundDeadPoitSet(this);
+        
+        SolutionManager.runByLevel(this);
+        
+        while (nextSolutionList != null)
         {
-            graphics.drawString(line, 2, fontSize += y);
+            SolutionManager.runLeft(this);
         }
-        graphics.dispose();
-        return g_oImage;
+        Long end = System.currentTimeMillis();
+        
+        outputResult(gifName);
+        
+        System.out.println("耗时：" + (end - begin) + "ms");
+        
+    }
+    
+    /**
+     * @param 对nextSolutionList进行赋值
+     */
+    public void setNextSolutionList(LinkedList<Solution> nextSolutionList)
+    {
+        this.nextSolutionList = nextSolutionList;
+    }
+    
+    public void setRoundDeadPoint(ArrayList<Zuobiao[]> roundDeadPoint)
+    {
+        this.roundDeadPoint = roundDeadPoint;
+    }
+    
+    /**
+     * @param 对success进行赋值
+     */
+    public void setSuccess(Solution success)
+    {
+        this.success = success;
     }
     
 }

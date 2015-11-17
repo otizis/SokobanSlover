@@ -105,4 +105,56 @@ public class Util
         return true;
     }
     
+    /**
+     * 存在死围返回true
+     * 
+     * @param boxList
+     * @param sokoMap
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static boolean checkRound(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
+    {
+        ArrayList<Zuobiao[]> roundDeadPoint = sokoMap.getRoundDeadPoint();
+        if (roundDeadPoint == null)
+        {
+            return false;
+        }
+        for (Zuobiao[] siwei : roundDeadPoint)
+        {
+            
+            if (isMatch(boxList, siwei))
+            {
+                return true;
+            }
+            
+        }
+        
+        return false;
+        
+    }
+    
+    /**
+     * boxList是否满足死围
+     * 
+     * 
+     * @param boxList
+     * @param siwei [参数说明]
+     *            
+     * @return void [返回类型说明]
+     * @exception throws [违例类型] [违例说明]
+     * @see [类、类#方法、类#成员]
+     */
+    private static boolean isMatch(ArrayList<Zuobiao> boxList, Zuobiao[] siwei)
+    {
+        for (Zuobiao zuobiao : siwei)
+        {
+            if (!boxList.contains(zuobiao))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 }

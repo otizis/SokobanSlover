@@ -23,8 +23,7 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static LinkedList<Solution> getNextSolution(Solution solu,
-        SokoMap sokoMap)
+    public static LinkedList<Solution> getNextSolution(Solution solu, SokoMap sokoMap)
     {
         
         if (solu == null)
@@ -33,9 +32,8 @@ public class SolutionFactory
         }
         Logger.debug("======开始计算下一步走法。");
         
-        ArrayList<Zuobiao> boxList =
-            SolutionManager.getBoxAndManAfter(solu, sokoMap);
-            
+        ArrayList<Zuobiao> boxList = SolutionManager.getBoxAndManAfter(solu, sokoMap);
+        
         Zuobiao man = boxList.remove(0);
         
         FastSet playerCanGoCells = sokoMap.getPlayerCanGoCells(boxList, man);
@@ -76,8 +74,15 @@ public class SolutionFactory
                     continue;
                 }
                 
-                // 移动后是否成功
                 box.moveByAspect(aspect);
+                // 移动后，是否有箱子组成了死围
+                if (Util.checkRound(boxList, sokoMap))
+                {
+                    box.backByAspect(aspect);
+                    continue;
+                }
+                
+                // 移动后是否成功
                 int less = Util.boxsNumNotGole(boxList, sokoMap);
                 if (less == 0)
                 {
@@ -123,8 +128,7 @@ public class SolutionFactory
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static void loopNextSolutionsBatch(LinkedList<Solution> needSub,
-        SokoMap sokoMap)
+    public static void loopNextSolutionsBatch(LinkedList<Solution> needSub, SokoMap sokoMap)
     {
         Collections.sort(needSub, new Comparator<Solution>()
         {
@@ -146,9 +150,8 @@ public class SolutionFactory
             
             Solution removeFirst = needSub.removeFirst();
             
-            LinkedList<Solution> temp =
-                SolutionFactory.getNextSolution(removeFirst, sokoMap);
-                
+            LinkedList<Solution> temp = SolutionFactory.getNextSolution(removeFirst, sokoMap);
+            
             removeFirst = null;
             
             if (sokoMap.getSuccess() != null)
@@ -188,8 +191,7 @@ public class SolutionFactory
                     }
                 }
             }
-            Logger.info(all + "中留下" + level + "个箱子未中的有" + count + "个,占"
-                + Math.round(count * 100.0 / all) + "%");
+            Logger.info(all + "中留" + level + "目标空的" + count + "个,占" + Math.round(count * 100.0 / all) + "%");
             if (count > maxCount)
             {
                 break;

@@ -2,13 +2,16 @@ package com.jaxer.www.Util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.enums.CellType;
+import com.jaxer.www.manager.SolutionFactory;
 import com.jaxer.www.manager.SolutionManager;
 import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.FastSet;
 import com.jaxer.www.model.SokoMap;
+import com.jaxer.www.model.Solution;
 import com.jaxer.www.model.Zuobiao;
 
 public class DeadPoitUtil
@@ -177,6 +180,111 @@ public class DeadPoitUtil
         }
         
         return true;
+    }
+    
+    /**
+     * 获取多个箱子围成的死点集合<br/>
+     * 两个或两个以上的箱子在特定的点位后，造成这几个箱子只能推到死点的情况
+     * 
+     * @param sokoMap
+     * @see [类、类#方法、类#成员]
+     */
+    public static void roundDeadPoitSet(SokoMap sokoMap)
+    {
+        Logger.info("==开始死围推算==");
+        // 获取还是空位的列表,
+        ArrayList<Zuobiao> manCanGoCells = Util.cloneBoxList(sokoMap.getManCanGoCells());
+        manCanGoCells.removeAll(sokoMap.getDeadSet());
+        manCanGoCells.removeAll(sokoMap.getGoleList());
+        
+        Zuobiao man = sokoMap.getGoleList().get(0);
+        
+        ArrayList<Zuobiao[]> roundDeadPoint = new ArrayList<Zuobiao[]>();
+        for (int i = 0; i < manCanGoCells.size(); i++)
+        {
+            for (int j = 0; j < manCanGoCells.size(); j++)
+            {
+                if (i == j)
+                {
+                    Logger.info("==死围推算" + i + "," + j + "==");
+                    continue;
+                }
+                Zuobiao a = manCanGoCells.get(i);
+                Zuobiao b = manCanGoCells.get(j);
+                ArrayList<Zuobiao> boxList = new ArrayList<Zuobiao>(2);
+                boxList.add(a);
+                boxList.add(b);
+                SokoMap sokoMap2 = new SokoMap(sokoMap, boxList, man,true);
+                
+                LinkedList<Solution> nextSolution = SolutionFactory.getNextSolution(new Solution(), sokoMap2);
+                if (sokoMap2.getSuccess() == null && nextSolution.isEmpty())
+                {
+                    // 说明这个boxList时已经没有推动的机会了
+                    roundDeadPoint.add(boxList.toArray(new Zuobiao[0]));
+                }
+            }
+            
+        }
+        
+        sokoMap.setRoundDeadPoint(roundDeadPoint);
+        Logger.info("==结束死围推算==");
+    }
+    
+    /**
+     * 人从此点出发，不能到达空点(非死点，非gole点)
+     * 
+     * @param sokoMap
+     * @param boxList
+     * @param man
+     * @return [参数说明]
+     *         
+     * @return boolean [返回类型说明]
+     * @exception throws [违例类型] [违例说明]
+     * @see [类、类#方法、类#成员]
+     */
+    public static boolean isManGoEmpty(SokoMap sokoMap, ArrayList<Zuobiao> boxList, Zuobiao man)
+    {
+        if (boxList == null)
+        {
+            boxList = new ArrayList<Zuobiao>();
+        }
+        FastSet playerCanGoCells = sokoMap.getPlayerCanGoCells(boxList, man);
+        ArrayList<Zuobiao> pcgc = playerCanGoCells.getList();
+        
+        for (Zuobiao zuobiao : pcgc)
+        {
+            if (!sokoMap.isPointDie(zuobiao))
+            {
+                // 这个逻辑下为，不是死点，也能到达
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * 将等效于墙的死点，改为墙
+     * 
+     * @param sokoMap [参数说明]
+     *            
+     * @return void [返回类型说明]
+     * @exception throws [违例类型] [违例说明]
+     * @see [类、类#方法、类#成员]
+     */
+    public static void convertWall(SokoMap sokoMap)
+    {
+        ArrayList<Zuobiao> pointDieList = sokoMap.getPointDieList();
+        for (Zuobiao zuobiao : pointDieList)
+        {
+            if (isManGoEmpty(sokoMap, null, zuobiao))
+            {
+                Cell[][] thisStepMap = sokoMap.getThisStepMap();
+                thisStepMap[zuobiao.getX()][zuobiao.getY()].setItem(CellType.wall);
+                sokoMap.getManCanGoCells().remove(zuobiao);
+                sokoMap.getDeadSet().remove(zuobiao);
+            }
+            
+        }
     }
     
 }
