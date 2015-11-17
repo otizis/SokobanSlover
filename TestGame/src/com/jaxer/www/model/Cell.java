@@ -13,6 +13,11 @@ public class Cell extends Zuobiao
         this.item = item;
     }
     
+    public void setItem(CellType type)
+    {
+        this.item = type;
+    }
+    
     public boolean check(CellType item)
     {
         return this.item == item;

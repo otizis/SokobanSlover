@@ -10,13 +10,11 @@ import com.jaxer.www.model.Zuobiao;
 public class Util
 {
     
-    // private static MapFliter fliter = new HashSetFilter();
-    // private static MapFliter fliter = new TurnOffFliter();
-    
     public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
-        ArrayList<Zuobiao> cloneBoxList = new ArrayList<Zuobiao>(boxList.size());
-        
+        ArrayList<Zuobiao> cloneBoxList =
+            new ArrayList<Zuobiao>(boxList.size());
+            
         for (Zuobiao box : boxList)
         {
             cloneBoxList.add(box.myClone());
@@ -58,7 +56,8 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb, String str, int sokomap_Max_X)
+    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb,
+        String str, int sokomap_Max_X)
     {
         int indxe = zb.getY() * (sokomap_Max_X + 1) + zb.getX();
         
@@ -73,7 +72,8 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static int boxsNumNotGole(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
+    public static int boxsNumNotGole(ArrayList<Zuobiao> boxList,
+        SokoMap sokoMap)
     {
         int rs = boxList.size();
         for (Zuobiao zuobiao : boxList)
@@ -93,7 +93,8 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
+    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList,
+        SokoMap sokoMap)
     {
         for (Zuobiao zb : sokoMap.getGoleList())
         {
@@ -113,6 +114,7 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
+
     public static boolean checkRound(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
     {
         ArrayList<Zuobiao[]> roundDeadPoint = sokoMap.getRoundDeadPoint();
@@ -155,6 +157,7 @@ public class Util
             }
         }
         return true;
+
     }
     
 }

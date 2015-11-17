@@ -16,6 +16,7 @@ public class BloomFliter implements MapFliter
     public BloomFliter(int expectedInsertions)
     {
         this.expectedInsertions = expectedInsertions;
+        clear();
     }
     
     BloomFilter<byte[]> bloomFilter;

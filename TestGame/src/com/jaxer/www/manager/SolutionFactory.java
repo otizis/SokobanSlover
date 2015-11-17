@@ -81,6 +81,7 @@ public class SolutionFactory
                     box.backByAspect(aspect);
                     continue;
                 }
+
                 
                 // 移动后是否成功
                 int less = Util.boxsNumNotGole(boxList, sokoMap);

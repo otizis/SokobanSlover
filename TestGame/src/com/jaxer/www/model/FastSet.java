@@ -1,5 +1,6 @@
 package com.jaxer.www.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -51,6 +52,22 @@ public class FastSet
         return index;
     }
     
+    /**
+     * 转化一维数组序号为二维的坐标
+     * 
+     * @param b
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    private Zuobiao getZuobiao(int index)
+    {
+        int y = index / (map_x + 1);
+        
+        int x = index - y * (map_x + 1);
+        
+        return new Zuobiao(x, y);
+    }
+    
     public void clear()
     {
         int i = 0;
@@ -97,4 +114,19 @@ public class FastSet
         int index = getLen(zb);
         return mapBytes[index];
     }
+    
+    public ArrayList<Zuobiao> getList()
+    {
+        ArrayList<Zuobiao> boxList = new ArrayList<Zuobiao>();
+        for (int i = 0; i < len; i++)
+        {
+            if (mapBytes[i])
+            {
+                boxList.add(getZuobiao(i));
+            }
+            
+        }
+        return boxList;
+    }
+    
 }

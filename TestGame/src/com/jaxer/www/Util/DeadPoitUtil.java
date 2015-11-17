@@ -96,8 +96,9 @@ public class DeadPoitUtil
     {
         
         // 上 右 下 左 为固定的位置，标为1
-        AspectEnum[] UpRiDoLe = {AspectEnum.up, AspectEnum.left, AspectEnum.down, AspectEnum.right};
-        
+        AspectEnum[] UpRiDoLe =
+            {AspectEnum.up, AspectEnum.left, AspectEnum.down, AspectEnum.right};
+            
         boolean[] isWall = {false, false, false, false};
         
         for (int i = 0; i < UpRiDoLe.length; i++)
@@ -125,7 +126,8 @@ public class DeadPoitUtil
     }
     
     /**
-     * 死点推断，移除所有雕像，只放一个雕像在推断的点，看是否能移动到任一个目标点。 如果不能，再测试人位置是否可以有其他情况，历遍上下左右的位置，再次进行推断。
+     * 死点推断，移除所有雕像，只放一个雕像在推断的点，看是否能移动到任一个目标点。
+     * 如果不能，再测试人位置是否可以有其他情况，历遍上下左右的位置，再次进行推断。
      *
      * @param zb 箱子的坐标
      * @see [类、类#方法、类#成员]
@@ -146,8 +148,9 @@ public class DeadPoitUtil
         
         // 如果不成功，获取该初始化人位置的等价位置
         
-        FastSet allPlayerCanGoCells = clone.getPlayerCanGoCells(deadPointList, sokoMap.getMan());
-        
+        FastSet allPlayerCanGoCells =
+            clone.getPlayerCanGoCells(deadPointList, sokoMap.getMan());
+            
         // 四种情况，人在箱子的上下左右，且不是以上等价情况的位置，再次推断
         for (AspectEnum aspect : AspectEnum.values())
         {
@@ -191,6 +194,7 @@ public class DeadPoitUtil
      */
     public static void roundDeadPoitSet(SokoMap sokoMap)
     {
+
         Logger.info("==开始死围推算==");
         // 获取还是空位的列表,
         ArrayList<Zuobiao> manCanGoCells = Util.cloneBoxList(sokoMap.getManCanGoCells());
@@ -283,7 +287,6 @@ public class DeadPoitUtil
                 sokoMap.getManCanGoCells().remove(zuobiao);
                 sokoMap.getDeadSet().remove(zuobiao);
             }
-            
         }
     }
     

@@ -112,10 +112,10 @@ public class SolutionManager
             return Util.cloneBoxList(sokoMap.getBoxList());
         }
         
-        if (solu.isHot())
-        {
-            return Util.cloneBoxList(solu.getBoxList());
-        }
+//        if (solu.isHot())
+//        {
+//            return Util.cloneBoxList(solu.getBoxList());
+//        }
         ArrayList<Solution> solutList = new ArrayList<Solution>();
         
         solutList.add(solu);
@@ -135,11 +135,11 @@ public class SolutionManager
             Zuobiao moveBox = cloneBoxList.get(moveIndex);
             moveBox.moveByAspect(solutList.get(i).getStep());
         }
-        solu.addTime();
-        if (solu.isHot())
-        {
-            solu.setBoxList(Util.cloneBoxList(cloneBoxList));
-        }
+//        solu.addTime();
+//        if (solu.isHot())
+//        {
+//            solu.setBoxList(Util.cloneBoxList(cloneBoxList));
+//        }
         return cloneBoxList;
     }
     

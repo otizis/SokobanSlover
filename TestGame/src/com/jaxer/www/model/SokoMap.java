@@ -42,7 +42,7 @@ public class SokoMap
     HashSet<Zuobiao> deadSet = null;
     
     private MapFliter fliter;
-    
+
     private ArrayList<Zuobiao> goleList = new ArrayList<Zuobiao>();
     
     private Zuobiao man;
@@ -449,11 +449,6 @@ public class SokoMap
         return new ArrayList<Zuobiao>(deadSet);
     }
     
-    public ArrayList<Zuobiao[]> getRoundDeadPoint()
-    {
-        return roundDeadPoint;
-    }
-    
     /**
      * @return 返回 success
      */
@@ -724,11 +719,6 @@ public class SokoMap
         this.nextSolutionList = nextSolutionList;
     }
     
-    public void setRoundDeadPoint(ArrayList<Zuobiao[]> roundDeadPoint)
-    {
-        this.roundDeadPoint = roundDeadPoint;
-    }
-    
     /**
      * @param 对success进行赋值
      */
@@ -737,4 +727,13 @@ public class SokoMap
         this.success = success;
     }
     
+    public void setRoundDeadPoint(ArrayList<Zuobiao[]> roundDeadPoint)
+    {
+        this.roundDeadPoint = roundDeadPoint;
+    }
+    
+    public ArrayList<Zuobiao[]> getRoundDeadPoint()
+    {
+        return roundDeadPoint;
+    }
 }
