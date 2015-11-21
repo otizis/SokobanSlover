@@ -1,6 +1,7 @@
 package com.jaxer.www.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -39,7 +40,6 @@ public class DeadPoitUtil
                 {
                     if (Logger.isdebug)
                     {
-                        
                         Logger.debug("跳过" + cell + ",放着箱子不会是死点");
                     }
                     continue;
@@ -96,9 +96,8 @@ public class DeadPoitUtil
     {
         
         // 上 右 下 左 为固定的位置，标为1
-        AspectEnum[] UpRiDoLe =
-            {AspectEnum.up, AspectEnum.left, AspectEnum.down, AspectEnum.right};
-            
+        AspectEnum[] UpRiDoLe = {AspectEnum.up, AspectEnum.left, AspectEnum.down, AspectEnum.right};
+        
         boolean[] isWall = {false, false, false, false};
         
         for (int i = 0; i < UpRiDoLe.length; i++)
@@ -126,8 +125,7 @@ public class DeadPoitUtil
     }
     
     /**
-     * 死点推断，移除所有雕像，只放一个雕像在推断的点，看是否能移动到任一个目标点。
-     * 如果不能，再测试人位置是否可以有其他情况，历遍上下左右的位置，再次进行推断。
+     * 死点推断，移除所有雕像，只放一个雕像在推断的点，看是否能移动到任一个目标点。 如果不能，再测试人位置是否可以有其他情况，历遍上下左右的位置，再次进行推断。
      *
      * @param zb 箱子的坐标
      * @see [类、类#方法、类#成员]
@@ -148,9 +146,8 @@ public class DeadPoitUtil
         
         // 如果不成功，获取该初始化人位置的等价位置
         
-        FastSet allPlayerCanGoCells =
-            clone.getPlayerCanGoCells(deadPointList, sokoMap.getMan());
-            
+        FastSet allPlayerCanGoCells = clone.getPlayerCanGoCells(deadPointList, sokoMap.getMan());
+        
         // 四种情况，人在箱子的上下左右，且不是以上等价情况的位置，再次推断
         for (AspectEnum aspect : AspectEnum.values())
         {
@@ -194,7 +191,7 @@ public class DeadPoitUtil
      */
     public static void roundDeadPoitSet(SokoMap sokoMap)
     {
-
+        
         Logger.info("==开始死围推算==");
         // 获取还是空位的列表,
         ArrayList<Zuobiao> manCanGoCells = Util.cloneBoxList(sokoMap.getManCanGoCells());
@@ -204,30 +201,44 @@ public class DeadPoitUtil
         Zuobiao man = sokoMap.getGoleList().get(0);
         
         ArrayList<Zuobiao[]> roundDeadPoint = new ArrayList<Zuobiao[]>();
-        for (int i = 0; i < manCanGoCells.size(); i++)
+        int num = 2;
+        while (num < 6)
         {
-            for (int j = 0; j < manCanGoCells.size(); j++)
+            Logger.info("==死围推算==" + num + "/" + sokoMap.getBoxList().size() + "==");
+            
+            char[] firstUnit = Util.getFirstUnit(manCanGoCells.size(), num);
+            
+            ArrayList<Zuobiao> boxList = new ArrayList<Zuobiao>(num);
+            
+            do
             {
-                if (i == j)
+                boxList.clear();
+                for (int j = 0; j < firstUnit.length; j++)
                 {
-                    Logger.info("==死围推算" + i + "," + j + "==");
+                    if (firstUnit[j] == '1')
+                    {
+                        boxList.add(manCanGoCells.get(j));
+                    }
+                }
+                // 一般3个会包含2个的死围状态，不用再测试。
+                if (Util.checkRound(boxList, sokoMap))
+                {
                     continue;
                 }
-                Zuobiao a = manCanGoCells.get(i);
-                Zuobiao b = manCanGoCells.get(j);
-                ArrayList<Zuobiao> boxList = new ArrayList<Zuobiao>(2);
-                boxList.add(a);
-                boxList.add(b);
-                SokoMap sokoMap2 = new SokoMap(sokoMap, boxList, man,true);
                 
+                SokoMap sokoMap2 = new SokoMap(sokoMap, boxList, man, true);
                 LinkedList<Solution> nextSolution = SolutionFactory.getNextSolution(new Solution(), sokoMap2);
                 if (sokoMap2.getSuccess() == null && nextSolution.isEmpty())
                 {
                     // 说明这个boxList时已经没有推动的机会了
                     roundDeadPoint.add(boxList.toArray(new Zuobiao[0]));
+                    if (Logger.isdebug)
+                    {
+                        Logger.debug("==死围添加==" + Arrays.toString(firstUnit) + "==");
+                    }
                 }
-            }
-            
+            } while (Util.getNextUnit(firstUnit));
+            num++;
         }
         
         sokoMap.setRoundDeadPoint(roundDeadPoint);
@@ -284,8 +295,7 @@ public class DeadPoitUtil
             {
                 Cell[][] thisStepMap = sokoMap.getThisStepMap();
                 thisStepMap[zuobiao.getX()][zuobiao.getY()].setItem(CellType.wall);
-                sokoMap.getManCanGoCells().remove(zuobiao);
-                sokoMap.getDeadSet().remove(zuobiao);
+                sokoMap.removeManCango(zuobiao);
             }
         }
     }

@@ -55,26 +55,28 @@ public class SolutionFactory
                 {
                     continue;
                 }
+                
                 // 目标位，已经有箱子或是墙，不用推了
                 Zuobiao zuobiaoGo = sokoMap.getMove(box, aspect);
                 if (!sokoMap.canGo(boxList, zuobiaoGo))
                 {
                     continue;
                 }
-                // 目标位是死角，不用推了
+                // 目标位是死点，不用推了
                 if (sokoMap.isPointDie(zuobiaoGo))
                 {
                     continue;
                 }
                 
+                box.moveByAspect(aspect);
                 // 已经存在的特征地图不再使用
-                if (sokoMap.isExist(boxList, box, aspect))
+                if (sokoMap.isExist(boxList, zuobiaoMan))
                 {
                     Logger.debug("以上结果重复，或不是最优解");
+                    box.backByAspect(aspect);
                     continue;
                 }
                 
-                box.moveByAspect(aspect);
                 // 移动后，是否有箱子组成了死围
                 if (Util.checkRound(boxList, sokoMap))
                 {

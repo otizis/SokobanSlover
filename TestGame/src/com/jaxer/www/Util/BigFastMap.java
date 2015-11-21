@@ -33,15 +33,20 @@ public class BigFastMap
     
     public void add(byte[] info)
     {
-        
-        Logger.debug("change-->" + Arrays.toString(info));
+        if (Logger.isdebug)
+        {
+            Logger.debug("change-->" + Arrays.toString(info));
+        }
         node.add(change(info));
         
     }
     
     private int[] change(byte[] source)
     {
-        Logger.debug("change-->" + Arrays.toString(source));
+        if (Logger.isdebug)
+        {
+            Logger.debug("change-->" + Arrays.toString(source));
+        }
         int hebingNum = catNum;
         int soureRadix = radix;
         
@@ -156,8 +161,8 @@ public class BigFastMap
     public static void main(String[] args)
     {
         System.out.println(Integer.valueOf("2222", 3));
-        byte[] a1 = new byte[] {0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+        byte[] a1 = new byte[] {0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2};
             
         byte[] a2 = new byte[] {1, 2, 2, 2, 2};
         BigFastMap a = new BigFastMap(3, 4);

@@ -1,6 +1,7 @@
 package com.jaxer.www.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -18,6 +19,23 @@ public class FastSet
         mapBytes = new boolean[(x + 1) * (y + 1)];
         len = mapBytes.length;
         map_x = x;
+    }
+    
+    public FastSet clone()
+    {
+        
+        return new FastSet(Arrays.copyOf(mapBytes, len), len, map_x);
+    }
+    
+    /**
+     * <默认构造函数>
+     */
+    public FastSet(boolean[] mapBytes, int len, int map_x)
+    {
+        super();
+        this.mapBytes = mapBytes;
+        this.len = len;
+        this.map_x = map_x;
     }
     
     /**
@@ -70,11 +88,7 @@ public class FastSet
     
     public void clear()
     {
-        int i = 0;
-        while (i < len)
-        {
-            mapBytes[i++] = false;
-        }
+        Arrays.fill(mapBytes, false);
     }
     
     public void removeAll(Collection<Zuobiao> paramCollection)

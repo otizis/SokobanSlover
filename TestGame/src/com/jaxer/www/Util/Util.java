@@ -1,8 +1,11 @@
 package com.jaxer.www.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 
+import com.google.common.escape.ArrayBasedUnicodeEscaper;
 import com.jaxer.www.enums.CellType;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Zuobiao;
@@ -12,9 +15,8 @@ public class Util
     
     public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
-        ArrayList<Zuobiao> cloneBoxList =
-            new ArrayList<Zuobiao>(boxList.size());
-            
+        ArrayList<Zuobiao> cloneBoxList = new ArrayList<Zuobiao>(boxList.size());
+        
         for (Zuobiao box : boxList)
         {
             cloneBoxList.add(box.myClone());
@@ -56,8 +58,7 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb,
-        String str, int sokomap_Max_X)
+    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb, String str, int sokomap_Max_X)
     {
         int indxe = zb.getY() * (sokomap_Max_X + 1) + zb.getX();
         
@@ -72,8 +73,7 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static int boxsNumNotGole(ArrayList<Zuobiao> boxList,
-        SokoMap sokoMap)
+    public static int boxsNumNotGole(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
     {
         int rs = boxList.size();
         for (Zuobiao zuobiao : boxList)
@@ -93,8 +93,7 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList,
-        SokoMap sokoMap)
+    public static boolean isAllGoalCover(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
     {
         for (Zuobiao zb : sokoMap.getGoleList())
         {
@@ -114,7 +113,7 @@ public class Util
      * @return
      * @see [类、类#方法、类#成员]
      */
-
+    
     public static boolean checkRound(ArrayList<Zuobiao> boxList, SokoMap sokoMap)
     {
         ArrayList<Zuobiao[]> roundDeadPoint = sokoMap.getRoundDeadPoint();
@@ -157,7 +156,122 @@ public class Util
             }
         }
         return true;
-
+        
+    }
+    
+    /**
+     * 获取total几个的num个数量的所有组合
+     * 
+     * @param boxList
+     * @param num
+     * @return [参数说明]
+     *         
+     * @return ArrayList<Zuobiao[]> [返回类型说明]
+     * @exception throws [违例类型] [违例说明]
+     * @see [类、类#方法、类#成员]
+     */
+    public static ArrayList<char[]> getAllUnit(int total, int num)
+    {
+        ArrayList<char[]> result = new ArrayList<char[]>();
+        
+        char[] list = new char[total];
+        Arrays.fill(list, '0');
+        Arrays.fill(list, 0, num, '1');
+        char[] end = Arrays.copyOf(list, total);
+        Arrays.sort(list);
+        
+        // 发现10，换位01，将前面的1都放到最开始
+        boolean flag = false;
+        while (true)
+        {
+            result.add(Arrays.copyOf(list, total));
+            if (flag)
+            {
+                break;
+            }
+            
+            for (int i = total - 1; i >= 0; i--)
+            {
+                if (list[i] == '1' && i - 1 >= 0 && list[i - 1] == '0')
+                {
+                    list[i] = '0';
+                    list[i - 1] = '1';
+                    Arrays.sort(list, i + 1, total);
+                    break;
+                }
+            }
+            if (Arrays.equals(list, end))
+            {
+                flag = true;
+            }
+            
+        }
+        return result;
+    }
+    
+    /**
+     * 获取total几个的num个数量的第一个，
+     * 
+     * @return [参数说明]
+     *         
+     * @return ArrayList<Zuobiao[]> [返回类型说明]
+     * @exception throws [违例类型] [违例说明]
+     * @see [类、类#方法、类#成员]
+     */
+    public static char[] getFirstUnit(int total, int num)
+    {
+        char[] list = new char[total];
+        Arrays.fill(list, '0');
+        Arrays.fill(list, total - num, total, '1');
+        return list;
+    }
+    
+    /**
+     * 获取total几个的num个数量的下一个组合，入参会改变，没有下一个返回false
+     * 
+     * @param boxList
+     * @param num
+     * @return [参数说明]
+     *         
+     * @return ArrayList<Zuobiao[]> [返回类型说明]
+     * @exception throws [违例类型] [违例说明]
+     * @see [类、类#方法、类#成员]
+     */
+    public static boolean getNextUnit(char[] indexArray)
+    {
+        int total = indexArray.length;
+        // 只要有一个a[n+1] > a[n],表示还没有结束
+        boolean isEnd = true;
+        for (int i = 0; i < indexArray.length - 1; i++)
+        {
+            if (indexArray[i + 1] > indexArray[i])
+            {
+                isEnd = false;
+                break;
+            }
+        }
+        if (isEnd)
+        {
+            return false;
+        }
+        // 发现10，换位01，将前面的1都放到最开始
+        for (int i = total - 1; i >= 0; i--)
+        {
+            if (indexArray[i] == '1' && i - 1 >= 0 && indexArray[i - 1] == '0')
+            {
+                indexArray[i] = '0';
+                indexArray[i - 1] = '1';
+                Arrays.sort(indexArray, i + 1, total);
+                break;
+            }
+        }
+        
+        return true;
+    }
+    
+    public static void main(String[] args)
+    {
+        Util.getAllUnit(60, 2);
     }
     
 }

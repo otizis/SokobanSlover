@@ -42,7 +42,7 @@ public class SokoMap
     HashSet<Zuobiao> deadSet = null;
     
     private MapFliter fliter;
-
+    
     private ArrayList<Zuobiao> goleList = new ArrayList<Zuobiao>();
     
     private Zuobiao man;
@@ -55,23 +55,27 @@ public class SokoMap
     
     private int max_y;
     
+    private int mapByteLen;
+    
     private LinkedList<Solution> nextSolutionList;
     
     private ArrayList<Zuobiao[]> roundDeadPoint;
     
     private Solution success;
     
-    public SokoMap(SokoMap soure, ArrayList<Zuobiao> boxList, Zuobiao man)
+    public SokoMap(SokoMap source, ArrayList<Zuobiao> boxList, Zuobiao man)
     {
-        this.mapCells = soure.mapCells;
+        this.mapCells = source.mapCells;
         this.boxList = boxList;
         this.man = man;
         this.deadSet = new HashSet<Zuobiao>();
-        this.goleList = Util.cloneBoxList(soure.goleList);
-        this.manCanGoCells = Util.cloneBoxList(soure.manCanGoCells);
-        this.max_x = soure.max_x;
-        this.max_y = soure.max_y;
-        fliter = new BloomFliter();
+        this.goleList = Util.cloneBoxList(source.goleList);
+        this.manCanGoCells = Util.cloneBoxList(source.manCanGoCells);
+        this.max_x = source.max_x;
+        this.max_y = source.max_y;
+        this.mapByteLen = source.mapByteLen;
+        // 克隆的单箱子小图，可以取基数小一点的数
+        fliter = new BloomFliter(100 * 10000);
     }
     
     /**
@@ -87,6 +91,7 @@ public class SokoMap
         this.manCanGoCells = Util.cloneBoxList(source.manCanGoCells);
         this.max_x = source.max_x;
         this.max_y = source.max_y;
+        this.mapByteLen = source.mapByteLen;
         fliter = new TurnOffFliter();
     }
     
@@ -107,6 +112,7 @@ public class SokoMap
         fliter = new BloomFliter();
         max_x = mapCells.length - 1;
         max_y = mapCells[0].length - 1;
+        mapByteLen = (max_x + 1) * (max_y + 1);
     }
     
     /**
@@ -147,11 +153,10 @@ public class SokoMap
      */
     public byte[] coverBox(ArrayList<Zuobiao> coll)
     {
-        byte[] desc = new byte[(max_x + 1) * (max_y + 1)];
+        byte[] desc = new byte[mapByteLen];
         for (Zuobiao b : coll)
         {
-            int i = getLen(b);
-            desc[i] = 1;
+            desc[getLen(b)] = 1;
         }
         if (Logger.isdebug)
         {
@@ -371,6 +376,15 @@ public class SokoMap
         return nextSolutionList;
     }
     
+    private FastSet manCanGoFastSet;
+    
+    public void removeManCango(Zuobiao zb)
+    {
+        manCanGoFastSet.remove(zb);
+        manCanGoCells.remove(zb);
+        deadSet.remove(zb);
+    }
+    
     /**
      * 获取玩家能移动到的位置
      * 
@@ -380,10 +394,13 @@ public class SokoMap
      */
     public FastSet getPlayerCanGoCells(ArrayList<Zuobiao> boxList, Zuobiao man)
     {
-        FastSet meightGo = new FastSet(this.max_x, this.max_y);
-        // 地图中可以站人的坐标
-        meightGo.addAll(this.manCanGoCells);
-        
+        if (manCanGoFastSet == null)
+        {
+            manCanGoFastSet = new FastSet(this.max_x, this.max_y);
+            // 地图中可以站人的坐标
+            manCanGoFastSet.addAll(this.manCanGoCells);
+        }
+        FastSet meightGo = manCanGoFastSet.clone();
         // 先移出箱子列表的位置
         meightGo.removeAll(boxList);
         
@@ -407,7 +424,7 @@ public class SokoMap
                 {
                     Zuobiao manEdge = getMove(canGo, asp);
                     
-                    if (manEdge != null && meightGo.contains(manEdge))
+                    if (meightGo.contains(manEdge))
                     {
                         meightGo.remove(manEdge);
                         canGoList.add(manEdge);
@@ -465,18 +482,23 @@ public class SokoMap
         return mapCells;
     }
     
-    public boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao box, AspectEnum aspect)
+    /**
+     * <一句话功能简述> <功能详细描述>
+     * 
+     * @param boxs
+     * @return [参数说明]
+     *         
+     * @return boolean [返回类型说明]
+     * @exception throws [违例类型] [违例说明]
+     * @see [类、类#方法、类#成员]
+     */
+    public boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao man)
     {
-        Zuobiao man = box.myClone();
-        // 移动箱子，得到移动后的列表，生成字串后复原
-        box.moveByAspect(aspect);
+        // 移动箱子，得到移动后的列表
         byte[] boxsStr = coverBox(boxs);
         
         FastSet canGoCellsAfter = getPlayerCanGoCells(boxs, man);
         byte[] manStr = coverMan(canGoCellsAfter, boxsStr);
-        
-        // 移动箱子，得到移动后的列表，生成字串后复原
-        box.backByAspect(aspect);
         
         return fliter.isExist(manStr);
     }
@@ -695,7 +717,7 @@ public class SokoMap
         Logger.info(SolutionManager.drawBefore(solution, this));
         
         // 多点死点推算
-        DeadPoitUtil.roundDeadPoitSet(this);
+        // DeadPoitUtil.roundDeadPoitSet(this);
         
         SolutionManager.runByLevel(this);
         
@@ -705,7 +727,7 @@ public class SokoMap
         }
         Long end = System.currentTimeMillis();
         
-        outputResult(gifName);
+        outputResult(gifName + (end - begin));
         
         System.out.println("耗时：" + (end - begin) + "ms");
         

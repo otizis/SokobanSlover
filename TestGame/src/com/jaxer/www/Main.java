@@ -17,9 +17,9 @@ public class Main
     public static void main(String[] args)
     {
         
-        String mapStr = MapStrConverter.convert(MapLib.test);
+        String mapStr = MapStrConverter.convert(MapLib.PerMonth11_06);
         SokoMap sokoMap = new SokoMap(mapStr);
-        sokoMap.run("map_" + System.currentTimeMillis());
+        sokoMap.run("map_");
         
     }
     
