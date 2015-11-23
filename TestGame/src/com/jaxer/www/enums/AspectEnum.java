@@ -19,4 +19,10 @@ public enum AspectEnum
         return desc;
     }
     
+    static final AspectEnum[] allEnum = {AspectEnum.up, AspectEnum.left, AspectEnum.down, AspectEnum.right};
+    
+    public static AspectEnum[] getAllEnum(){
+        
+        return  allEnum;
+    }
 }

@@ -46,7 +46,7 @@ public class SolutionFactory
             Zuobiao box = boxList.get(i);
             
             // 历遍上下左右
-            for (AspectEnum aspect : AspectEnum.values())
+            for (AspectEnum aspect : AspectEnum.getAllEnum())
             {
                 
                 // 推动时，站人的位置人能过去

@@ -149,7 +149,7 @@ public class DeadPoitUtil
         FastSet allPlayerCanGoCells = clone.getPlayerCanGoCells(deadPointList, sokoMap.getMan());
         
         // 四种情况，人在箱子的上下左右，且不是以上等价情况的位置，再次推断
-        for (AspectEnum aspect : AspectEnum.values())
+        for (AspectEnum aspect : AspectEnum.getAllEnum())
         {
             
             Zuobiao manOnEdge = clone.getMove(zb, aspect);

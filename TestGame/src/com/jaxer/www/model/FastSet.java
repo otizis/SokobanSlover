@@ -108,11 +108,19 @@ public class FastSet
         while (iterator.hasNext())
         {
             Zuobiao next = iterator.next();
-            int index = getLen(next);
-            mapBytes[index] = true;
+            add(next);
         }
     }
     
+    public void add(Zuobiao zb)
+    {
+        int index = getLen(zb);
+        mapBytes[index] = true;
+    }
+    public void add(int index)
+    {
+        mapBytes[index] = true;
+    }
     public void remove(Zuobiao zb)
     {
         int index = getLen(zb);

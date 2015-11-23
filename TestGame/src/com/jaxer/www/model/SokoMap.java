@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.jaxer.www.Filter.BloomFliter;
@@ -303,7 +304,8 @@ public class SokoMap
     }
     
     /**
-     * 根据方向移动坐标,返回一个new对象，不修改入参。
+     * 根据方向移动坐标,返回一个new对象，不修改入参。 <br/>
+     * <b>请勿修改返回值的坐标。</b>
      * 
      * @param moveItem 坐标
      * @param asp 方向
@@ -316,21 +318,33 @@ public class SokoMap
         switch (asp)
         {
             case up:
-                result = moveItem.getUp();
+                if (moveItem.y == 0)
+                {
+                    return null;
+                }
+                result = mapCells[moveItem.x][moveItem.y - 1];
                 break;
             case down:
-                result = moveItem.getDown();
+                if (moveItem.y == max_y)
+                {
+                    return null;
+                }
+                result = mapCells[moveItem.x][moveItem.y + 1];
                 break;
             case left:
-                result = moveItem.getLeft();
+                if (moveItem.x == 0)
+                {
+                    return null;
+                }
+                result = mapCells[moveItem.x - 1][moveItem.y];
                 break;
             default:
-                result = moveItem.getRight();
+                if (moveItem.x == max_x)
+                {
+                    return null;
+                }
+                result = mapCells[moveItem.x + 1][moveItem.y];
                 break;
-        }
-        if (out(result))
-        {
-            return null;
         }
         return result;
     }
@@ -392,6 +406,96 @@ public class SokoMap
      * @return
      * @see [类、类#方法、类#成员]
      */
+    public FastSet getPlayerCanGoCells2(ArrayList<Zuobiao> boxList, Zuobiao man)
+    {
+        int[] mapBytes = new int[(max_x + 1) * (max_y + 1)];
+        Arrays.fill(mapBytes, -1);
+        
+        Iterator<Zuobiao> iterator = manCanGoCells.iterator();
+        // 空地为0，有墙或箱子为-1
+        while (iterator.hasNext())
+        {
+            Zuobiao next = iterator.next();
+            int index = getLen(next);
+            mapBytes[index] = 0;
+        }
+        
+        iterator = boxList.iterator();
+        while (iterator.hasNext())
+        {
+            Zuobiao next = iterator.next();
+            int index = getLen(next);
+            mapBytes[index] = -1;
+        }
+        
+        // 横向
+        for (int i = 0; i < mapBytes.length; i++)
+        {
+            if (i % max_x == 0)
+            {
+                mapBytes[i] = i;
+                continue;
+            }
+            if (mapBytes[i] == 0)
+            {
+                if (mapBytes[i - 1] == -1)
+                {
+                    mapBytes[i] = i;
+                }
+                else
+                {
+                    mapBytes[i] = mapBytes[i - 1];
+                }
+            }
+            
+        }
+        // 纵向
+        for (int i = max_x + 1; i < mapBytes.length; i++)
+        {
+            
+            if (mapBytes[i - max_x - 1] != -1)
+            {
+                // 当前格子的索引
+                int index = mapBytes[i];
+                if (index == -1)
+                {
+                    continue;
+                }
+                // 合并的索引
+                int root = i - max_x - 1;
+                while (root != mapBytes[root])
+                {
+                    root = mapBytes[root];
+                }
+                mapBytes[index] = root;
+                
+            }
+            
+        }
+        int manIndex = mapBytes[mapBytes[getLen(man)]];
+        FastSet result = new FastSet(this.max_x, this.max_y);
+        for (int i = 0; i < mapBytes.length; i++)
+        {
+            if (mapBytes[i] == -1)
+            {
+                continue;
+            }
+            if (mapBytes[mapBytes[i]] == manIndex)
+            {
+                result.add(i);
+            }
+            
+        }
+        return result;
+    }
+    
+    /**
+     * 获取玩家能移动到的位置
+     * 
+     * @param curMap
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
     public FastSet getPlayerCanGoCells(ArrayList<Zuobiao> boxList, Zuobiao man)
     {
         if (manCanGoFastSet == null)
@@ -401,38 +505,32 @@ public class SokoMap
             manCanGoFastSet.addAll(this.manCanGoCells);
         }
         FastSet meightGo = manCanGoFastSet.clone();
+        FastSet result = new FastSet(this.max_x, this.max_y);
         // 先移出箱子列表的位置
         meightGo.removeAll(boxList);
         
         ArrayList<Zuobiao> canGoList = new ArrayList<Zuobiao>();
         // 把玩家现在的位置放入可以去的set中
         canGoList.add(man);
+        result.add(man);
         meightGo.remove(man);
         
-        // 新增的坐标数
-        int count = 1;
         // 开始的坐标
         int start = 0;
-        while (count > 0)
+        while (start < canGoList.size())
         {
-            int addTemp = 0;
-            // 循环上一次循环增加的坐标，四周是否是空
-            while (count-- > 0)
+            Zuobiao canGo = canGoList.get(start++);
+            for (AspectEnum asp : AspectEnum.getAllEnum())
             {
-                Zuobiao canGo = canGoList.get(start++);
-                for (AspectEnum asp : AspectEnum.values())
+                Zuobiao manEdge = getMove(canGo, asp);
+                
+                if (meightGo.contains(manEdge))
                 {
-                    Zuobiao manEdge = getMove(canGo, asp);
-                    
-                    if (meightGo.contains(manEdge))
-                    {
-                        meightGo.remove(manEdge);
-                        canGoList.add(manEdge);
-                        addTemp++;
-                    }
+                    meightGo.remove(manEdge);
+                    canGoList.add(manEdge);
+                    result.add(manEdge);
                 }
             }
-            count = addTemp;
         }
         
         if (Logger.isdebug)
@@ -449,9 +547,7 @@ public class SokoMap
             
             Logger.info(Util.drawMap(mapStr, max_x));
         }
-        meightGo.clear();
-        meightGo.addAll(canGoList);
-        return meightGo;
+        return result;
     }
     
     /**
@@ -483,7 +579,7 @@ public class SokoMap
     }
     
     /**
-     * <一句话功能简述> <功能详细描述>
+     * 是否在之前出现过该状态的地图
      * 
      * @param boxs
      * @return [参数说明]
