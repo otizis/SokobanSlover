@@ -10,6 +10,7 @@ import com.jaxer.www.Util.Logger;
 import com.jaxer.www.Util.Util;
 import com.jaxer.www.enums.AspectEnum;
 import com.jaxer.www.model.FastSet;
+import com.jaxer.www.model.IndexMap;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
 import com.jaxer.www.model.Zuobiao;
@@ -36,7 +37,7 @@ public class SolutionFactory
         
         Zuobiao man = boxList.remove(0);
         
-        FastSet playerCanGoCells = sokoMap.getPlayerCanGoCells(boxList, man);
+        IndexMap indexMap = sokoMap.getIndexMap(boxList, man);
         
         LinkedList<Solution> solutions = new LinkedList<Solution>();
         
@@ -51,7 +52,7 @@ public class SolutionFactory
                 
                 // 推动时，站人的位置人能过去
                 Zuobiao zuobiaoMan = sokoMap.getMovePlayer(box, aspect);
-                if (!playerCanGoCells.contains(zuobiaoMan))
+                if (!indexMap.isEq(zuobiaoMan, man))
                 {
                     continue;
                 }
@@ -83,7 +84,6 @@ public class SolutionFactory
                     box.backByAspect(aspect);
                     continue;
                 }
-
                 
                 // 移动后是否成功
                 int less = Util.boxsNumNotGole(boxList, sokoMap);

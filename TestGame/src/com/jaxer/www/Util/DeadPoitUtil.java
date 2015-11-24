@@ -11,6 +11,7 @@ import com.jaxer.www.manager.SolutionFactory;
 import com.jaxer.www.manager.SolutionManager;
 import com.jaxer.www.model.Cell;
 import com.jaxer.www.model.FastSet;
+import com.jaxer.www.model.IndexMap;
 import com.jaxer.www.model.SokoMap;
 import com.jaxer.www.model.Solution;
 import com.jaxer.www.model.Zuobiao;
@@ -34,7 +35,6 @@ public class DeadPoitUtil
         {
             for (Cell cell : cells)
             {
-                
                 // 现在放着箱子的可跳过
                 if (sokoMap.getBoxList().contains(cell))
                 {
@@ -146,7 +146,7 @@ public class DeadPoitUtil
         
         // 如果不成功，获取该初始化人位置的等价位置
         
-        FastSet allPlayerCanGoCells = clone.getPlayerCanGoCells(deadPointList, sokoMap.getMan());
+        IndexMap indexMap = clone.getIndexMap(deadPointList, sokoMap.getMan());
         
         // 四种情况，人在箱子的上下左右，且不是以上等价情况的位置，再次推断
         for (AspectEnum aspect : AspectEnum.getAllEnum())
@@ -166,7 +166,7 @@ public class DeadPoitUtil
             {
                 continue;
             }
-            if (allPlayerCanGoCells.contains(manOnEdge))
+            if (indexMap.isEq(manOnEdge, sokoMap.getMan()))
             {
                 continue;
             }

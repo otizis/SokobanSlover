@@ -78,8 +78,10 @@ public class SolutionManager
         int level = 1;
         while (!nextSolution.isEmpty())
         {
-            
-            Logger.info("开始走第" + level + "层分支，有走法：" + nextSolution.size());
+                
+            if(Logger.isInfo){
+                Logger.info("开始走第" + level + "层分支，有走法：" + nextSolution.size());
+            }
             
             // 下一步的走法列表
             SolutionFactory.loopNextSolutionsBatch(nextSolution, sokoMap);

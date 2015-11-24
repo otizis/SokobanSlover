@@ -390,8 +390,6 @@ public class SokoMap
         return nextSolutionList;
     }
     
-    private FastSet manCanGoFastSet;
-    
     public void removeManCango(Zuobiao zb)
     {
         manCanGoFastSet.remove(zb);
@@ -399,94 +397,107 @@ public class SokoMap
         deadSet.remove(zb);
     }
     
+    private FastSet manCanGoFastSet;
+    
     /**
      * 获取玩家能移动到的位置
      * 
      * @param curMap
      * @return
-     * @see [类、类#方法、类#成员]
+     * @see [类、类#方法、类#成员]z
      */
-    public FastSet getPlayerCanGoCells2(ArrayList<Zuobiao> boxList, Zuobiao man)
+    public IndexMap getIndexMap(ArrayList<Zuobiao> boxList, Zuobiao man)
     {
-        int[] mapBytes = new int[(max_x + 1) * (max_y + 1)];
-        Arrays.fill(mapBytes, -1);
+        // 最后一位留给玩家
+        short[] mapBytes = new short[(max_x + 1) * (max_y + 1) + 1];
+        Arrays.fill(mapBytes, (short)-1);
         
-        Iterator<Zuobiao> iterator = manCanGoCells.iterator();
+        int size = manCanGoCells.size();
         // 空地为0，有墙或箱子为-1
-        while (iterator.hasNext())
+        for (int i = 0; i < size; i++)
         {
-            Zuobiao next = iterator.next();
+            Zuobiao next = manCanGoCells.get(i);
             int index = getLen(next);
             mapBytes[index] = 0;
         }
         
-        iterator = boxList.iterator();
-        while (iterator.hasNext())
+        size = boxList.size();
+        for (int i = 0; i < size; i++)
         {
-            Zuobiao next = iterator.next();
+            Zuobiao next = boxList.get(i);
             int index = getLen(next);
             mapBytes[index] = -1;
         }
         
-        // 横向
-        for (int i = 0; i < mapBytes.length; i++)
-        {
-            if (i % max_x == 0)
-            {
-                mapBytes[i] = i;
-                continue;
-            }
-            if (mapBytes[i] == 0)
-            {
-                if (mapBytes[i - 1] == -1)
-                {
-                    mapBytes[i] = i;
-                }
-                else
-                {
-                    mapBytes[i] = mapBytes[i - 1];
-                }
-            }
-            
-        }
-        // 纵向
-        for (int i = max_x + 1; i < mapBytes.length; i++)
-        {
-            
-            if (mapBytes[i - max_x - 1] != -1)
-            {
-                // 当前格子的索引
-                int index = mapBytes[i];
-                if (index == -1)
-                {
-                    continue;
-                }
-                // 合并的索引
-                int root = i - max_x - 1;
-                while (root != mapBytes[root])
-                {
-                    root = mapBytes[root];
-                }
-                mapBytes[index] = root;
-                
-            }
-            
-        }
-        int manIndex = mapBytes[mapBytes[getLen(man)]];
-        FastSet result = new FastSet(this.max_x, this.max_y);
-        for (int i = 0; i < mapBytes.length; i++)
+        int len = mapBytes.length - 1;
+        for (short i = 0; i < len; i++)
         {
             if (mapBytes[i] == -1)
             {
                 continue;
             }
-            if (mapBytes[mapBytes[i]] == manIndex)
+            short max_x_1 = (short)(max_x + 1);
+            if (i % max_x_1 == 0)
             {
-                result.add(i);
+                
+                mapBytes[i] = i;
+                continue;
+            }
+            
+            if (mapBytes[i] == 0)
+            {
+                if (i - max_x_1 < 0 || mapBytes[i - max_x_1] == -1)
+                {
+                    if (mapBytes[i - 1] == -1)
+                    {
+                        mapBytes[i] = i;
+                    }
+                    else
+                    {
+                        mapBytes[i] = mapBytes[i - 1];
+                    }
+                }
+                else
+                {
+                    short root = mapBytes[i - max_x_1];
+                    while (root != mapBytes[root])
+                    {
+                        root = mapBytes[root];
+                    }
+                    
+                    if (mapBytes[i - 1] == -1)
+                    {
+                        mapBytes[i] = root;
+                    }
+                    else
+                    {
+                        short index = mapBytes[i - 1];
+                        while (index != mapBytes[index])
+                        {
+                            index = mapBytes[index];
+                        }
+                        if (index == root)
+                        {
+                            
+                            mapBytes[i] = mapBytes[i - 1];
+                        }
+                        else if (index > root)
+                        {
+                            mapBytes[i] = root;
+                            mapBytes[index] = root;
+                        }
+                        else
+                        {
+                            mapBytes[i] = index;
+                            mapBytes[root] = index;
+                        }
+                    }
+                    
+                }
             }
             
         }
-        return result;
+        return new IndexMap(mapBytes, max_x, man);
     }
     
     /**
@@ -591,11 +602,41 @@ public class SokoMap
     public boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao man)
     {
         // 移动箱子，得到移动后的列表
-        byte[] boxsStr = coverBox(boxs);
+        IndexMap indexMap = getIndexMap(boxs, man);
+        short[] mapShort = indexMap.getMapBytes();
         
-        FastSet canGoCellsAfter = getPlayerCanGoCells(boxs, man);
-        byte[] manStr = coverMan(canGoCellsAfter, boxsStr);
+        byte[] manStr = new byte[mapShort.length << 1];
         
+        for (int i = 0; i < mapShort.length; i++)
+        {
+            manStr[(i << 1) + 1] = (byte)(mapShort[i] >> 8);
+            manStr[i << 1] = (byte)(mapShort[i] >> 0);
+            
+        }
+        return fliter.isExist(manStr);
+    }
+    
+    /**
+     * 是否在之前出现过该状态的地图
+     * 
+     * @param boxs
+     * @return [参数说明]
+     *         
+     * @return boolean [返回类型说明]
+     * @exception throws [违例类型] [违例说明]
+     * @see [类、类#方法、类#成员]
+     */
+    public boolean isExist2(ArrayList<Zuobiao> boxs, Zuobiao man)
+    {
+        // 移动箱子，得到移动后的列表
+        IndexMap indexMap = getIndexMap(boxs, man);
+        short[] mapShort = indexMap.getMapBytes();
+        
+        byte[] manStr = new byte[mapShort.length];
+        for (int i = 0; i < mapShort.length; i++)
+        {
+            manStr[i] = (byte)mapShort[i];
+        }
         return fliter.isExist(manStr);
     }
     
