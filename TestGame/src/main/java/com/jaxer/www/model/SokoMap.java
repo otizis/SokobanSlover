@@ -393,19 +393,17 @@ public class SokoMap
     private FastSet manCanGoFastSet;
     
     /**
-     * 获取玩家能移动到的位置
-     * 
-     * @return
-     * @see [类、类#方法、类#成员]z
+     * 获取当前状态下，地图的分块图
+     * 同编号的认为是一块地，这块地上人可以到达，其他块不能到达。
      */
     public IndexMap getIndexMap(ArrayList<Zuobiao> boxList, Zuobiao man)
     {
         // 最后一位留给玩家
         short[] mapBytes = new short[(max_x + 1) * (max_y + 1) + 1];
-        Arrays.fill(mapBytes, (short)-1);
-        
-        int size = manCanGoCells.size();
         // 空地为0，有墙或箱子为-1
+        Arrays.fill(mapBytes, (short)-1);
+
+        int size = manCanGoCells.size();
         for (int i = 0; i < size; i++)
         {
             Zuobiao next = manCanGoCells.get(i);
@@ -582,12 +580,6 @@ public class SokoMap
     /**
      * 是否在之前出现过该状态的地图
      * 
-     * @param boxs
-     * @return [参数说明]
-     *         
-     * @return boolean [返回类型说明]
-     * @exception throws [违例类型] [违例说明]
-     * @see [类、类#方法、类#成员]
      */
     public boolean isExist(ArrayList<Zuobiao> boxs, Zuobiao man)
     {
@@ -605,7 +597,27 @@ public class SokoMap
         }
         return fliter.isExist(manStr);
     }
-    
+
+    /**
+     * 是否在之前出现过该状态的地图
+     *
+     */
+    public boolean isExist(IndexMap indexMap)
+    {
+        // 移动箱子，得到移动后的列表
+        short[] mapShort = indexMap.getMapBytes();
+
+        byte[] manStr = new byte[mapShort.length << 1];
+
+        for (int i = 0; i < mapShort.length; i++)
+        {
+            manStr[(i << 1) + 1] = (byte)(mapShort[i] >> 8);
+            manStr[i << 1] = (byte)(mapShort[i] >> 0);
+
+        }
+        return fliter.isExist(manStr);
+    }
+
     /**
      * 是否在之前出现过该状态的地图
      * 

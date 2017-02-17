@@ -185,10 +185,9 @@ public class SolutionManager
     }
     
     /**
-     * 获取箱子列表和人，人的位置放在0
+     * 根据提供解法步骤，获取箱子和人的最终坐标
      * 
-     * @return
-     * @see [类、类#方法、类#成员]
+     * @return 坐标列表，人的坐标放在0
      */
     public static ArrayList<Zuobiao> getBoxAndManAfter(Solution solu, SokoMap sokoMap)
     {
