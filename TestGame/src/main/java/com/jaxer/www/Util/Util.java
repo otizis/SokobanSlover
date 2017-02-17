@@ -13,7 +13,7 @@ public class Util
     
     public static ArrayList<Zuobiao> cloneBoxList(ArrayList<Zuobiao> boxList)
     {
-        ArrayList<Zuobiao> cloneBoxList = new ArrayList<Zuobiao>(boxList.size());
+        ArrayList<Zuobiao> cloneBoxList = new ArrayList<Zuobiao>();
         
         for (Zuobiao box : boxList)
         {
