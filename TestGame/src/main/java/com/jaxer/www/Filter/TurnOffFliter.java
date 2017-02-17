@@ -1,6 +1,6 @@
 package com.jaxer.www.Filter;
 
-import com.jaxer.www.api.MapFliter;
+import com.jaxer.www.interfaces.MapFliter;
 
 public class TurnOffFliter implements MapFliter
 {

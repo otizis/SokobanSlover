@@ -1,17 +1,27 @@
 package com.jaxer.www.Util;
 
+import com.jaxer.www.enums.MapType;
 import com.jaxer.www.enums.Mf8Enum;
-import com.jaxer.www.manager.MapLib;
+import com.jaxer.www.interfaces.MapLib;
+import com.jaxer.www.model.MapText;
+import com.jaxer.www.myexception.MyException;
 
 public class MapStrConverter
 {
-    public static String convert(StringBuilder mapStr)
+    public static MapLib convert(CharSequence mapStr, MapType mapType)
     {
-        
-        return mapStr.toString();
+        switch (mapType)
+        {
+            case MF8_$:
+                return convert(mapStr.toString());
+            case Stand_BPS:
+                return new MapText(mapStr.toString());
+            default:
+                throw new MyException("unknow mapType");
+        }
     }
-    
-    public static String convert(String mapStr)
+
+    private static MapLib convert(String mapStr)
     {
         if (mapStr == null)
         {
@@ -25,17 +35,12 @@ public class MapStrConverter
             if (b == Mf8Enum.error)
             {
                 Logger.error(a + ",convert error;");
-                System.out.println("");
                 builder.append(a);
             }
             builder.append(b);
-            
+
         }
-        return builder.toString();
+        return new MapText(builder.toString());
     }
-    
-    public static void main(String[] args)
-    {
-        System.out.println(convert(MapLib.test2));
-    }
+
 }

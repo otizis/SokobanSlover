@@ -1,5 +1,6 @@
 package com.jaxer.www.manager;
 
+import com.google.common.collect.Lists;
 import com.jaxer.www.Util.Logger;
 import com.jaxer.www.Util.Util;
 import com.jaxer.www.enums.AspectEnum;
@@ -104,41 +105,9 @@ public class SolutionManager
      */
     public static ArrayList<Zuobiao> getBoxListAfter(Solution solu, SokoMap sokoMap)
     {
-        // 若是根节点，直接返回
-        Solution root = solu.getLastSolution();
-        if (null == root)
-        {
-            return Util.cloneBoxList(sokoMap.getBoxList());
-        }
-        
-        if (solu.isHot())
-        {
-            return Util.cloneBoxList(solu.getBoxList());
-        }
-        ArrayList<Solution> solutList = new ArrayList<Solution>();
-        
-        solutList.add(solu);
-        
-        while (root.getLastSolution() != null)
-        {
-            solutList.add(0, root);
-            root = root.getLastSolution();
-        }
-        
-        ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(sokoMap.getBoxList());
-        
-        for (int i = 0; i < solutList.size(); i++)
-        {
-            int moveIndex = solutList.get(i).getBoxIndex();
-            Zuobiao moveBox = cloneBoxList.get(moveIndex);
-            moveBox.moveByAspect(solutList.get(i).getStep());
-        }
-        solu.addTime();
-        if (solu.isHot())
-        {
-            solu.setBoxList(Util.cloneBoxList(cloneBoxList));
-        }
-        return cloneBoxList;
+        ArrayList<Zuobiao> boxAndManAfter = getBoxAndManAfter(solu, sokoMap);
+        boxAndManAfter.remove(0);
+        return boxAndManAfter;
     }
     
     /**
@@ -192,7 +161,7 @@ public class SolutionManager
     public static ArrayList<Zuobiao> getBoxAndManAfter(Solution solu, SokoMap sokoMap)
     {
         ArrayList<Zuobiao> cloneBoxList = Util.cloneBoxList(sokoMap.getBoxList());
-        
+
         // 若是根节点，直接返回
         Solution root = solu.getLastSolution();
         if (null == root)
@@ -201,30 +170,27 @@ public class SolutionManager
             return cloneBoxList;
         }
         
-        ArrayList<Solution> solutList = new ArrayList<Solution>();
-        
-        solutList.add(solu);
-        
+        ArrayList<Solution> solutList = Lists.newArrayList(solu);
         while (root.getLastSolution() != null)
         {
-            solutList.add(0, root);
+            solutList.add(root);
             root = root.getLastSolution();
         }
-        
+
         Zuobiao man = null;
         int size = solutList.size();
-        for (int i = 0; i < size; i++)
+        for (int i = size-1; i >= 0; i--)
         {
             Solution solution = solutList.get(i);
             int moveIndex = solution.getBoxIndex();
             Zuobiao moveBox = cloneBoxList.get(moveIndex);
             moveBox.moveByAspect(solution.getStep());
-            if ((i + 1) == size)
+            if (i == 0)
             {
                 man = sokoMap.getMovePlayer(moveBox, solution.getStep());
             }
         }
-        
+
         cloneBoxList.add(0, man);
         return cloneBoxList;
         

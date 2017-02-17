@@ -2,7 +2,7 @@ package com.jaxer.www.Filter;
 
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
-import com.jaxer.www.api.MapFliter;
+import com.jaxer.www.interfaces.MapFliter;
 
 public class BloomFliter implements MapFliter
 {

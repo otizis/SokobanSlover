@@ -1,7 +1,7 @@
 package com.jaxer.www.model;
 
-import com.jaxer.www.api.Moveable;
 import com.jaxer.www.enums.AspectEnum;
+import com.jaxer.www.interfaces.Moveable;
 
 public class Zuobiao implements Moveable, Comparable<Zuobiao>
 {

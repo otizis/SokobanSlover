@@ -13,24 +13,13 @@ import java.util.ArrayList;
  */
 public class Solution
 {
-    private int uesTime = 0;
-    
-    public void addTime()
-    {
-        uesTime++;
-    }
-    
-    public boolean isHot()
-    {
-        return uesTime > 10 * 10000;
-    }
-    
+    // 走法之后的箱子坐标列表
     private ArrayList<Zuobiao> boxList;
     
     /**
      * @return 返回 boxList
      */
-    public ArrayList<Zuobiao> getBoxList()
+    public ArrayList<Zuobiao> getBoxListAfter()
     {
         return boxList;
     }
@@ -38,7 +27,7 @@ public class Solution
     /**
      *  对boxList进行赋值
      */
-    public void setBoxList(ArrayList<Zuobiao> boxList)
+    public void setBoxListAfter(ArrayList<Zuobiao> boxList)
     {
         this.boxList = boxList;
     }

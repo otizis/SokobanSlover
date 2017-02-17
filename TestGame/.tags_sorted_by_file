@@ -56,11 +56,11 @@ isAllGoalCover	src\com\jaxer\www\Util\Util.java	/^    public static boolean isAl
 replaceZuobiao	src\com\jaxer\www\Util\Util.java	/^    public static StringBuilder replaceZuobiao(StringBuilder a, Zuobiao zb, String str, int sokomap_Max_X)$/;"	m	class:Util
 MapFliter	src\com\jaxer\www\api\MapFliter.java	/^public interface MapFliter$/;"	i
 clear	src\com\jaxer\www\api\MapFliter.java	/^    public void clear();$/;"	m	interface:MapFliter
-com.jaxer.www.api	src\com\jaxer\www\api\MapFliter.java	/^package com.jaxer.www.api;$/;"	p
+com.jaxer.www.interfaces	src\com\jaxer\www\api\MapFliter.java	/^package com.jaxer.www.interfaces;$/;"	p
 isExist	src\com\jaxer\www\api\MapFliter.java	/^    public boolean isExist(byte[] t);$/;"	m	interface:MapFliter
 Moveable	src\com\jaxer\www\api\Moveable.java	/^public interface Moveable$/;"	i
 backByAspect	src\com\jaxer\www\api\Moveable.java	/^    public void backByAspect(AspectEnum aspect);$/;"	m	interface:Moveable
-com.jaxer.www.api	src\com\jaxer\www\api\Moveable.java	/^package com.jaxer.www.api;$/;"	p
+com.jaxer.www.interfaces	src\com\jaxer\www\api\Moveable.java	/^package com.jaxer.www.interfaces;$/;"	p
 moveByAspect	src\com\jaxer\www\api\Moveable.java	/^    public void moveByAspect(AspectEnum aspect);$/;"	m	interface:Moveable
 moveDown	src\com\jaxer\www\api\Moveable.java	/^    public void moveDown();$/;"	m	interface:Moveable
 moveLeft	src\com\jaxer\www\api\Moveable.java	/^    public void moveLeft();$/;"	m	interface:Moveable

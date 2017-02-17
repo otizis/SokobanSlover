@@ -112,8 +112,8 @@ com.jaxer.www.Util	.\src\com\jaxer\www\Util\DeadPoitUtil.java	/^package com.jaxe
 com.jaxer.www.Util	.\src\com\jaxer\www\Util\Logger.java	/^package com.jaxer.www.Util;$/;"	p
 com.jaxer.www.Util	.\src\com\jaxer\www\Util\MapStrConverter.java	/^package com.jaxer.www.Util;$/;"	p
 com.jaxer.www.Util	.\src\com\jaxer\www\Util\Util.java	/^package com.jaxer.www.Util;$/;"	p
-com.jaxer.www.api	.\src\com\jaxer\www\api\MapFliter.java	/^package com.jaxer.www.api;$/;"	p
-com.jaxer.www.api	.\src\com\jaxer\www\api\Moveable.java	/^package com.jaxer.www.api;$/;"	p
+com.jaxer.www.interfaces	.\src\com\jaxer\www\api\MapFliter.java	/^package com.jaxer.www.interfaces;$/;"	p
+com.jaxer.www.interfaces	.\src\com\jaxer\www\api\Moveable.java	/^package com.jaxer.www.interfaces;$/;"	p
 com.jaxer.www.enums	.\src\com\jaxer\www\enums\AspectEnum.java	/^package com.jaxer.www.enums;$/;"	p
 com.jaxer.www.enums	.\src\com\jaxer\www\enums\CellType.java	/^package com.jaxer.www.enums;$/;"	p
 com.jaxer.www.enums	.\src\com\jaxer\www\enums\Mf8Enum.java	/^package com.jaxer.www.enums;$/;"	p

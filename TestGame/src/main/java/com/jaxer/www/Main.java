@@ -1,7 +1,9 @@
 package com.jaxer.www;
 
 import com.jaxer.www.Util.MapStrConverter;
-import com.jaxer.www.manager.MapLib;
+import com.jaxer.www.enums.MapType;
+import com.jaxer.www.interfaces.MapLib;
+import com.jaxer.www.manager.BPSMMapLib;
 import com.jaxer.www.model.SokoMap;
 
 /**
@@ -9,13 +11,12 @@ import com.jaxer.www.model.SokoMap;
  */
 public class Main
 {
-    
+
     public static void main(String[] args)
     {
-        
-        String mapStr = MapStrConverter.convert(MapLib.PerMonth11_06);
-        SokoMap sokoMap = new SokoMap(mapStr);
-        sokoMap.run("map_");
+        MapLib mapText = MapStrConverter.convert(BPSMMapLib.test3, MapType.Stand_BPS);
+
+        new SokoMap(mapText).run("map_");
     }
-    
+
 }

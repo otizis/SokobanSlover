@@ -1,4 +1,4 @@
-package com.jaxer.www.api;
+package com.jaxer.www.interfaces;
 
 import com.jaxer.www.enums.AspectEnum;
 
